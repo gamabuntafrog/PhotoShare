@@ -1,0 +1,59 @@
+import {IPost} from "./post";
+
+export interface IUser {
+    username: string,
+    email: string,
+    avatar: {
+        url: string | null,
+        id: string | null
+    },
+    age: number,
+    posts: IPost[] | string[],
+    savedPosts: IPost[],
+    likedPosts: IPost[],
+    subscribes: IUser[],
+    subscribers: IUser[],
+    createdAt: string,
+    updatedAt: string,
+    token: string,
+    _id: string,
+}
+
+export interface IUserWithPosts {
+    username: string,
+    email: string,
+    avatar: {
+        url: string | null,
+        id: string | null
+    },
+    age: number,
+    posts: IPost[],
+    savedPosts: string[],
+    likedPosts: string[],
+    subscribes: string[],
+    subscribers: string[],
+    createdAt: string,
+    updatedAt: string,
+    token: string,
+    _id: string,
+}
+
+export interface ICurrentUser {
+    username: string,
+    email: string,
+    avatar: {
+        url: string | null,
+        id: string | null
+    },
+    age: number,
+    posts: string[],
+    savedPosts: string[],
+    likedPosts: string[],
+    subscribes: string[],
+    subscribers: string[],
+    createdAt: string,
+    updatedAt: string,
+    token: string,
+    _id: string,
+}
+

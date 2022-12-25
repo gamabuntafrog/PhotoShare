@@ -1,3 +1,40 @@
+:root {
+    --primary-50: black;
+    --primary-100: black;
+    --primary-200: black;
+    --primary-400: black;
+    --primary-500: black;
+    --primary-600: black;
+    --primary-700: black;
+    --primary-800: black;
+    --primary-900: black;
+    --primary-A100: black;
+    --primary-A200: black;
+    --primary-A400: black;
+    --primary-A700: black;
+    --primary-main: black;
+    --primary-light: black;
+    --primary-dark: black;
+    --primary-contrastText: black;
+    --text-primary: black;
+    --text-secondary: black;
+    --text-disabled: black;
+    --text-icon: black;
+    --secondary-main: black;
+    --secondary-main: black;
+    --secondary-light: black;
+    --secondary-dark: black;
+    --secondary-contrastText: black;
+
+}
+
+#wot-new-assistant-container { width: 0 !important }
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,6 +42,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /*background-color: darkslategrey;*/
 }
 
 code {
