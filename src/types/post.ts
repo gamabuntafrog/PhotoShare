@@ -10,6 +10,10 @@ export interface IComment {
 export interface IPost {
     savesCount: number,
     comments: IComment[],
+    image: {
+        url: string,
+        id: string
+    },
     _id: string,
     author: IUser,
     title: string,

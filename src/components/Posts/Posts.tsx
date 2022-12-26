@@ -9,7 +9,7 @@ import {IUserSliceAuthorized} from "../../types/userSlice";
 export default function Posts() {
     const {data: result, isLoading, error} = postsApi.useFetchAllPostsQuery()
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
-
+    console.log(result)
 
     if (isLoading) {
         return (

@@ -6,6 +6,7 @@
 ## Технології:
 React
 React Router DOM
+React Hook Forms
 Typescript
 MaterialUI
 Redux Toolkit
@@ -18,6 +19,7 @@ An application with authorization, the ability to subscribe to users, upload pic
 ## Technologies:
 React
 React Router DOM
+React Hook Forms
 Typescript
 MaterialUI
 Redux Toolkit

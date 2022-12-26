@@ -26,6 +26,7 @@ export default function Settings() {
         dispatch(toggleColorMode())
     }
 
+    const nextColorMode = theme.palette.mode === 'dark' ? 'light' : 'dark'
 
     return (
         <Container>
@@ -33,7 +34,7 @@ export default function Settings() {
             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2}}>
                 <Typography  variant='h2'>Color</Typography>
                 <Button variant='outlined' sx={{ml: 1, color: 'primary.main'}} onClick={changeColorMode} color="inherit">
-                    Change mode to {theme.palette.mode === 'dark' ? 'light' : 'dark'}
+                    Change mode to {nextColorMode}
                 </Button>
                 <List
                     sx={{
@@ -50,7 +51,7 @@ export default function Settings() {
                             >
                                 <Button
                                     variant='contained'
-                                    sx={{bgcolor: `${color.ref} !important`, }}
+                                    sx={{bgcolor: `${color.ref} !important`}}
                                     onClick={() => changePrimaryColor(color.enum)}
                                 >
                                     {color.string}

@@ -13,7 +13,7 @@ interface IPostItem {
 }
 
 export default function PostItem({post}: IPostItem) {
-    const {author, _id, title, body, likesCount, savesCount} = post
+    const {author, _id, title, body, likesCount, savesCount, image: {url}} = post
     const {username, _id: authorId} = author
     const avatarURL = author.avatar.url || ''
 
@@ -37,7 +37,7 @@ export default function PostItem({post}: IPostItem) {
                     <Typography sx={{ml: 1}}>{username}</Typography>
                 </NavLink>
             </Box>
-            <Box sx={{width: '100%', height: '300px', backgroundColor: 'darkcyan', borderRadius: 1}}/>
+            <img src={url} style={{width: '100%', height: '300px', backgroundColor: 'darkcyan', borderRadius: '8px', objectFit: 'cover'}}/>
             <Box sx={{display: 'flex', alignItems: 'center', padding: 1, alignSelf: 'flex-start', width: '95%'}}>
                 <IconButton>
                     <FavoriteBorderIcon/>
