@@ -240,21 +240,23 @@ export default function UserProfile() {
                     >
                         {posts.map((post) => {
 
-                            const {_id: postId, author, title, body} = post
+                            const {_id: postId, author, title, body, image: {url}} = post
                             return (
                                 <ListItem
                                     key={postId}
                                     sx={{
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        width: '300px'
+                                        width: '300px',
+
                                     }}
                                 >
-                                    <Box sx={{
+                                    <img src={url} style={{
                                         width: '100%',
                                         height: '300px',
                                         backgroundColor: 'darkcyan',
-                                        borderRadius: 1
+                                        objectFit: 'cover',
+                                        borderRadius: '8px',
                                     }}/>
                                     <Typography>{title}</Typography>
                                 </ListItem>
