@@ -253,6 +253,11 @@ export default function UserProfile() {
 
                                     }}
                                 >
+                                    <Button sx={{color: 'red'}} onClick={() => {
+
+                                    }}>
+                                        Delete
+                                    </Button>
                                     <img
                                         src={url}
                                         style={{

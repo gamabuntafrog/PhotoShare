@@ -5,6 +5,7 @@ import {postsApi} from "./api/postsApi";
 import {themeSlice} from "./slices/themeSlice";
 import {usersApi} from "./api/usersApi";
 import userSlice from "./slices/userSlice";
+import {collectionsApi} from "./api/collectionsApi";
 
 
 const persistUserConfig = {
@@ -26,13 +27,14 @@ export const store = configureStore({
   reducer: {
     [postsApi.reducerPath]: postsApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
+    [collectionsApi.reducerPath]: collectionsApi.reducer,
     userReducer: persistedUserReducer,
     themeReducer: persistedThemeReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: false
-    }).concat(postsApi.middleware, usersApi.middleware)
+    }).concat(postsApi.middleware, usersApi.middleware, collectionsApi.middleware)
   }
 });
 
