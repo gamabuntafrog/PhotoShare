@@ -6,6 +6,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import CommentIcon from '@mui/icons-material/Comment';
 import {IPost} from "../../types/post";
+import {FC} from "react";
 
 
 interface IPostItem {
@@ -39,15 +40,17 @@ export default function PostItem({post}: IPostItem) {
                     position: 'relative'
                 }}
             >
-                <img
-                    src={postImageURL}
-                    style={{
-                        width: '100%',
-                        objectFit: 'cover',
-                        borderRadius: '8px',
-                        backgroundColor: main
-                    }}
-                />
+                <NavLink to={`posts/${postId}`}>
+                    <img
+                        src={postImageURL}
+                        style={{
+                            width: '100%',
+                            objectFit: 'cover',
+                            borderRadius: '8px',
+                            backgroundColor: main
+                        }}
+                    />
+                </NavLink>
                 <Box sx={{
                     display: 'flex', alignItems: 'center', padding: 0.5, alignSelf: 'flex-start', width: '95%',
                     position: 'absolute',

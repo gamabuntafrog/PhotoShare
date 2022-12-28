@@ -7,6 +7,7 @@ import Login from "./Login";
 import React from "react";
 import Register from "./Register";
 import CreatePost from "./CreatePost";
+import Post from "./Post";
 
 const privateRouter = createBrowserRouter([
     {
@@ -42,6 +43,15 @@ const privateRouter = createBrowserRouter([
             <>
                 <Header/>
                 <CreatePost/>
+            </>
+        )
+    },
+    {
+        path: "/posts/:id",
+        element: (
+            <>
+                <Header/>
+                <Post/>
             </>
         )
     },

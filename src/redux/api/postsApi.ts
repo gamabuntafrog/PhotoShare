@@ -7,13 +7,13 @@ import {IPost} from "../../types/post";
 export const postsApi = createApi({
     reducerPath: 'postsApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3001'
+        baseUrl: 'http://localhost:3001/posts'
     }),
     tagTypes: ['Post'],
     endpoints: (builder) => ({
         fetchAllPosts: builder.query<IPostsApi, void>({
             query: () => ({
-                url: '/posts'
+                url: '/'
             }),
             providesTags: result => ['Post']
         }),
@@ -32,10 +32,14 @@ export const postsApi = createApi({
                 },
             }),
             invalidatesTags: ['Post']
+        }),
+        getPostById: builder.query<IPost, string>({
+            query: (id) => ({
+                url: `/${id}`
+            }),
+            providesTags: result => ['Post'],
+            transformResponse: (response: {code: number, data: {post: IPost}, status: string}) => response.data.post
         })
-        // getPostById: builder.query<IPost, string>({
-        //     query: (id) => `/${id}`
-        // })
     })
 })
 
