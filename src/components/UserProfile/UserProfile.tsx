@@ -3,7 +3,7 @@ import {
     Box,
     Button,
     Container,
-    FormGroup,
+    FormGroup, Grid,
     Input,
     InputLabel,
     List,
@@ -15,20 +15,23 @@ import {useParams} from "react-router-dom";
 import {usersApi} from "../../redux/api/usersApi";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
-import {ChangeEvent, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import * as Yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
-import {register as registerUser} from "../../redux/slices/userSlice";
+import convertImageToString from "../../utils/convertImageToString";
+import setPreviewImage from "../../utils/setPreviewImage";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import {useTheme} from '@mui/material/styles';
 
 
 const userSchema = Yup.object({
-    image: Yup.mixed(),
+    imageList: Yup.mixed(),
     username: Yup.string().min(6).required()
 })
 
 interface IFormData {
-    image: string,
+    imageList: FileList,
     username: string
 }
 
@@ -42,28 +45,45 @@ export default function UserProfile() {
     const [subscribe] = usersApi.useSubscribeMutation()
     const [unsubscribe] = usersApi.useUnsubscribeMutation()
 
-    const {register, setValue, handleSubmit, formState: {errors: {username: usernameError}}} = useForm<IFormData>({
+    const {
+        register,
+        setValue,
+        handleSubmit,
+        watch,
+        formState: {errors: {username: usernameError}}
+    } = useForm<IFormData>({
         resolver: yupResolver(userSchema),
         mode: 'all'
     });
 
+    const theme = useTheme();
+    const {palette: {primary: {main}}} = theme
+
+    const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
+    const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
+
+    console.log(isSmallerLaptop)
 
     const [avatarFile, setAvatarFile] = useState<null | string>(null);
     const [isChangingMode, setIsChangingMode] = useState(false);
 
 
-    const saveChanges = async ({username}: { username: string }) => {
+    const saveChanges = async ({username, imageList}: { username: string, imageList: FileList }) => {
+        const avatar = await convertImageToString(imageList)
+
         await updateUser({token, body: {username, avatar: avatarFile}})
         setIsChangingMode(false)
 
         document.location.reload()
     }
 
-    const onSubmit = handleSubmit(({username}) => saveChanges({username}));
+    const onSubmit = handleSubmit(({username, imageList}) => saveChanges({username, imageList}));
 
     const toggleSubscribe = async (userId: string, token: string, isSubscribed: boolean) => {
         isSubscribed ? unsubscribe({userId, token}) : subscribe({userId, token})
     }
+
+    useEffect(() => setPreviewImage(watch('imageList'), setAvatarFile), [watch('imageList')]);
 
     if (isLoading) {
         return (
@@ -106,33 +126,13 @@ export default function UserProfile() {
     const isProfileOfCurrentUser = currentUserId === userId
     const isSubscribed = !!subscribers.find((id) => id === currentUserId)
 
-
-    const getAvatarFile = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        const files = (e.target as HTMLInputElement).files
-        const avatarFile = !!files && files[0]
-
-        if (!avatarFile) return
-
-        const setPreviewImage = () => {
-            const fileReader = new FileReader()
-            fileReader.onload = (e) => {
-                const {result} = e.target as FileReader
-                if (result) {
-                    setAvatarFile(result as string)
-                }
-            }
-            fileReader.readAsDataURL(avatarFile);
-        }
-
-        setPreviewImage()
-    }
-
     const turnOnChangingMode = () => setIsChangingMode(true)
     const turnOffChangingMode = () => {
         setAvatarFile(null)
         setValue('username', username)
         setIsChangingMode(false)
     }
+
 
     return (
         <Box
@@ -169,17 +169,17 @@ export default function UserProfile() {
                                     Change avatar
                                 </InputLabel>
                                 <input
-                                    {...register('image')}
+                                    {...register('imageList')}
                                     id='avatar'
                                     type='file'
                                     accept="image/*"
                                     hidden
-                                    onChange={getAvatarFile}
                                 />
                             </Button>
 
                             <InputLabel error={!!usernameError} htmlFor='username'>Username</InputLabel>
-                            <OutlinedInput defaultValue={username} error={!!usernameError} {...register('username')} id='username' sx={{
+                            <OutlinedInput defaultValue={username} error={!!usernameError} {...register('username')}
+                                           id='username' sx={{
                                 my: 1
                             }}/>
                             <Button
@@ -223,47 +223,58 @@ export default function UserProfile() {
             </Box>
             <Box
                 sx={{
-                    width: '90%',
-                    maxWidth: '1000px',
+                    width: '95%',
+                    // maxWidth: '1000px',
                     mx: 'auto',
                     mb: 2
                 }}
             >
                 {posts.length > 0 ?
-                    <List
+                    <Box
                         sx={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            flexWrap: 'wrap',
-                            justifyContent: 'space-between',
+                            columnCount: isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5,
+                            columnGap: 3,
+
                         }}
                     >
                         {posts.map((post) => {
 
-                            const {_id: postId, author, title, body, image: {url}} = post
+                            const {_id: postId, author, title, body, tags, image: {url}} = post
+                            const formattedTags = tags.join(' ')
+
                             return (
-                                <ListItem
+                                <Box
                                     key={postId}
                                     sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        width: '300px',
+                                        display: 'inline-block',
+                                        width: '100%',
+                                        mb: 1,
+                                        borderRadius: '8px',
 
                                     }}
                                 >
-                                    <img src={url} style={{
-                                        width: '100%',
-                                        height: '300px',
-                                        backgroundColor: 'darkcyan',
-                                        objectFit: 'cover',
-                                        borderRadius: '8px',
-                                    }}/>
-                                    <Typography>{title}</Typography>
-                                </ListItem>
+                                    <img
+                                        src={url}
+                                        style={{
+                                            width: '100%',
+                                            objectFit: 'cover',
+                                            borderRadius: '8px',
+                                            backgroundColor: main
+                                        }}
+                                    />
+                                    <Box
+                                        sx={{
+                                            px: 0.5
+                                        }}
+                                    >
+                                        <Typography variant='h6'>{title}</Typography>
+                                        <Typography variant='body1'>{formattedTags}</Typography>
+                                    </Box>
+                                </Box>
                             )
 
                         })}
-                    </List>
+                    </Box>
                     :
                     <Typography variant='h3' sx={{mt: '150px'}} textAlign='center'>
                         There already no posts yet

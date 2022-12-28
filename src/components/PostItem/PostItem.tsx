@@ -1,60 +1,89 @@
 import {Avatar, Box, IconButton, ListItem, Typography, Link} from "@mui/material";
+import {useTheme} from "@mui/material/styles";
 import styles from "../Posts/Posts.module.css";
 import {NavLink} from "react-router-dom";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CommentIcon from '@mui/icons-material/Comment';
 import {IPost} from "../../types/post";
 
 
 interface IPostItem {
-    post: IPost
+    post: IPost,
 }
+
+// зробити появу кнопок на картинці при ховері на айтем
+// зробити окрему сторінку з постом
 
 export default function PostItem({post}: IPostItem) {
-    const {author, _id, title, body, likesCount, savesCount, image: {url}} = post
-    const {username, _id: authorId} = author
-    const avatarURL = author.avatar.url || ''
+    const {_id: postId, author, title, body, tags, likesCount, image: {url: postImageURL}} = post
+    const {username, _id: authorId, avatar: {url: avatarURL = ''}} = author
+
+    const formattedTags = tags.join(' ')
+    const theme = useTheme()
+    const {main} = theme.palette.primary
 
     return (
-        <ListItem
-            sx={{display: 'flex', flexDirection: 'column', justifyContent: ''}}
-            className={styles.posts__item}
+        <Box
+            key={postId}
+            sx={{
+                display: 'inline-block',
+                width: '100%',
+                mb: 2,
+                borderRadius: '8px',
+
+            }}
         >
-
-            <Box sx={{
-                py: 1,
-                ml: 1,
-                alignSelf: 'start'
-            }}>
-                <NavLink style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'start',
-                }} to={`users/${authorId}`}>
-                    <Avatar src={avatarURL}/>
-                    <Typography sx={{ml: 1}}>{username}</Typography>
-                </NavLink>
+            <Box
+                sx={{
+                    position: 'relative'
+                }}
+            >
+                <img
+                    src={postImageURL}
+                    style={{
+                        width: '100%',
+                        objectFit: 'cover',
+                        borderRadius: '8px',
+                        backgroundColor: main
+                    }}
+                />
+                <Box sx={{
+                    display: 'flex', alignItems: 'center', padding: 0.5, alignSelf: 'flex-start', width: '95%',
+                    position: 'absolute',
+                    top: '100%',
+                    transform: 'translateY(-110%)'
+                }}>
+                    <IconButton>
+                        <FavoriteBorderIcon/>
+                    </IconButton>
+                    <Typography sx={{ml: 0.5}}>
+                        {likesCount}
+                    </Typography>
+                    <IconButton sx={{ml: 1}}>
+                        <CommentIcon/>
+                    </IconButton>
+                    <IconButton sx={{ml: 'auto'}}>
+                        <BookmarkBorderIcon/>
+                    </IconButton>
+                </Box>
             </Box>
-            <img src={url} style={{width: '100%', height: '300px', backgroundColor: 'darkcyan', borderRadius: '8px', objectFit: 'cover'}}/>
-            <Box sx={{display: 'flex', alignItems: 'center', padding: 1, alignSelf: 'flex-start', width: '95%'}}>
-                <IconButton>
-                    <FavoriteBorderIcon/>
-                </IconButton>
-                <Typography sx={{ml: 0.5}}>
-                    {likesCount}
-                </Typography>
-                <IconButton sx={{ml: 1}}>
-                    <CommentIcon/>
-                </IconButton>
-                <IconButton sx={{ml: 'auto'}}>
-                    <BookmarkBorderIcon/>
-                </IconButton>
+            <Box
+                sx={{
+                    px: 0.5,
+                }}
+            >
+                <Typography variant='h6'>{title}</Typography>
             </Box>
-            <Typography>{title}</Typography>
-
-            {/*<Typography>{body}</Typography>*/}
-        </ListItem>
+            <NavLink style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'start',
+            }} to={`users/${authorId}`}>
+                <Avatar sx={{width: '40px', height: '40px'}} src={avatarURL as string}/>
+                <Typography sx={{ml: 1}}>{username}</Typography>
+            </NavLink>
+        </Box>
     )
 }
+

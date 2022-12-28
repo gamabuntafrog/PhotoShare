@@ -5,11 +5,17 @@ import PostItem from "../PostItem/PostItem";
 import {useAppSelector} from "../../redux/hooks";
 import {postsApi} from "../../redux/api/postsApi";
 import {IUserSliceAuthorized} from "../../types/userSlice";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import {useTheme} from "@mui/material/styles";
 
 export default function Posts() {
     const {data: result, isLoading, error} = postsApi.useFetchAllPostsQuery()
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
     console.log(result)
+
+    const theme = useTheme()
+    const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
+    const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
     if (isLoading) {
         return (
@@ -43,15 +49,18 @@ export default function Posts() {
     }
     return (
         <Box sx={{overflowY: 'auto', height: '91vh'}}>
-            <Container className={styles.posts}>
-                <List sx={{
-                    width: '340px',
-                    margin: '0 auto'
-                }}>
-                    {result && result.data.posts.map((post) => <PostItem post={post} key={post._id}/>)}
-                </List>
+            <Box
+                sx={{
+                    columnCount: isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5,
+                    columnGap: 3,
+                    width: '95%',
+                    py: 2,
+                    mx: 'auto'
+                }}
+            >
+                {result && result.data.posts.map((post) => <PostItem post={post} key={post._id}/>)}
+            </Box>
 
-            </Container>
         </Box>
     )
 }

@@ -28,20 +28,6 @@ export function Notifications({notifications, setIsNotificationsOpen}: {
                 width: '400px',
                 overflowY: 'auto'
             }}
-            onClick={(e) => {
-                // e.stopPropagation()
-                console.log('click!')
-            }}
-            onBlur={(e) => {
-                setIsNotificationsOpen(false)
-
-                console.log('blur!')
-            }}
-            onMouseEnter={(e) => {
-                // console.log(e.currentTarget)
-                // e.currentTarget.click()
-                console.log('hover!')
-            }}
         >
             <List
                 sx={{
@@ -100,7 +86,7 @@ export default function Header() {
 
     return (
         <Box className={cssHeader.header} sx={header.header(palette.primary.main, mode)}>
-            <Container maxWidth="md" sx={header.container()}>
+            <Container maxWidth="desktop" sx={header.container()}>
                 <NavLink className={cssHeader.logo__link} to='/' style={linkStyles}>
                     <svg className={cssHeader.logo__svg}
                          width="200" height="49" viewBox="0 0 315 49" xmlns="http://www.w3.org/2000/svg">

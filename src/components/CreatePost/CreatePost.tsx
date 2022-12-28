@@ -70,7 +70,7 @@ export default function CreatePost() {
 
         await uploadPhoto({title, body, image, tags: filteredTags})
     });
-
+    // переробити завантаження аватарки так само як тут
     const uploadPhoto = async (body: {
         title: string,
         body: string,

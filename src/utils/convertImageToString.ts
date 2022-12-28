@@ -1,4 +1,4 @@
-const convertImageToString = async (imageList: FileList): Promise<string> => {
+export default async function convertImageToString (imageList: FileList): Promise<string>  {
     const imagePromise: Promise<string> = new Promise((resolve, reject) => {
         const fileReader = new FileReader()
         fileReader.onload = (e) => {
@@ -14,4 +14,3 @@ const convertImageToString = async (imageList: FileList): Promise<string> => {
     return imagePromise
 }
 
-export default convertImageToString
