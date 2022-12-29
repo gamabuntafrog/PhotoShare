@@ -3,7 +3,7 @@ import {
     Box,
     Button,
     Container,
-    FormGroup, Grid,
+    FormGroup, Grid, ImageList, ImageListItem,
     Input,
     InputLabel,
     List,
@@ -11,7 +11,7 @@ import {
     OutlinedInput,
     Typography
 } from "@mui/material";
-import {useParams} from "react-router-dom";
+import {NavLink, useParams} from "react-router-dom";
 import {usersApi} from "../../redux/api/usersApi";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
@@ -23,6 +23,8 @@ import convertImageToString from "../../utils/convertImageToString";
 import setPreviewImage from "../../utils/setPreviewImage";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {useTheme} from '@mui/material/styles';
+import {collectionsApi} from "../../redux/api/collectionsApi";
+import {skipToken} from "@reduxjs/toolkit/query";
 
 
 const userSchema = Yup.object({
@@ -40,7 +42,11 @@ export default function UserProfile() {
 
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
 
-    const {data: user, isLoading, error} = usersApi.useGetByIdQuery({id, token, posts: true})
+    const {data: user, isLoading, error} = usersApi.useGetByIdQuery({id, token, posts: true, collections: true})
+    // const {data: userCollections = [], isLoading: isUserCollectionsLoading} = collectionsApi.useGetCurrentQuery({token: user?.token || ''}, {skip: !user})
+    console.log(user)
+    // console.log(userCollections)
+
     const [updateUser] = usersApi.useUpdateByIdMutation()
     const [subscribe] = usersApi.useSubscribeMutation()
     const [unsubscribe] = usersApi.useUnsubscribeMutation()
@@ -61,8 +67,8 @@ export default function UserProfile() {
 
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
+    const isSmallerMobile = useMediaQuery(theme.breakpoints.down('mobile'));
 
-    console.log(isSmallerLaptop)
 
     const [avatarFile, setAvatarFile] = useState<null | string>(null);
     const [isChangingMode, setIsChangingMode] = useState(false);
@@ -116,7 +122,7 @@ export default function UserProfile() {
     }
 
 
-    const {avatar, username, age, email, createdAt, _id: userId, posts, subscribes, subscribers} = user
+    const {avatar, username, age, email, createdAt, _id: userId, posts, subscribes, subscribers, collections} = user
     const avatarURL = avatar.url || avatarFile || ''
     const [month, day, year] = new Date(createdAt).toLocaleDateString('en-US').split('/')
     const formattedCreatedAt = [day, month, year].join('.')
@@ -133,6 +139,7 @@ export default function UserProfile() {
         setIsChangingMode(false)
     }
 
+    const calculateRows = (isSmallerLaptop ? isSmallerTablet ? isSmallerMobile ? 1 : 2 : 3 : 5)
 
     return (
         <Box
@@ -226,66 +233,138 @@ export default function UserProfile() {
                     width: '95%',
                     // maxWidth: '1000px',
                     mx: 'auto',
-                    mb: 2
+                    mb: 4
                 }}
             >
-                {posts.length > 0 ?
+                {collections.length > 0 ?
                     <Box
                         sx={{
-                            columnCount: isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5,
-                            columnGap: 3,
+                            display: 'grid',
+                            // columnCount: ,
+                            // columnGap: 3,
+                            gridTemplateColumns: `repeat(${calculateRows}, 1fr)`,
+                            gap: 3,
 
                         }}
                     >
-                        {posts.map((post) => {
-
-                            const {_id: postId, author, title, body, tags, image: {url}} = post
-                            const formattedTags = tags.join(' ')
+                        {collections.map((collection, i) => {
+                            const {_id: collectionId, title, posts} = collection
 
                             return (
-                                <Box
-                                    key={postId}
-                                    sx={{
-                                        display: 'inline-block',
-                                        width: '100%',
-                                        mb: 1,
-                                        borderRadius: '8px',
+                                <NavLink style={{
+                                    // width: '100%',
+                                    // height: '100%',
+                                    // display: 'block'
+                                    position: 'relative',
+                                    backgroundColor: theme.palette.primary.main,
+                                    borderRadius: '8px',
+                                    overflow: 'hidden',
+                                    minHeight: isSmallerTablet ? '150px' : '300px'
 
-                                    }}
-                                >
-                                    <Button sx={{color: 'red'}} onClick={() => {
-
-                                    }}>
-                                        Delete
-                                    </Button>
-                                    <img
-                                        src={url}
-                                        style={{
-                                            width: '100%',
-                                            objectFit: 'cover',
-                                            borderRadius: '8px',
-                                            backgroundColor: main
-                                        }}
-                                    />
+                                }} key={collection._id} to={`/collections/${collection._id}`}>
                                     <Box
                                         sx={{
-                                            px: 0.5
+                                            position: 'absolute',
+                                            width: '100%',
+                                            height: '100%',
+                                            background: 'rgba(0, 0, 0, 0.2)',
+                                            zIndex: '99',
+                                        }}
+                                    />
+                                    <Typography
+                                        sx={{
+                                            position: 'absolute',
+                                            top: '0px',
+                                            left: '0px',
+                                            textAlign: 'center',
+                                            zIndex: '100',
+                                            padding: 1,
+
+                                        }}
+                                        variant='h4'
+                                    >
+                                        {collection.title}
+                                    </Typography>
+                                    <ImageList
+                                        cols={2}
+                                        rowHeight={150}
+                                        sx={{
+                                            overflow: 'hidden',
+                                            margin: 0,
+                                            background: 'rgba(0, 0, 0, 1)',
                                         }}
                                     >
-                                        <Typography variant='h6'>{title}</Typography>
-                                        <Typography variant='body1'>{formattedTags}</Typography>
-                                    </Box>
-                                </Box>
-                            )
+                                        {posts.map((post, i) => {
+                                            console.log(post)
+                                            const isLengthSmall = posts.length < 2
+                                            const rows = i === 0 ? isLengthSmall ? 2 : 2 : 1
+                                            const cols = i === 0 ? isLengthSmall ? 2 : 1 : 1
 
+                                            return (
+                                                <ImageListItem
+                                                    sx={{bgcolor: 'primary.main', overflow: 'hidden'}}
+                                                    rows={rows}
+                                                    cols={cols}
+                                                    key={i}
+                                                >
+                                                    <img style={{objectFit: isLengthSmall ? 'cover' : 'contain'}} src={post.image.url}/>
+                                                </ImageListItem>
+                                            )
+                                        })}
+                                    </ImageList>
+                                </NavLink>
+                            )
                         })}
                     </Box>
                     :
                     <Typography variant='h3' sx={{mt: '150px'}} textAlign='center'>
-                        There already no posts yet
+                        There already no collections yet
                     </Typography>
                 }
             </Box>
         </Box>
     )
 }
+
+// {posts.map((post) => {
+//
+//     const {_id: postId, author, title, body, tags, image: {url}} = post
+//     const formattedTags = tags.join(' ')
+//
+//     return (
+//         <Box
+//             key={postId}
+//             sx={{
+//                 display: 'inline-block',
+//                 width: '100%',
+//                 mb: 1,
+//                 borderRadius: '8px',
+//
+//             }}
+//         >
+//             <Button sx={{color: 'red'}} onClick={() => {
+//
+//             }}>
+//                 Delete
+//             </Button>
+//             <img
+//                 src={url}
+//                 style={{
+//                     width: '100%',
+//                     objectFit: 'cover',
+//                     borderRadius: '8px',
+//                     backgroundColor: main
+//                 }}
+//             />
+//             <Box
+//                 sx={{
+//                     px: 0.5
+//                 }}
+//             >
+//                 <Typography variant='h6'>{title}</Typography>
+//                 <Typography variant='body1'>{formattedTags}</Typography>
+//             </Box>
+//         </Box>
+//     )
+//
+// })}

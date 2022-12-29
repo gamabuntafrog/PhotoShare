@@ -6,7 +6,7 @@ import {
     FormGroup,
     Grid,
     Input,
-    InputLabel, Menu, MenuItem,
+    InputLabel, Menu, MenuItem, Modal,
     OutlinedInput,
     Typography
 } from "@mui/material";
@@ -21,7 +21,7 @@ import {useNavigate} from "react-router-dom";
 import setPreviewImage from "../../utils/setPreviewImage";
 import convertImageToString from "../../utils/convertImageToString";
 import {collectionsApi} from "../../redux/api/collectionsApi";
-import { ICollection } from "../../types/collection";
+import {ICollection} from "../../types/collection";
 
 const postSchema = Yup.object({
     title: Yup.string().max(48, "Max title length is 48 symbols").required(),
@@ -61,19 +61,21 @@ interface IFormData {
     tags: string,
     collection: ICollection
 }
+
 interface ICollectionFormData {
     title: string,
     tags: string
 }
 
-export function CreateCollection({closeModal}: { closeModal: () => void }) {
+export function CreateCollection({closeModal, isModalOpen}: { closeModal: () => void, isModalOpen: boolean }) {
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
-    const [createCollection] = collectionsApi.useCreateMutation()
+    const [createCollection, {data, isLoading: isCollectionCreatingLoading}] = collectionsApi.useCreateMutation()
 
     const {
         register,
         watch,
         setValue,
+        reset: resetForm,
         handleSubmit,
         formState: {errors: {title: titleError, tags: tagsError}}
     } = useForm<ICollectionFormData>({
@@ -88,29 +90,67 @@ export function CreateCollection({closeModal}: { closeModal: () => void }) {
         createNewUserCollection({title, tags: formattedTags})
     })
 
-    const createNewUserCollection = async (body: {title: string, tags: string[]}) => {
-        const create = await createCollection({token, body})
-        console.log(create)
+    const createNewUserCollection = async (body: { title: string, tags: string[] }) => {
 
+        await createCollection({token, body})
+
+        resetForm()
+        closeModal()
     }
 
     return (
-        <Box>
-            <Button color='error' onClick={closeModal}>Close</Button>
-            <Typography variant='h3'>Create new collection</Typography>
-            <form onSubmit={onSubmit}>
-                <InputLabel htmlFor='title' error={!!titleError} sx={{my: 1}}>
-                    {titleError?.message || 'Title'}
-                </InputLabel>
-                <OutlinedInput fullWidth id='title' {...register('title')}/>
-                <InputLabel htmlFor='tags' error={!!tagsError} sx={{my: 1}}>
-                    {tagsError?.message || 'Tags'}
-                </InputLabel>
-                <OutlinedInput fullWidth id='tags' {...register('tags')}/>
-                <Button type='submit'>Create</Button>
-            </form>
+        <Modal
+            open={isModalOpen}
+            onClose={closeModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <Container
+                sx={{
+                    bgcolor: 'background.default',
+                    mx: 2,
+                    py: 2,
+                    px: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: isCollectionCreatingLoading ? 'center' : 'center',
+                    justifyContent: 'center',
+                    minHeight: '50vh'
+                }}
+                maxWidth='tablet'
 
-        </Box>
+            >
+                {isCollectionCreatingLoading ?
+                    <Typography color='text.standard' variant='h1'>Loading...</Typography>
+                    :
+                    <>
+                        <Button color='error'  sx={{alignSelf: 'end'}} onClick={closeModal}>Close</Button>
+                        <Typography color='text.standard' textAlign='center' mx='auto' my={2} variant='h3'>Create new collection</Typography>
+                        <form style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '90%',
+                        }} onSubmit={onSubmit}>
+                            <InputLabel htmlFor='title' error={!!titleError} sx={{my: 1}}>
+                                {titleError?.message || 'Title'}
+                            </InputLabel>
+                            <OutlinedInput fullWidth id='title' {...register('title')}/>
+                            <InputLabel htmlFor='tags' error={!!tagsError} sx={{my: 1}}>
+                                {tagsError?.message || 'Tags'}
+                            </InputLabel>
+                            <OutlinedInput fullWidth id='tags' {...register('tags')}/>
+                            <Button type='submit' variant='outlined' sx={{alignSelf: 'end', mt: 2}}>Create</Button>
+                        </form>
+
+                    </>
+                }
+            </Container>
+        </Modal>
     )
 }
 
@@ -137,7 +177,15 @@ export default function CreatePost() {
         watch,
         setValue,
         handleSubmit,
-        formState: {errors: {title: titleError, body: bodyError, imageList: imageError, tags: tagsError, collection: collectionError}}
+        formState: {
+            errors: {
+                title: titleError,
+                body: bodyError,
+                imageList: imageError,
+                tags: tagsError,
+                collection: collectionError
+            }
+        }
     } = useForm<IFormData>({
         resolver: yupResolver(postSchema),
         mode: 'all'
@@ -208,7 +256,7 @@ export default function CreatePost() {
                 overflowY: 'auto'
             }}
         >
-            {isCreateCollectionModalOpen && <CreateCollection closeModal={closeModal}/>}
+            <CreateCollection closeModal={closeModal} isModalOpen={isCreateCollectionModalOpen}/>
             <Box
                 sx={{
                     display: 'flex',
@@ -243,6 +291,9 @@ export default function CreatePost() {
                                 MenuListProps={{
                                     'aria-labelledby': 'basic-button',
                                 }}
+                                sx={{
+                                    maxHeight: '300px'
+                                }}
                             >
                                 {userCollections.map((collection) => {
                                     // console.log(collection)
@@ -259,7 +310,7 @@ export default function CreatePost() {
                                         handleClose()
                                         openModal()
                                     }}
-                                    sx={{mx: 1, mt: 1}}
+                                    sx={{mx: 1, my: 1}}
                                 >
                                     Create new collection
                                 </Button>

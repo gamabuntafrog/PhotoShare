@@ -25,6 +25,9 @@ declare module '@mui/material/styles' {
         lg: false;
         xl: false;
     }
+    interface TypeText {
+            standard: string
+    }
 }
 
 let root = document.querySelector(':root') as HTMLElement
@@ -43,11 +46,13 @@ export default function ThemeAppWrapper() {
                         default: mode === 'dark' ? '#161616' : '#ededed',
                         paper: mode === 'dark' ? '#242424' : '#cfcfcf'
                     },
-
+                    text: {
+                        standard: mode === 'dark' ? 'white' : 'black'
+                    }
                 },
                 breakpoints: {
                     values: {
-                        mobile: 0,
+                        mobile: 360,
                         tablet: 640,
                         laptop: 1024,
                         desktop: 1200,

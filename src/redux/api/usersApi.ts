@@ -9,15 +9,16 @@ export const usersApi = createApi({
     }),
     tagTypes: ['User'],
     endpoints: (builder) => ({
-        getById: builder.query<IUserWithPosts, {id: string, token: string, posts: boolean}>({
-            query: ({id, token, posts}) => ({
+        getById: builder.query<IUserWithPosts, {id: string, token: string, posts: boolean, collections: boolean}>({
+            query: ({id, token, posts, collections}) => ({
                 url: `/${id}`,
                 method: 'GET',
                 headers: {
                     authorization: `Bearer ${token}`
                 },
                 params: {
-                    posts
+                    posts,
+                    collections
                 }
             }),
             transformResponse: (response: {status: number, data: { user: IUserWithPosts }}) => {

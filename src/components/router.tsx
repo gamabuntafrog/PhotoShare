@@ -8,6 +8,7 @@ import React from "react";
 import Register from "./Register";
 import CreatePost from "./CreatePost";
 import Post from "./Post";
+import Collection from "./Collection";
 
 const privateRouter = createBrowserRouter([
     {
@@ -52,6 +53,15 @@ const privateRouter = createBrowserRouter([
             <>
                 <Header/>
                 <Post/>
+            </>
+        )
+    },
+    {
+        path: "/collections/:id",
+        element: (
+            <>
+                <Header/>
+                <Collection/>
             </>
         )
     },

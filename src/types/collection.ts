@@ -8,3 +8,11 @@ export interface ICollection {
     title: string,
     _id: string
 }
+
+export interface ICollectionWithPosts {
+    author: string,
+    tags: string[],
+    posts: IPost[],
+    title: string,
+    _id: string
+}

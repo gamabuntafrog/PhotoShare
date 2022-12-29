@@ -1,5 +1,5 @@
 import styles from './Posts.module.css'
-import {Avatar, Box, Container, IconButton, List, ListItem, Typography} from "@mui/material";
+import {Avatar, Box, Container, IconButton, ImageList, List, ListItem, Typography} from "@mui/material";
 import {NavLink} from "react-router-dom";
 import PostItem from "../PostItem/PostItem";
 import {useAppSelector} from "../../redux/hooks";
@@ -49,17 +49,28 @@ export default function Posts() {
     }
     return (
         <Box sx={{overflowY: 'auto', height: '91vh'}}>
-            <Box
+            <ImageList
+                // sx={{
+                //     columnCount: isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5,
+                //     columnGap: 3,
+                //     // display: 'grid',
+                //     // gridTemplateColumns: 'repeat(auto-fill, 250px) ',
+                //
+                //     width: '95%',
+                //     py: 2,
+                //     mx: 'auto'
+                // }}
+                variant="masonry"
                 sx={{
-                    columnCount: isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5,
-                    columnGap: 3,
-                    width: '95%',
-                    py: 2,
-                    mx: 'auto'
+                        width: '95%',
+                        py: 2,
+                        mx: 'auto'
                 }}
+                gap={12}
+                cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
-                {result && result.data.posts.map((post) => <PostItem post={post} key={post._id}/>)}
-            </Box>
+                {result ? result.data.posts.map((post) => <PostItem post={post} key={post._id}/>) : <Box/>}
+            </ImageList>
 
         </Box>
     )

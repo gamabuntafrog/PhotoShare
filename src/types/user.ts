@@ -1,4 +1,5 @@
 import {IPost} from "./post";
+import {ICollection, ICollectionWithPosts} from "./collection";
 
 export interface IUser {
     username: string,
@@ -36,6 +37,7 @@ export interface IUserWithPosts {
     updatedAt: string,
     token: string,
     _id: string,
+    collections: ICollectionWithPosts[]
 }
 
 export interface ICurrentUser {
