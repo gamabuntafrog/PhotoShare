@@ -10,7 +10,7 @@ export interface ICollection {
 }
 
 export interface ICollectionWithPosts {
-    author: string,
+    author: IUser,
     tags: string[],
     posts: IPost[],
     title: string,

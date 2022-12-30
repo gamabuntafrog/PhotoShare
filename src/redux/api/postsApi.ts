@@ -12,13 +12,14 @@ export const postsApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:3001/posts'
     }),
-    tagTypes: ['Post'],
+    tagTypes: ['Post', 'Posts'],
     endpoints: (builder) => ({
-        fetchAllPosts: builder.query<IPostsApi, void>({
+        fetchAllPosts: builder.query<IPost[], void>({
             query: () => ({
                 url: '/'
             }),
-            providesTags: result => ['Post']
+            providesTags: result => ['Posts'],
+            transformResponse: (response: IPostsApi) => response.data.posts
         }),
         createPost: builder.mutation<IPost, {
             token: string, body: {
@@ -37,7 +38,7 @@ export const postsApi = createApi({
                     authorization: `Bearer ${token}`,
                 },
             }),
-            invalidatesTags: ['Post']
+            invalidatesTags: ['Post', 'Posts']
         }),
         getPostById: builder.query<IPost, string>({
             query: (id) => ({

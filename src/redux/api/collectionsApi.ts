@@ -1,7 +1,7 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {IUser} from "../../types/user";
 import {IPost} from "../../types/post";
-import { ICollection } from "../../types/collection";
+import {ICollection, ICollectionWithPosts} from "../../types/collection";
 
 
 
@@ -27,6 +27,16 @@ export const collectionsApi = createApi({
                 },
             }),
             invalidatesTags: ['Collection']
+        }),
+        getCollectionWithPosts: builder.query<ICollectionWithPosts, {id: string, token: string}>({
+            query: ({id, token}) => ({
+                url: `/${id}`,
+                method: 'GET',
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+            }),
+            transformResponse: (response: {data: {collection: ICollectionWithPosts}, status: string, code: number}) => response.data.collection
         }),
         getCurrent: builder.query<ICollection[], {token: string}>({
             query: ({token}) => ({

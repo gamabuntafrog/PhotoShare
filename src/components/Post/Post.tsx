@@ -14,7 +14,6 @@ export default function Post() {
     const {data: post, isLoading: isPostLoading} = postsApi.useGetPostByIdQuery(id)
 
 
-
     const theme = useTheme()
     const {main} = theme.palette.primary
 

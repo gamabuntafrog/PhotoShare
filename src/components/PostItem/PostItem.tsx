@@ -29,7 +29,7 @@ export default function PostItem({post}: IPostItem) {
             sx={{
                 px: 0.5,
             }}
-        ><NavLink to={`posts/${postId}`}>
+        ><NavLink to={`/posts/${postId}`}>
             <Typography variant='h6'>{title}</Typography>
         </NavLink>
         </Box>
@@ -37,7 +37,7 @@ export default function PostItem({post}: IPostItem) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'start',
-        }} to={`users/${authorId}`}>
+        }} to={`/users/${authorId}`}>
             <Avatar sx={{width: '40px', height: '40px'}} src={avatarURL as string}/>
             <Typography sx={{ml: 1}}>{username}</Typography>
         </NavLink>
@@ -46,54 +46,49 @@ export default function PostItem({post}: IPostItem) {
     return (
         <ImageListItem
             key={postId}
-            // sx={{
-            //     display: 'inline-block',
-            //     width: '100%',
-            //     mb: 2,
-            //     borderRadius: '8px',
-            // }}
+            sx={{
+                display: 'inline-block',
+            }}
 
         >
-            {/*<Box*/}
-            {/*    sx={{*/}
-            {/*        position: 'relative'*/}
-            {/*    }}*/}
-            {/*>*/}
-            <NavLink to={`posts/${postId}`}>
-                <img
-                    src={postImageURL}
-                    style={{
-                        width: '100%',
-                        objectFit: 'cover',
-                        borderRadius: '8px',
-                        backgroundColor: main
-                    }}
-                />
-            </NavLink>
-            {/*<Box sx={{*/}
-            {/*    display: 'flex', alignItems: 'center', padding: 0.5, alignSelf: 'flex-start', width: '95%',*/}
-            {/*    position: 'absolute',*/}
-            {/*    top: '100%',*/}
-            {/*    transform: 'translateY(-110%)'*/}
-            {/*}}>*/}
-            {/*    <IconButton>*/}
-            {/*        <FavoriteBorderIcon/>*/}
-            {/*    </IconButton>*/}
-            {/*    <Typography sx={{ml: 0.5}}>*/}
-            {/*        {likesCount}*/}
-            {/*    </Typography>*/}
-            {/*    <IconButton sx={{ml: 1}}>*/}
-            {/*        <CommentIcon/>*/}
-            {/*    </IconButton>*/}
-            {/*    <IconButton sx={{ml: 'auto'}}>*/}
-            {/*        <BookmarkBorderIcon/>*/}
-            {/*    </IconButton>*/}
-            {/*</Box>*/}
-            {/*</Box>*/}
-            <ImageListItemBar sx={{display: 'inline-flex'}} position="below" title={PostItemTitle}
-            />
-
-
+            <Box
+                sx={{
+                    position: 'relative'
+                }}
+            >
+                <NavLink to={`/posts/${postId}`}>
+                    <img
+                        src={postImageURL}
+                        style={{
+                            width: '100%',
+                            objectFit: 'cover',
+                            borderRadius: '8px',
+                            backgroundColor: main
+                        }}
+                    />
+                </NavLink>
+                <Box sx={{
+                    display: 'flex', alignItems: 'center', padding: 0.5, alignSelf: 'flex-start', width: '95%',
+                    position: 'absolute',
+                    top: '100%',
+                    transform: 'translateY(-110%)',
+                    zIndex: 100
+                }}>
+                    <IconButton>
+                        <FavoriteBorderIcon/>
+                    </IconButton>
+                    <Typography sx={{ml: 0.5}}>
+                        {likesCount}
+                    </Typography>
+                    <IconButton sx={{ml: 1}}>
+                        <CommentIcon/>
+                    </IconButton>
+                    <IconButton sx={{ml: 'auto'}}>
+                        <BookmarkBorderIcon/>
+                    </IconButton>
+                </Box>
+            </Box>
+            <ImageListItemBar sx={{display: 'inline-flex'}} position="below" title={PostItemTitle}/>
         </ImageListItem>
 
     )

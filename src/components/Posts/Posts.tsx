@@ -1,23 +1,26 @@
 import styles from './Posts.module.css'
 import {Avatar, Box, Container, IconButton, ImageList, List, ListItem, Typography} from "@mui/material";
-import {NavLink} from "react-router-dom";
+import {NavLink, useParams} from "react-router-dom";
 import PostItem from "../PostItem/PostItem";
 import {useAppSelector} from "../../redux/hooks";
 import {postsApi} from "../../redux/api/postsApi";
 import {IUserSliceAuthorized} from "../../types/userSlice";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material/styles";
+import {collectionsApi} from "../../redux/api/collectionsApi";
 
 export default function Posts() {
-    const {data: result, isLoading, error} = postsApi.useFetchAllPostsQuery()
+    const {id = ''} = useParams<{ id: string }>()!
+
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
-    console.log(result)
+
+    const {data: allPosts, isLoading: isAllPostsLoading, error: allPostsError} = postsApi.useFetchAllPostsQuery()
 
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-    if (isLoading) {
+    if (isAllPostsLoading) {
         return (
             <Container className={styles.posts} sx={{
                 margin: '0 auto',
@@ -33,7 +36,7 @@ export default function Posts() {
     }
 
 
-    if (error) {
+    if (allPostsError || !allPosts) {
         return (
             <Container className={styles.posts} sx={{
                 margin: '0 auto',
@@ -50,16 +53,6 @@ export default function Posts() {
     return (
         <Box sx={{overflowY: 'auto', height: '91vh'}}>
             <ImageList
-                // sx={{
-                //     columnCount: isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5,
-                //     columnGap: 3,
-                //     // display: 'grid',
-                //     // gridTemplateColumns: 'repeat(auto-fill, 250px) ',
-                //
-                //     width: '95%',
-                //     py: 2,
-                //     mx: 'auto'
-                // }}
                 variant="masonry"
                 sx={{
                         width: '95%',
@@ -69,7 +62,7 @@ export default function Posts() {
                 gap={12}
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
-                {result ? result.data.posts.map((post) => <PostItem post={post} key={post._id}/>) : <Box/>}
+                {allPosts.map((post) => <PostItem post={post} key={post._id}/>)}
             </ImageList>
 
         </Box>
