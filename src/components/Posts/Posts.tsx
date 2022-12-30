@@ -13,14 +13,46 @@ export default function Posts() {
     const {id = ''} = useParams<{ id: string }>()!
 
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
+    const {savedPosts} = user
 
-    const {data: allPosts, isLoading: isAllPostsLoading, error: allPostsError} = postsApi.useFetchAllPostsQuery()
+    const {data: allPosts, isLoading: isAllPostsLoading, error: allPostsError, refetch: postsRefetch} = postsApi.useFetchAllPostsQuery()
+    const {
+        data: collection,
+        isLoading: isCollectionLoading,
+        error: collectionError,
+        refetch: collectionRefetch
+    } = collectionsApi.useGetCollectionWithPostsQuery({id, token})
+    const [likePostInCollection] = collectionsApi.useLikePostMutation()
+    const [unlikePostInCollection] = collectionsApi.useUnlikePostMutation()
+    const [savePostInCollection] = collectionsApi.useSavePostMutation()
+    const [unsavePostInCollection] = collectionsApi.useUnsavePostMutation()
 
+    // зробити toggleLikeOfPost який приймає isLiked і робить лайк або навпаки
+
+    const toggleLikeOfPost = async ({id, token, isLiked}: {id: string, token: string, isLiked: boolean}) => {
+        if (isLiked) {
+            console.log('liked')
+            await unlikePostInCollection({id, token})
+        } else {
+            await likePostInCollection({id, token})
+        }
+        postsRefetch()
+    }
+
+    const toggleSaveOfPost = async ({id, token, isSaved}: {id: string, token: string, isSaved: boolean}) => {
+        if (isSaved) {
+            console.log('saved')
+            await unsavePostInCollection({id, token})
+        } else {
+            await savePostInCollection({id, token})
+        }
+        postsRefetch()
+    }
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-    if (isAllPostsLoading) {
+    if (isAllPostsLoading || isCollectionLoading) {
         return (
             <Container className={styles.posts} sx={{
                 margin: '0 auto',
@@ -62,7 +94,7 @@ export default function Posts() {
                 gap={12}
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
-                {allPosts.map((post) => <PostItem post={post} key={post._id}/>)}
+                {allPosts.map((post) => <PostItem toggleLikeOfPost={toggleLikeOfPost} toggleSaveOfPost={toggleSaveOfPost} post={post} key={post._id}/>)}
             </ImageList>
 
         </Box>

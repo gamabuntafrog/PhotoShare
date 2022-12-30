@@ -240,8 +240,6 @@ export default function UserProfile() {
                     <Box
                         sx={{
                             display: 'grid',
-                            // columnCount: ,
-                            // columnGap: 3,
                             gridTemplateColumns: `repeat(${calculateRows}, 1fr)`,
                             gap: 3,
 
@@ -252,9 +250,6 @@ export default function UserProfile() {
 
                             return (
                                 <NavLink style={{
-                                    // width: '100%',
-                                    // height: '100%',
-                                    // display: 'block'
                                     position: 'relative',
                                     backgroundColor: theme.palette.primary.main,
                                     borderRadius: '8px',
@@ -307,7 +302,7 @@ export default function UserProfile() {
                                                     cols={cols}
                                                     key={i}
                                                 >
-                                                    <img style={{objectFit: isLengthSmall ? 'cover' : 'contain'}} src={post.image.url}/>
+                                                    <img src={post.image.url}/>
                                                 </ImageListItem>
                                             )
                                         })}

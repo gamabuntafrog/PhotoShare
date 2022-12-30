@@ -19,7 +19,8 @@ export interface IPost {
     title: string,
     body: string,
     tags: string[],
-    usersLiked: (IUser | null)[] ,
+    usersLiked: string[],
+    usersSaved: string[],
     likesCount: number,
     createdAt: string,
     updatedAt: string

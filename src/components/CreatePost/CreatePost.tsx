@@ -17,7 +17,7 @@ import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from 
 import {useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
 import {postsApi} from "../../redux/api/postsApi";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import setPreviewImage from "../../utils/setPreviewImage";
 import convertImageToString from "../../utils/convertImageToString";
 import {collectionsApi} from "../../redux/api/collectionsApi";
@@ -25,7 +25,7 @@ import {ICollection} from "../../types/collection";
 import CreateCollectionModal from "../CreateCollectionModal";
 
 const postSchema = Yup.object({
-    title: Yup.string().max(48, "Max title length is 48 symbols").required(),
+    title: Yup.string().max(48, "Max title length is 48 symbols"),
     body: Yup.string().max(256, "Max body length is 48 symbols"),
     imageList: Yup.mixed().required('image is required').test('required', 'file is required', (value) => {
         return value && value[0]
@@ -39,12 +39,7 @@ const postSchema = Yup.object({
 
         return !check
     }),
-    collection: Yup.object({
-        title: Yup.string().required(),
-        tags: Yup.array().required(),
-        author: Yup.string().required(),
-        _id: Yup.string().required()
-    }).required()
+    collectionId: Yup.string().required()
 }).required()
 
 
@@ -54,14 +49,12 @@ interface IFormData {
     body: string,
     imageList: FileList,
     tags: string,
-    collection: ICollection
+    collectionId: string
 }
 
 
-
-
-
 export default function CreatePost() {
+    const {id: collectionId = ''} = useParams<{ id: string }>()!
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
 
     const [avatarFile, setImageFile] = useState<null | string>(null);
@@ -72,7 +65,7 @@ export default function CreatePost() {
     const openModal = () => setIsCreateCollectionModalOpen(true)
 
     const {data: userCollections = [], isLoading: isUserCollectionsLoading} = collectionsApi.useGetCurrentQuery({token})
-    // console.log(userCollections)
+
     const [createPost] = postsApi.useCreatePostMutation()
 
 
@@ -90,7 +83,7 @@ export default function CreatePost() {
                 body: bodyError,
                 imageList: imageError,
                 tags: tagsError,
-                collection: collectionError
+                collectionId: collectionIdError
             }
         }
     } = useForm<IFormData>({
@@ -98,17 +91,19 @@ export default function CreatePost() {
         mode: 'all'
     });
 
-    const willSavedInCollection = watch('collection')
-    // console.log('collectionERror: ',collectionError)
-    // console.log(willSavedInCollection)
 
-    const onSubmit = handleSubmit(async ({title, body, imageList, tags, collection}) => {
+    const findIndexOfCollection = (id: string) => userCollections.findIndex(({_id}) => _id === id)
+    useEffect(() => void setValue('collectionId', collectionId), []);
+
+    const willSavedInCollectionIndex = !!watch('collectionId') ? findIndexOfCollection(watch('collectionId')) : findIndexOfCollection(collectionId)
+
+    console.log(willSavedInCollectionIndex)
+
+    const onSubmit = handleSubmit(async ({title, body, imageList, tags, collectionId}) => {
         const filteredTags = tags.split(' ').filter((str) => str !== '')
         const image = await convertImageToString(imageList)
 
-        console.log(collection)
-
-        await uploadPhoto({title, body, image, tags: filteredTags, collection})
+        await uploadPhoto({title, body, image, tags: filteredTags, collectionId})
     });
 
     // переробити завантаження аватарки так само як тут
@@ -117,7 +112,7 @@ export default function CreatePost() {
         body: string,
         image: string,
         tags: string[],
-        collection: ICollection
+        collectionId: string
     }) => {
         setIsPostCreating(true)
 
@@ -185,10 +180,10 @@ export default function CreatePost() {
                                 aria-expanded={open ? 'true' : undefined}
                                 onClick={handleClick}
                                 sx={{
-                                    color: !!collectionError ? 'red' : 'primary.main'
+                                    color: !!collectionIdError ? 'red' : 'primary.main'
                                 }}
                             >
-                                {willSavedInCollection?.title || 'Select collection'}
+                                {userCollections[willSavedInCollectionIndex]?.title || 'Select collection'}
                             </Button>
                             <Menu
                                 id="basic-menu"
@@ -207,7 +202,7 @@ export default function CreatePost() {
                                     return (
                                         <MenuItem key={collection._id} onClick={() => {
                                             handleClose()
-                                            setValue('collection', collection)
+                                            setValue('collectionId', collection._id)
                                         }}>{collection.title}</MenuItem>
                                     )
                                 })}
@@ -247,7 +242,7 @@ export default function CreatePost() {
                                     sx={{cursor: 'pointer', color: 'inherit', width: '100%'}}
                                     htmlFor='imageList'
                                 >
-                                    {imageError?.message || watch('imageList') ? 'Selected' : 'Select a photo'}
+                                    {imageError?.message || (watch('imageList')?.length > 0) ? 'Selected' : 'Select a photo'}
                                 </InputLabel>
                                 <input
                                     {...register('imageList')}

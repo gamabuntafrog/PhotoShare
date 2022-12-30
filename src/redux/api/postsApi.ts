@@ -27,7 +27,7 @@ export const postsApi = createApi({
                 body: string,
                 image: string,
                 tags: string[],
-                collection: ICollection
+                collectionId: string
             }
         }>({
             query: ({token, body}) => ({

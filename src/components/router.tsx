@@ -48,6 +48,15 @@ const privateRouter = createBrowserRouter([
         )
     },
     {
+        path: "/post/create/:id",
+        element: (
+            <>
+                <Header/>
+                <CreatePost/>
+            </>
+        )
+    },
+    {
         path: "/posts/:id",
         element: (
             <>

@@ -47,6 +47,7 @@ export interface ICurrentUser {
         url: string | null,
         id: string | null
     },
+    collections: string[]
     age: number,
     posts: string[],
     savedPosts: string[],

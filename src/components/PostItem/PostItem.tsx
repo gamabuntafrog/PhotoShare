@@ -6,19 +6,29 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import CommentIcon from '@mui/icons-material/Comment';
 import {IPost} from "../../types/post";
-import {FC} from "react";
-
+import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import {useAppSelector} from "../../redux/hooks";
+import {IUserSliceAuthorized} from "../../types/userSlice";
 
 interface IPostItem {
     post: IPost,
+    toggleLikeOfPost: ({id, token, isLiked}: {id: string, token: string, isLiked: boolean}) => void,
+    toggleSaveOfPost: ({id, token, isSaved}: {id: string, token: string, isSaved: boolean}) => void,
 }
 
 // зробити появу кнопок на картинці при ховері на айтем
 // зробити окрему сторінку з постом
 
-export default function PostItem({post}: IPostItem) {
-    const {_id: postId, author, title, body, tags, likesCount, image: {url: postImageURL}} = post
+export default function PostItem({post, toggleLikeOfPost, toggleSaveOfPost}: IPostItem)  {
+    const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
+
+    const {_id: postId, author, title, body, tags, likesCount, image: {url: postImageURL}, usersLiked, usersSaved} = post
     const {username, _id: authorId, avatar: {url: avatarURL = ''}} = author
+    console.log(usersLiked)
+
+    const isSaved = !!usersSaved.find((id) => id === user._id)
+    const isLiked = !!usersLiked.find((id) => id === user._id)
 
     const formattedTags = tags.join(' ')
     const theme = useTheme()
@@ -48,44 +58,68 @@ export default function PostItem({post}: IPostItem) {
             key={postId}
             sx={{
                 display: 'inline-block',
+                '&:hover .buttonsBar': {
+                    opacity: 1
+                }
             }}
 
         >
             <Box
                 sx={{
-                    position: 'relative'
+                    position: 'relative',
+
+                    '&:hover .postImage': {
+                        filter: 'brightness(80%)',
+                    },
                 }}
             >
-                <NavLink to={`/posts/${postId}`}>
+                <NavLink style={{position: 'relative'}} to={`/posts/${postId}`}>
                     <img
                         src={postImageURL}
                         style={{
                             width: '100%',
                             objectFit: 'cover',
                             borderRadius: '8px',
-                            backgroundColor: main
+                            backgroundColor: main,
                         }}
+                        className='postImage'
                     />
                 </NavLink>
-                <Box sx={{
-                    display: 'flex', alignItems: 'center', padding: 0.5, alignSelf: 'flex-start', width: '95%',
-                    position: 'absolute',
-                    top: '100%',
-                    transform: 'translateY(-110%)',
-                    zIndex: 100
-                }}>
-                    <IconButton>
-                        <FavoriteBorderIcon/>
+                <Box
+                    sx={{
+                        display: 'flex', alignItems: 'center', padding: 0.5, alignSelf: 'flex-start', width: '95%',
+                        position: 'absolute',
+                        top: '0',
+                        right: '0',
+                        zIndex: 100,
+                        opacity: 0
+                    }}
+                    className='buttonsBar'
+                >
+                    <IconButton onClick={() => toggleSaveOfPost({id: postId, token, isSaved})} sx={{ml: 'auto'}}>
+                        {isSaved ? <BookmarkAddedIcon/> : <BookmarkBorderIcon />}
+                    </IconButton>
+                </Box>
+                <Box
+                    sx={{
+                        display: 'flex', alignItems: 'center', padding: 0.5, alignSelf: 'flex-start', width: '95%',
+                        position: 'absolute',
+                        top: '100%',
+                        transform: 'translateY(-110%)',
+                        zIndex: 100,
+                        opacity: 0
+                    }}
+                    className='buttonsBar'
+                >
+                    <IconButton onClick={() => {
+                        toggleLikeOfPost({id: postId, token, isLiked})
+                    }}>
+                        {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
                     </IconButton>
                     <Typography sx={{ml: 0.5}}>
                         {likesCount}
                     </Typography>
-                    <IconButton sx={{ml: 1}}>
-                        <CommentIcon/>
-                    </IconButton>
-                    <IconButton sx={{ml: 'auto'}}>
-                        <BookmarkBorderIcon/>
-                    </IconButton>
+
                 </Box>
             </Box>
             <ImageListItemBar sx={{display: 'inline-flex'}} position="below" title={PostItemTitle}/>
