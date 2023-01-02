@@ -46,7 +46,45 @@ export const postsApi = createApi({
             }),
             providesTags: result => ['Post'],
             transformResponse: (response: { code: number, data: { post: IPost }, status: string }) => response.data.post
-        })
+        }),
+        likePost: builder.mutation<void, {token: string, postId: string}>({
+            query: ({token, postId}) => ({
+                url: `/${postId}/like`,
+                method: 'PATCH',
+                headers: {
+                    authorization: `Bearer ${token}`,
+                }
+            }),
+        }),
+        unlikePost: builder.mutation<void, {token: string, postId: string}>({
+            query: ({token, postId}) => ({
+                url: `/${postId}/unlike`,
+                method: 'PATCH',
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+            })
+        }),
+        savePost: builder.mutation<IPost, {token: string, id: string}>({
+            query: ({token, id}) => ({
+                url: `/${id}/save`,
+                method: 'PATCH',
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+                invalidatesTags: ['Collection']
+            })
+        }),
+        unsavePost: builder.mutation<IPost, {token: string, id: string}>({
+            query: ({token, id}) => ({
+                url: `/${id}/unsave`,
+                method: 'PATCH',
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+                invalidatesTags: ['Collection']
+            })
+        }),
     })
 })
 

@@ -10,25 +10,37 @@ import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
+import {useState} from "react";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {SerializedError} from "@reduxjs/toolkit";
+import {collectionsApi} from "../../redux/api/collectionsApi";
+import {IToggleLikeProps, useToggleLike} from "../../types/types";
 
 interface IPostItem {
     post: IPost,
-    toggleLikeOfPost: ({id, token, isLiked}: {id: string, token: string, isLiked: boolean}) => void,
-    toggleSaveOfPost: ({id, token, isSaved}: {id: string, token: string, isSaved: boolean}) => void,
+    useToggleLike: useToggleLike
 }
 
-// зробити появу кнопок на картинці при ховері на айтем
-// зробити окрему сторінку з постом
 
-export default function PostItem({post, toggleLikeOfPost, toggleSaveOfPost}: IPostItem)  {
+export default function PostItem({post, useToggleLike}: IPostItem) {
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
-
-    const {_id: postId, author, title, body, tags, likesCount, image: {url: postImageURL}, usersLiked, usersSaved} = post
+    const {
+        _id: postId,
+        author,
+        title,
+        body,
+        tags,
+        likesCount,
+        image: {url: postImageURL},
+        usersLiked,
+        usersSaved
+    } = post
     const {username, _id: authorId, avatar: {url: avatarURL = ''}} = author
-    console.log(usersLiked)
 
     const isSaved = !!usersSaved.find((id) => id === user._id)
-    const isLiked = !!usersLiked.find((id) => id === user._id)
+    const findIsPostLiked = !!usersLiked.find((id) => id === user._id)
+
+    const [{isLiked, likes}, toggleLike] = useToggleLike({postId, isPostLiked: findIsPostLiked, likesCount})
 
     const formattedTags = tags.join(' ')
     const theme = useTheme()
@@ -96,9 +108,9 @@ export default function PostItem({post, toggleLikeOfPost, toggleSaveOfPost}: IPo
                     }}
                     className='buttonsBar'
                 >
-                    <IconButton onClick={() => toggleSaveOfPost({id: postId, token, isSaved})} sx={{ml: 'auto'}}>
-                        {isSaved ? <BookmarkAddedIcon/> : <BookmarkBorderIcon />}
-                    </IconButton>
+                    {/*<IconButton onClick={() => toggleSaveOfPost({id: postId, token, isSaved})} sx={{ml: 'auto'}}>*/}
+                    {/*    {isSaved ? <BookmarkAddedIcon/> : <BookmarkBorderIcon />}*/}
+                    {/*</IconButton>*/}
                 </Box>
                 <Box
                     sx={{
@@ -111,15 +123,12 @@ export default function PostItem({post, toggleLikeOfPost, toggleSaveOfPost}: IPo
                     }}
                     className='buttonsBar'
                 >
-                    <IconButton onClick={() => {
-                        toggleLikeOfPost({id: postId, token, isLiked})
-                    }}>
+                    <IconButton onClick={toggleLike}>
                         {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
                     </IconButton>
                     <Typography sx={{ml: 0.5}}>
-                        {likesCount}
+                        {likes}
                     </Typography>
-
                 </Box>
             </Box>
             <ImageListItemBar sx={{display: 'inline-flex'}} position="below" title={PostItemTitle}/>

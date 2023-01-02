@@ -8,6 +8,7 @@ import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import styles from "../Posts/Posts.module.css";
 import PostItem from "../PostItem";
+import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
 
 const useSavedAndLikedPostsInfo = ({savedPosts, likedPosts}: {savedPosts: string[], likedPosts: string[]}) => {
     const existingPosts: {[key: string]: {isSaved?: boolean, isLiked?: boolean}} = {} ;
@@ -43,36 +44,14 @@ export default function Collection() {
         refetch: collectionRefetch
     } = collectionsApi.useGetCollectionWithPostsQuery({id, token})
     console.log(collection)
-    const [likePostInCollection] = collectionsApi.useLikePostMutation()
-    const [unlikePostInCollection] = collectionsApi.useUnlikePostMutation()
-    const [savePostInCollection] = collectionsApi.useSavePostMutation()
-    const [unsavePostInCollection] = collectionsApi.useUnsavePostMutation()
-
-    // зробити toggleLikeOfPost який приймає isLiked і робить лайк або навпаки
-
-    const toggleLikeOfPost = async ({id, token, isLiked}: {id: string, token: string, isLiked: boolean}) => {
-        if (isLiked) {
-            console.log('liked')
-            await unlikePostInCollection({id, token})
-        } else {
-            await likePostInCollection({id, token})
-        }
-        collectionRefetch()
-    }
-
-    const toggleSaveOfPost = async ({id, token, isSaved}: {id: string, token: string, isSaved: boolean}) => {
-        if (isSaved) {
-            console.log('saved')
-            await unsavePostInCollection({id, token})
-        } else {
-            await savePostInCollection({id, token})
-        }
-        collectionRefetch()
-    }
 
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
+
+    const useToggleLike = useToggleLikeOfPostCreator({
+        token
+    })
 
     if (isCollectionLoading) {
         return (
@@ -158,7 +137,7 @@ export default function Collection() {
                 gap={12}
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
-                {posts.map((post) => <PostItem toggleSaveOfPost={toggleSaveOfPost} toggleLikeOfPost={toggleLikeOfPost} post={post} key={post._id}/>)}
+                {posts.map((post) => <PostItem useToggleLike={useToggleLike} post={post} key={post._id}/>)}
             </ImageList>
 
         </Box>

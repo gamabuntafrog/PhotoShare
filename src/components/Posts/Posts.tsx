@@ -8,6 +8,11 @@ import {IUserSliceAuthorized} from "../../types/userSlice";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material/styles";
 import {collectionsApi} from "../../redux/api/collectionsApi";
+import {useEffect} from "react";
+import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
+
+
+
 
 export default function Posts() {
     const {id = ''} = useParams<{ id: string }>()!
@@ -15,44 +20,23 @@ export default function Posts() {
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
     const {savedPosts} = user
 
-    const {data: allPosts, isLoading: isAllPostsLoading, error: allPostsError, refetch: postsRefetch} = postsApi.useFetchAllPostsQuery()
     const {
-        data: collection,
-        isLoading: isCollectionLoading,
-        error: collectionError,
-        refetch: collectionRefetch
-    } = collectionsApi.useGetCollectionWithPostsQuery({id, token})
-    const [likePostInCollection] = collectionsApi.useLikePostMutation()
-    const [unlikePostInCollection] = collectionsApi.useUnlikePostMutation()
-    const [savePostInCollection] = collectionsApi.useSavePostMutation()
-    const [unsavePostInCollection] = collectionsApi.useUnsavePostMutation()
+        data: allPosts,
+        isLoading: isAllPostsLoading,
+        error: allPostsError,
+    } = postsApi.useFetchAllPostsQuery()
 
-    // зробити toggleLikeOfPost який приймає isLiked і робить лайк або навпаки
 
-    const toggleLikeOfPost = async ({id, token, isLiked}: {id: string, token: string, isLiked: boolean}) => {
-        if (isLiked) {
-            console.log('liked')
-            await unlikePostInCollection({id, token})
-        } else {
-            await likePostInCollection({id, token})
-        }
-        postsRefetch()
-    }
+    const useToggleLike = useToggleLikeOfPostCreator({
+        token
+    })
 
-    const toggleSaveOfPost = async ({id, token, isSaved}: {id: string, token: string, isSaved: boolean}) => {
-        if (isSaved) {
-            console.log('saved')
-            await unsavePostInCollection({id, token})
-        } else {
-            await savePostInCollection({id, token})
-        }
-        postsRefetch()
-    }
+
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-    if (isAllPostsLoading || isCollectionLoading) {
+    if (isAllPostsLoading) {
         return (
             <Container className={styles.posts} sx={{
                 margin: '0 auto',
@@ -87,14 +71,14 @@ export default function Posts() {
             <ImageList
                 variant="masonry"
                 sx={{
-                        width: '95%',
-                        py: 2,
-                        mx: 'auto'
+                    width: '95%',
+                    py: 2,
+                    mx: 'auto'
                 }}
                 gap={12}
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
-                {allPosts.map((post) => <PostItem toggleLikeOfPost={toggleLikeOfPost} toggleSaveOfPost={toggleSaveOfPost} post={post} key={post._id}/>)}
+                {allPosts.map((post) => <PostItem useToggleLike={useToggleLike} post={post} key={post._id}/>)}
             </ImageList>
 
         </Box>

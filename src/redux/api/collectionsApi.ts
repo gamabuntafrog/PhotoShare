@@ -50,45 +50,5 @@ export const collectionsApi = createApi({
             providesTags: result => ['Collection'],
             transformResponse: (response: {data: {collections: ICollection[]}, status: string, code: number}) => response.data.collections
         }),
-        likePost: builder.mutation<IPost, {token: string, id: string}>({
-            query: ({token, id}) => ({
-                url: `/${id}/like`,
-                method: 'PATCH',
-                headers: {
-                    authorization: `Bearer ${token}`,
-                },
-                invalidatesTags: ['Collection']
-            })
-        }),
-        unlikePost: builder.mutation<IPost, {token: string, id: string}>({
-            query: ({token, id}) => ({
-                url: `/${id}/unlike`,
-                method: 'PATCH',
-                headers: {
-                    authorization: `Bearer ${token}`,
-                },
-                invalidatesTags: ['Collection']
-            })
-        }),
-        savePost: builder.mutation<IPost, {token: string, id: string}>({
-            query: ({token, id}) => ({
-                url: `/${id}/save`,
-                method: 'PATCH',
-                headers: {
-                    authorization: `Bearer ${token}`,
-                },
-                invalidatesTags: ['Collection']
-            })
-        }),
-        unsavePost: builder.mutation<IPost, {token: string, id: string}>({
-            query: ({token, id}) => ({
-                url: `/${id}/unsave`,
-                method: 'PATCH',
-                headers: {
-                    authorization: `Bearer ${token}`,
-                },
-                invalidatesTags: ['Collection']
-            })
-        }),
     })
 })
