@@ -2,18 +2,24 @@ import {
     IToggleLikeProps,
     useToggleLikeReturnValue
 } from "../types/types";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {postsApi} from "../redux/api/postsApi";
 
 
-export default function useToggleLikeOfPostCreator({token}: { token: string }) {
+export default function useToggleLikeOfPostCreator({token, currentUserId}: { token: string, currentUserId: string }) {
 
     const [likePost] = postsApi.useLikePostMutation()
     const [unlikePost] = postsApi.useUnlikePostMutation()
 
-    return function useToggleLike({isPostLiked, likesCount, postId}: IToggleLikeProps): useToggleLikeReturnValue {
+    return function useToggleLike({usersLiked, likesCount, postId, skip}: IToggleLikeProps): useToggleLikeReturnValue {
+        const findIsPostLiked = usersLiked.some((id) => id === currentUserId)
 
-        const [{isLiked, likes}, setLikesState] = useState({isLiked: isPostLiked, likes: likesCount});
+        const [{isLiked, likes}, setLikesState] = useState({isLiked: findIsPostLiked, likes: likesCount});
+
+        useEffect(() => {
+            setLikesState({isLiked: findIsPostLiked, likes: likesCount})
+        }, [skip]);
+
 
         const incLike = () => setLikesState(({isLiked, likes}) => {
             return {likes: ++likes, isLiked: !isLiked}
@@ -38,6 +44,7 @@ export default function useToggleLikeOfPostCreator({token}: { token: string }) {
                 console.log(e)
             }
         }
+
 
         return [{isLiked, likes}, toggleLike] as const
     }

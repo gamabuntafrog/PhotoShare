@@ -10,11 +10,10 @@ export default function useToggleSaveOfPostCreator({token}: { token: string }) {
     const [savePost] = postsApi.useSavePostMutation()
     const [unsavePost] = postsApi.useUnsavePostMutation()
     const {data: userCollections = [], isLoading, refetch} = collectionsApi.useGetCurrentQuery({token})
-    console.log(userCollections)
-    function useToggleSave({savesCount, postId}: IToggleSaveProps): useToggleSaveReturnValue {
-        console.log(userCollections)
 
-        const findIsSaved = userCollections.some(({posts}) => posts.find((id) => id === postId))
+    function useToggleSave({savesCount, postId, skip}: IToggleSaveProps): useToggleSaveReturnValue {
+
+        const findIsSaved = userCollections.some(({posts}) => posts.find((id) => id.toString() === postId))
         const getSavesInfo = userCollections.map(({title, posts, _id}) => {
             const findPost = posts.find((id) => id === postId)
 
@@ -25,9 +24,6 @@ export default function useToggleSaveOfPostCreator({token}: { token: string }) {
             }
         })
 
-
-
-
         const [{isSaved, saves, savesInfo}, setSavesState] = useState({
             isSaved: findIsSaved,
             saves: savesCount,
@@ -36,16 +32,12 @@ export default function useToggleSaveOfPostCreator({token}: { token: string }) {
 
         useEffect(() => {
             setSavesState(prev => {
-                return {...prev, savesInfo: getSavesInfo}
+                return {...prev, savesInfo: getSavesInfo, isSaved: findIsSaved}
             })
-        }, [userCollections]);
+        }, [userCollections, skip]);
 
         const addCollectionInList = (newCollection: ICollection) => {
-            // userCollections.push(newCollection)
-            //
-            // setSavesState(prev => {
-            //     return {...prev, savesInfo: getSavesInfo}
-            // })
+
         }
 
         const toggleSave = async ({collectionId, isSavedInCollection}: { collectionId: string, isSavedInCollection: boolean }) => {

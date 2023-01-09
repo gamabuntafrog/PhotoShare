@@ -16,7 +16,7 @@ export default function Collection() {
     const {id = ''} = useParams<{ id: string }>()!
 
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
-    const {savedPosts, likedPosts} = user
+    const {savedPosts, likedPosts, _id: currentUserId} = user
 
 
     const {
@@ -31,7 +31,7 @@ export default function Collection() {
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-    const useToggleLike = useToggleLikeOfPostCreator({token})
+    const useToggleLike = useToggleLikeOfPostCreator({token, currentUserId})
     const [{isLoading}, useToggleSave] = useToggleSaveOfPostCreator({token})
 
     if (isCollectionLoading || isLoading) {

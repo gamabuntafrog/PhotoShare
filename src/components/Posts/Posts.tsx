@@ -18,7 +18,7 @@ export default function Posts() {
     const {id = ''} = useParams<{ id: string }>()!
 
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
-    const {savedPosts} = user
+    const {savedPosts, _id: currentUserId} = user
 
     const {
         data: allPosts,
@@ -27,7 +27,7 @@ export default function Posts() {
     } = postsApi.useFetchAllPostsQuery()
 
 
-    const useToggleLike = useToggleLikeOfPostCreator({token})
+    const useToggleLike = useToggleLikeOfPostCreator({token, currentUserId})
     const [{isLoading, refetch}, useToggleSave] = useToggleSaveOfPostCreator({token})
 
     const theme = useTheme()

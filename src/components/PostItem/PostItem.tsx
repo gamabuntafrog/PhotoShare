@@ -50,9 +50,9 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
     } = post
     const {username, _id: authorId, avatar: {url: avatarURL = ''}} = author
 
-    const findIsPostLiked = !!usersLiked.find((id) => id === user._id)
 
-    const [{isLiked, likes}, toggleLike] = useToggleLike({postId, isPostLiked: findIsPostLiked, likesCount})
+
+    const [{isLiked, likes}, toggleLike] = useToggleLike({postId, usersLiked, likesCount})
 
     const formattedTags = tags.join(' ')
     const theme = useTheme()
@@ -65,10 +65,14 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
         <Box
             sx={{
                 px: 0.5,
+                pb: 1,
             }}
-        ><NavLink to={`/posts/${postId}`}>
-            <Typography variant='h6'>{title}</Typography>
-        </NavLink>
+        >
+            <NavLink to={`/posts/${postId}`}>
+                <Typography variant='h6'>{title}</Typography>
+                <Typography sx={{mt: -1}} variant='caption'>{formattedTags}</Typography>
+
+            </NavLink>
         </Box>
         <NavLink style={{
             display: 'flex',
@@ -141,7 +145,7 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
                         onClick={handleClick}
                         sx={{ml: 'auto'}}
                     >
-                        {isSaved ? <BookmarkAddedIcon/> : <BookmarkBorderIcon />}
+                        {isSaved ? <BookmarkAddedIcon/> : <BookmarkBorderIcon/>}
                     </IconButton>
                     <Box>
                         <Menu

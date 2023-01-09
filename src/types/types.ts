@@ -3,9 +3,10 @@ import {IPost} from "./post";
 import {ICollection} from "./collection";
 
 export interface IToggleLikeProps {
-    isPostLiked: boolean,
+    usersLiked: string[],
     likesCount: number,
     postId: string,
+    skip?: boolean
 }
 
 export type useToggleLikeReturnValue = readonly [{readonly isLiked: boolean, readonly likes: number}, (() => Promise<void>)]
@@ -15,6 +16,7 @@ export type useToggleLikeType = (args: IToggleLikeProps) => useToggleLikeReturnV
 export interface IToggleSaveProps {
     savesCount: number,
     postId: string,
+    skip?: boolean
 }
 
 export type savesInfoType = {postId: string, savedInCollectionTitle: string, collectionId: string, isSaved: boolean}
