@@ -50,7 +50,7 @@ export interface ICurrentUser {
     collections: string[]
     age: number,
     posts: string[],
-    savedPosts: string[],
+    savedPosts: {post: string, collection: string}[],
     likedPosts: string[],
     subscribes: string[],
     subscribers: string[],

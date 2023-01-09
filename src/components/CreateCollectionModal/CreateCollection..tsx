@@ -6,6 +6,7 @@ import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {Button, Container, InputLabel, Modal, OutlinedInput, Typography} from "@mui/material";
 import React from "react";
 import * as Yup from "yup";
+import {useNavigate, useParams} from "react-router-dom";
 
 const collectionSchema = Yup.object({
     title: Yup.string().max(48, "Max title length is 48 symbols").required(),
@@ -17,10 +18,12 @@ const collectionSchema = Yup.object({
 
 interface ICollectionFormData {
     title: string,
-    tags: string
+    tags: string,
 }
 
-export default function CreateCollectionModal({closeModal, isModalOpen}: { closeModal: () => void, isModalOpen: boolean }) {
+export default function CreateCollectionModal({closeModal, isModalOpen, refetch}: { closeModal: () => void, isModalOpen: boolean, refetch?: () => void }) {
+    const {id: collectionId = ''} = useParams<{ id: string }>()!
+
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
     const [createCollection, {data, isLoading: isCollectionCreatingLoading}] = collectionsApi.useCreateMutation()
 
@@ -36,6 +39,8 @@ export default function CreateCollectionModal({closeModal, isModalOpen}: { close
         mode: 'all'
     });
 
+    const navigate = useNavigate()
+
     const onSubmit = handleSubmit(({title, tags}) => {
         const formattedTags = tags.split(' ')
         console.log({title, tags})
@@ -45,10 +50,20 @@ export default function CreateCollectionModal({closeModal, isModalOpen}: { close
 
     const createNewUserCollection = async (body: { title: string, tags: string[] }) => {
 
-        await createCollection({token, body})
+        const collection = await createCollection({token, body})
 
         resetForm()
         closeModal()
+
+        if (!!refetch && 'data' in collection) {
+            refetch()
+            console.log(collection.data)
+        }
+
+        if (!!collectionId && 'data' in collection) {
+
+            navigate(collection.data._id)
+        }
     }
 
     return (

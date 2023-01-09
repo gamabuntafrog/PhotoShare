@@ -1,4 +1,14 @@
-import {Avatar, Box, IconButton, ListItem, Typography, Link, ImageListItem, ImageListItemBar} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    IconButton,
+    ListItem,
+    Typography,
+    Link,
+    ImageListItem,
+    ImageListItemBar,
+    MenuItem, Button, Menu
+} from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import styles from "../Posts/Posts.module.css";
 import {NavLink} from "react-router-dom";
@@ -10,20 +20,23 @@ import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
-import {useState} from "react";
+import React, {Dispatch, useState} from "react";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {collectionsApi} from "../../redux/api/collectionsApi";
-import {IToggleLikeProps, useToggleLike} from "../../types/types";
+import {IToggleLikeProps, useToggleLikeType, useToggleSaveType} from "../../types/types";
 
 interface IPostItem {
     post: IPost,
-    useToggleLike: useToggleLike
+    useToggleLike: useToggleLikeType,
+    useToggleSave: useToggleSaveType,
+    openModal: () => void
 }
 
 
-export default function PostItem({post, useToggleLike}: IPostItem) {
+export default function PostItem({post, useToggleLike, useToggleSave, openModal}: IPostItem) {
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
+
     const {
         _id: postId,
         author,
@@ -31,13 +44,12 @@ export default function PostItem({post, useToggleLike}: IPostItem) {
         body,
         tags,
         likesCount,
+        savesCount,
         image: {url: postImageURL},
         usersLiked,
-        usersSaved
     } = post
     const {username, _id: authorId, avatar: {url: avatarURL = ''}} = author
 
-    const isSaved = !!usersSaved.find((id) => id === user._id)
     const findIsPostLiked = !!usersLiked.find((id) => id === user._id)
 
     const [{isLiked, likes}, toggleLike] = useToggleLike({postId, isPostLiked: findIsPostLiked, likesCount})
@@ -45,6 +57,9 @@ export default function PostItem({post, useToggleLike}: IPostItem) {
     const formattedTags = tags.join(' ')
     const theme = useTheme()
     const {main} = theme.palette.primary
+
+
+    const [{isSaved, saves, savesInfo}, toggleSave, addNewCollectionInSavesInfo] = useToggleSave({postId, savesCount})
 
     const PostItemTitle = <>
         <Box
@@ -64,6 +79,16 @@ export default function PostItem({post, useToggleLike}: IPostItem) {
             <Typography sx={{ml: 1}}>{username}</Typography>
         </NavLink>
     </>
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
         <ImageListItem
@@ -108,9 +133,52 @@ export default function PostItem({post, useToggleLike}: IPostItem) {
                     }}
                     className='buttonsBar'
                 >
-                    {/*<IconButton onClick={() => toggleSaveOfPost({id: postId, token, isSaved})} sx={{ml: 'auto'}}>*/}
-                    {/*    {isSaved ? <BookmarkAddedIcon/> : <BookmarkBorderIcon />}*/}
-                    {/*</IconButton>*/}
+                    <IconButton
+                        id="basic-button"
+                        aria-controls={open ? 'basic-menu' : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? 'true' : undefined}
+                        onClick={handleClick}
+                        sx={{ml: 'auto'}}
+                    >
+                        {isSaved ? <BookmarkAddedIcon/> : <BookmarkBorderIcon />}
+                    </IconButton>
+                    <Box>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                            sx={{
+                                maxHeight: '300px'
+                            }}
+                        >
+                            {savesInfo.map(({savedInCollectionTitle, postId, isSaved, collectionId}, i) => {
+                                return (
+                                    <MenuItem key={i} onClick={() => {
+                                        handleClose()
+                                        toggleSave({collectionId, isSavedInCollection: isSaved})
+                                    }}>
+                                        {isSaved ? 'saved in' : 'not saved in'} {savedInCollectionTitle}
+                                    </MenuItem>
+                                )
+                            })}
+                            <Button
+                                variant='contained'
+                                onClick={() => {
+                                    handleClose()
+                                    openModal()
+
+                                }}
+                                sx={{mx: 1, my: 1}}
+                            >
+                                Create new collection
+                            </Button>
+                        </Menu>
+                    </Box>
                 </Box>
                 <Box
                     sx={{

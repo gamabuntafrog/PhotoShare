@@ -9,24 +9,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import styles from "../Posts/Posts.module.css";
 import PostItem from "../PostItem";
 import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
+import useToggleSaveOfPostCreator from "../../hooks/useToggleSaveOfPostCreator";
 
-const useSavedAndLikedPostsInfo = ({savedPosts, likedPosts}: {savedPosts: string[], likedPosts: string[]}) => {
-    const existingPosts: {[key: string]: {isSaved?: boolean, isLiked?: boolean}} = {} ;
-
-    savedPosts.forEach((key) => {
-        !!existingPosts[key] ? existingPosts[key].isSaved = true : existingPosts[key] = {
-            isSaved: true
-        }
-    });
-
-    likedPosts.forEach((key) => {
-        !!existingPosts[key] ? existingPosts[key].isLiked = true : existingPosts[key] = {
-            isLiked: true
-        }
-    });
-
-    return existingPosts
-}
 
 export default function Collection() {
     const {id = ''} = useParams<{ id: string }>()!
@@ -34,9 +18,7 @@ export default function Collection() {
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
     const {savedPosts, likedPosts} = user
 
-    const savedAndLikedPostsInfo = useSavedAndLikedPostsInfo({savedPosts, likedPosts})
 
-    console.log(savedAndLikedPostsInfo)
     const {
         data: collection,
         isLoading: isCollectionLoading,
@@ -49,11 +31,10 @@ export default function Collection() {
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-    const useToggleLike = useToggleLikeOfPostCreator({
-        token
-    })
+    const useToggleLike = useToggleLikeOfPostCreator({token})
+    const [{isLoading}, useToggleSave] = useToggleSaveOfPostCreator({token})
 
-    if (isCollectionLoading) {
+    if (isCollectionLoading || isLoading) {
         return (
             <Container className={styles.posts} sx={{
                 margin: '0 auto',
@@ -137,7 +118,7 @@ export default function Collection() {
                 gap={12}
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
-                {posts.map((post) => <PostItem useToggleLike={useToggleLike} post={post} key={post._id}/>)}
+                {/*{posts.map((post) => <PostItem useToggleSave={useToggleSave} useToggleLike={useToggleLike} post={post} key={post._id}/>)}*/}
             </ImageList>
 
         </Box>

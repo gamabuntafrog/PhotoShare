@@ -20,7 +20,7 @@ export interface IPost {
     body: string,
     tags: string[],
     usersLiked: string[],
-    usersSaved: string[],
+    savedInCollections: string[],
     likesCount: number,
     createdAt: string,
     updatedAt: string

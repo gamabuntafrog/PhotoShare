@@ -1,16 +1,6 @@
-import {MutationTrigger} from "@reduxjs/toolkit/dist/query/react/buildHooks";
-import {
-    BaseQueryFn,
-    FetchArgs,
-    FetchBaseQueryError,
-    FetchBaseQueryMeta,
-    MutationDefinition
-} from "@reduxjs/toolkit/query";
+
 import {IPost} from "./post";
-
-export type likePostFnType = MutationTrigger<MutationDefinition<{ token: string, id: string }, BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>, "Collection", void, "collectionsApi">>
-export type unlikePostFnType = MutationTrigger<MutationDefinition<{ token: string, id: string }, BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError, {}, FetchBaseQueryMeta>, "Collection", void, "collectionsApi">>
-
+import {ICollection} from "./collection";
 
 export interface IToggleLikeProps {
     isPostLiked: boolean,
@@ -20,4 +10,15 @@ export interface IToggleLikeProps {
 
 export type useToggleLikeReturnValue = readonly [{readonly isLiked: boolean, readonly likes: number}, (() => Promise<void>)]
 
-export type useToggleLike = (args: IToggleLikeProps) => useToggleLikeReturnValue
+export type useToggleLikeType = (args: IToggleLikeProps) => useToggleLikeReturnValue
+
+export interface IToggleSaveProps {
+    savesCount: number,
+    postId: string,
+}
+
+export type savesInfoType = {postId: string, savedInCollectionTitle: string, collectionId: string, isSaved: boolean}
+
+export type useToggleSaveReturnValue = readonly [{readonly isSaved: boolean, readonly saves: number, readonly savesInfo: savesInfoType[]}, (({collectionId}: {collectionId: string, isSavedInCollection: boolean}) => Promise<void>), ((newCollection: ICollection) => void)]
+
+export type useToggleSaveType = (args: IToggleSaveProps) => useToggleSaveReturnValue

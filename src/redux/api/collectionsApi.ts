@@ -26,7 +26,9 @@ export const collectionsApi = createApi({
                     authorization: `Bearer ${token}`,
                 },
             }),
-            invalidatesTags: ['Collection']
+            invalidatesTags: ['Collection'],
+            transformResponse: (response: {data: {collection: ICollection}, status: string, code: number}) => response.data.collection
+
         }),
         getCollectionWithPosts: builder.query<ICollectionWithPosts, {id: string, token: string}>({
             query: ({id, token}) => ({

@@ -97,8 +97,6 @@ export default function CreatePost() {
 
     const willSavedInCollectionIndex = !!watch('collectionId') ? findIndexOfCollection(watch('collectionId')) : findIndexOfCollection(collectionId)
 
-    console.log(willSavedInCollectionIndex)
-
     const onSubmit = handleSubmit(async ({title, body, imageList, tags, collectionId}) => {
         const filteredTags = tags.split(' ').filter((str) => str !== '')
         const image = await convertImageToString(imageList)

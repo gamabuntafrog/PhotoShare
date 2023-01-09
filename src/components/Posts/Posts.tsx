@@ -8,10 +8,10 @@ import {IUserSliceAuthorized} from "../../types/userSlice";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material/styles";
 import {collectionsApi} from "../../redux/api/collectionsApi";
-import {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
-
-
+import useToggleSaveOfPostCreator from "../../hooks/useToggleSaveOfPostCreator";
+import CreateCollectionModal from "../CreateCollectionModal";
 
 
 export default function Posts() {
@@ -27,16 +27,18 @@ export default function Posts() {
     } = postsApi.useFetchAllPostsQuery()
 
 
-    const useToggleLike = useToggleLikeOfPostCreator({
-        token
-    })
-
+    const useToggleLike = useToggleLikeOfPostCreator({token})
+    const [{isLoading, refetch}, useToggleSave] = useToggleSaveOfPostCreator({token})
 
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-    if (isAllPostsLoading) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const openModal = () => setIsModalOpen(true)
+    const closeModal = () => setIsModalOpen(false)
+
+    if (isAllPostsLoading || isLoading) {
         return (
             <Container className={styles.posts} sx={{
                 margin: '0 auto',
@@ -68,6 +70,8 @@ export default function Posts() {
     }
     return (
         <Box sx={{overflowY: 'auto', height: '91vh'}}>
+            <CreateCollectionModal refetch={refetch} closeModal={closeModal} isModalOpen={isModalOpen}/>
+
             <ImageList
                 variant="masonry"
                 sx={{
@@ -78,7 +82,13 @@ export default function Posts() {
                 gap={12}
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
-                {allPosts.map((post) => <PostItem useToggleLike={useToggleLike} post={post} key={post._id}/>)}
+                {allPosts.map((post) => <PostItem
+                    useToggleSave={useToggleSave}
+                    useToggleLike={useToggleLike}
+                    openModal={openModal}
+                    post={post}
+                    key={post._id}
+                />)}
             </ImageList>
 
         </Box>
