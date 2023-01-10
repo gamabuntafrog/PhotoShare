@@ -40,6 +40,15 @@ export const postsApi = createApi({
             }),
             invalidatesTags: ['Post', 'Posts']
         }),
+        delete: builder.mutation<void, {id: string, token: string}>({
+            query: ({token, id}) => ({
+                url: `/${id}`,
+                method: 'DELETE',
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+            }),
+        }),
         getPostById: builder.query<IPost, string>({
             query: (id) => ({
                 url: `/${id}`

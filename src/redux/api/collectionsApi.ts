@@ -28,7 +28,16 @@ export const collectionsApi = createApi({
             }),
             invalidatesTags: ['Collection'],
             transformResponse: (response: {data: {collection: ICollection}, status: string, code: number}) => response.data.collection
-
+        }),
+        delete: builder.mutation<void, {id: string, token: string}>({
+            query: ({id, token}) => ({
+                url: `/${id}`,
+                method: 'DELETE',
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+            }),
+            invalidatesTags: ['Collection'],
         }),
         getCollectionWithPosts: builder.query<ICollectionWithPosts, {id: string, token: string}>({
             query: ({id, token}) => ({

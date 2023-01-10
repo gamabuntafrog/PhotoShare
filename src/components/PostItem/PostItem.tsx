@@ -66,12 +66,13 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
             sx={{
                 px: 0.5,
                 pb: 1,
+                whiteSpace: 'break-spaces',
+                wordBreak: 'break-all'
             }}
         >
             <NavLink to={`/posts/${postId}`}>
                 <Typography variant='h6'>{title}</Typography>
                 <Typography sx={{mt: -1}} variant='caption'>{formattedTags}</Typography>
-
             </NavLink>
         </Box>
         <NavLink style={{

@@ -25,8 +25,19 @@ export default function Post() {
     const [subscribe] = usersApi.useSubscribeMutation()
     const [unsubscribe] = usersApi.useUnsubscribeMutation()
 
+    const [deletePostFn] = postsApi.useDeleteMutation()
+
+    const deletePost = async () => {
+        await deletePostFn({id: postId, token})
+    }
+
     const {data: post, isLoading: isPostLoading} = postsApi.useGetPostByIdQuery(id)
-    const {data: author, isLoading: isUserLoading} = usersApi.useGetByIdQuery({id: post?.author?._id || '', token, posts: false, collections: false})
+    const {data: author, isLoading: isUserLoading} = usersApi.useGetByIdQuery({
+        id: post?.author?._id || '',
+        token,
+        posts: false,
+        collections: false
+    })
 
     const useToggleLike = useToggleLikeOfPostCreator({token, currentUserId})
     const [{isLiked, likes}, toggleLike] = useToggleLike({
@@ -93,8 +104,9 @@ export default function Post() {
     const formattedTags = tags.join(' ')
     const isProfileOfCurrentUser = currentUserId === post.author._id
     const isSubscribed = !!subscribers.find((id) => id === currentUserId)
-    console.log(isSubscribed)
-    console.log(post)
+    const isUserAuthorOfPost = authorId === currentUserId
+
+
     return (
         <Box
             sx={{overflowY: 'auto', height: '92vh'}}
@@ -146,10 +158,6 @@ export default function Post() {
                             <Typography sx={{ml: 0.5}}>
                                 {likes}
                             </Typography>
-                            {/*<IconButton sx={{ml: 'auto'}}>*/}
-                            {/*    <BookmarkBorderIcon/>*/}
-                            {/*</IconButton>*/}
-
                             <IconButton
                                 id="basic-button"
                                 aria-controls={open ? 'basic-menu' : undefined}
@@ -160,6 +168,11 @@ export default function Post() {
                             >
                                 {isSaved ? <BookmarkAddedIcon/> : <BookmarkBorderIcon/>}
                             </IconButton>
+                            {isUserAuthorOfPost &&
+                                <Button color='error' onClick={deletePost}>
+                                    Delete
+                                </Button>
+                            }
                             <Box>
                                 <Menu
                                     id="basic-menu"
@@ -201,7 +214,6 @@ export default function Post() {
                             mt: 'auto',
                             display: 'flex', alignItems: 'center', alignSelf: 'flex-start',
                         }}>
-
                         </Box>
                         <Typography variant='h3'>{title}</Typography>
                         <Box
@@ -240,13 +252,13 @@ export default function Post() {
                             <Typography variant='body1'>{body}</Typography>
                             <Typography variant='body2'>{formattedTags}</Typography>
                         </Box>
-                        <Box>
-                            <Typography variant='h6'>Comments</Typography>
-                            <OutlinedInput multiline fullWidth sx={{
-                                minHeight: '200px',
-                                alignItems: 'flex-start'
-                            }}/>
-                        </Box>
+                        {/*<Box>*/}
+                        {/*    <Typography variant='h6'>Comments</Typography>*/}
+                        {/*    <OutlinedInput multiline fullWidth sx={{*/}
+                        {/*        minHeight: '200px',*/}
+                        {/*        alignItems: 'flex-start'*/}
+                        {/*    }}/>*/}
+                        {/*</Box>*/}
                     </Box>
 
                 </Box>
