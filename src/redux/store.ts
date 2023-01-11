@@ -6,6 +6,7 @@ import {themeSlice} from "./slices/themeSlice";
 import {usersApi} from "./api/usersApi";
 import userSlice from "./slices/userSlice";
 import {collectionsApi} from "./api/collectionsApi";
+import {responseNotificationsSlice} from "./slices/responseNotificationsSlice";
 
 
 const persistUserConfig = {
@@ -30,6 +31,7 @@ export const store = configureStore({
     [collectionsApi.reducerPath]: collectionsApi.reducer,
     userReducer: persistedUserReducer,
     themeReducer: persistedThemeReducer,
+    responseNotificationsReducer: responseNotificationsSlice.reducer
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({

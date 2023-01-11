@@ -11,7 +11,7 @@ import {
     Alert, IconButton
 } from "@mui/material";
 import {useEffect} from "react";
-import {disableLoading, getCurrentUser, removeErrors} from "../../redux/slices/userSlice";
+import {disableLoading, getCurrentUser, login, removeErrors} from "../../redux/slices/userSlice";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import { useForm } from "react-hook-form";
 import {Image} from "@mui/icons-material";
@@ -19,6 +19,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import * as yup from 'yup'
 import CloseIcon from '@mui/icons-material/Close';
+import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 
 
 
@@ -38,7 +39,7 @@ const loginSchema = yup.object({
 }).required()
 
 export default function Login() {
-    const {authError} = useAppSelector(state => state.userReducer.errors)
+
     const { register, setValue, handleSubmit, formState: { errors } } = useForm<IFormData>({
         resolver: yupResolver(loginSchema),
         mode: 'all'
@@ -48,7 +49,12 @@ export default function Login() {
     const dispatch = useAppDispatch()
 
     const tryLogin = async (email: string, password: string) => {
-        await dispatch(getCurrentUser({email, password}))
+        try {
+            await dispatch(login({email, password})).unwrap()
+        } catch (e) {
+            console.log(e)
+            dispatch(pushResponse(e as IResponseNotification))
+        }
     }
 
     const onSubmit = handleSubmit(({email, password}) => {
@@ -71,17 +77,6 @@ export default function Login() {
                 overflowY: 'auto'
             }}
         >
-            <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                open={authError}
-                autoHideDuration={6000}
-                onClose={() => dispatch(removeErrors())}
-                sx={{alignItems: 'center'}}
-            >
-                <Alert onClose={() => dispatch(removeErrors())} severity="error" >
-                    <Typography variant='h6'>Email or password is wrong</Typography>
-                </Alert>
-            </Snackbar>
             <Container
                 sx={{
                     height: '100%',

@@ -3,9 +3,14 @@ import {RootState} from "../store";
 import {ICurrentUser, IUser} from "../../types/user";
 import {IUserSlice} from "../../types/userSlice";
 import {INotificationWithUser} from "../../types/notification";
+import {IResponseNotification} from "./responseNotificationsSlice";
 
 class StatusError extends Error {
     code: number | undefined;
+}
+
+const createCustomError = (err: {message: string, code: number, status: 'success' | 'error'}) => {
+    throw err
 }
 
 export interface IResponseError {
@@ -29,58 +34,78 @@ const initialState: IUserSlice = {
 const usersBaseURL = 'http://localhost:3001/users'
 const authBaseURL = 'http://localhost:3001/auth'
 
+export interface IResponse<T> { code: number, data: T, status: string }
 
 const fetchToken = async ({email, password}: { email: string, password: string }): Promise<string> => {
-    type responseType = { code: 200, data: { token: string }, status: string } | IResponseError
 
-    const response: responseType = await fetch(`${authBaseURL}/login`, {
+    const response = await fetch(`${authBaseURL}/login`, {
         body: JSON.stringify({email, password}),
         headers: {
             'content-type': 'application/json;charset=UTF-8',
         },
         method: 'POST'
-    }).then((res) => res.json())
+    })
+    console.log(response)
 
-    if ('message' in response) {
-        const error = new StatusError(response.message)
-        error.code = response.code
-
-        throw error
-    } else {
-        return response.data.token
+    if (!response.ok) {
+        const error = await response.json()
+        createCustomError(error)
     }
+
+    const responseData: IResponse<{token: string}> = await response.json()
+
+    return responseData.data.token
 }
 
 const fetchUser = async (token: string): Promise<ICurrentUser> => {
 
-    type responseUserType = { code: number, data: { user: ICurrentUser }, status: string } | IResponseError
-    const response: responseUserType = token && await fetch(`${usersBaseURL}/current`, {
+    const response = await fetch(`${usersBaseURL}/current`, {
         headers: {
             authorization: `Bearer ${token}`
         }
-    }).then((res) => res.json())
+    })
 
-    if ('message' in response) {
-        const error = new StatusError(response.message)
-        error.code = response.code
+    console.log(response)
 
-        throw error
+    if (!response.ok) {
+        const error = await response.json()
+        createCustomError(error)
     }
 
-    return response.data.user
+    const responseData: IResponse<{user: ICurrentUser}> = await response.json()
+
+    return responseData.data.user
 }
 
-export const getCurrentUser = createAsyncThunk<{ user: ICurrentUser, token: string }, { email: string, password: string } | void, { state: RootState }>('users/getCurrent', async (args, {getState}) => {
+export const getCurrentUser = createAsyncThunk<{ user: ICurrentUser, token: string }, void, { state: RootState }>('users/getCurrent', async (args, {getState, rejectWithValue}) => {
     const {userReducer} = getState()
-    const {email, password} = args || {}
 
-    const token = userReducer.token || (email && password) && await fetchToken({email, password})
+    try {
+        const token = userReducer.token!
 
-    if (!token) throw new Error('cannot get token')
+        const user = await fetchUser(token)
 
-    const user = await fetchUser(token)
+        return {user, token}
+    } catch (e) {
+        console.log(e)
+        return rejectWithValue(e as IResponseNotification)
+    }
+})
 
-    return {user, token}
+export const login = createAsyncThunk<{ user: ICurrentUser, token: string }, { email: string, password: string }, { state: RootState }>('users/getCurrent', async (args, {getState, rejectWithValue}) => {
+    const {userReducer} = getState()
+    const {email, password} = args
+
+    try {
+        const token = userReducer.token || await fetchToken({email, password})
+
+        const user = await fetchUser(token)
+
+        return {user, token}
+    } catch (e) {
+        console.log(e)
+        return rejectWithValue(e as IResponseNotification)
+    }
 })
 
 export const register = createAsyncThunk<{ user: ICurrentUser, token: string }, {email: string, username: string, password: string}>('users/login', async ({username, email, password}) => {

@@ -38,6 +38,8 @@ export default function Posts() {
     const openModal = () => setIsModalOpen(true)
     const closeModal = () => setIsModalOpen(false)
 
+    console.log(allPosts, allPostsError)
+
     if (isAllPostsLoading || isLoading) {
         return (
             <Container className={styles.posts} sx={{
