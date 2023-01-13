@@ -56,11 +56,11 @@ export default function UserProfile() {
         resolver: yupResolver(changeProfileValidationSchema),
         mode: 'all'
     });
-    const {username: usernameError} = errors
-    console.log(errors)
+    const {username: usernameError, imageList: avatarError} = errors
+    const isErrors = !!(usernameError || avatarError)
+    console.log(isErrors)
     const theme = useTheme();
     const {palette: {primary: {main}}} = theme
-    console.log(watch('imageList'))
 
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
@@ -190,7 +190,7 @@ export default function UserProfile() {
                                 />
                             </Button>
 
-                            <InputLabel error={!!usernameError} htmlFor='username'>Username</InputLabel>
+                            <InputLabel error={!!usernameError} htmlFor='username'>{usernameError?.message || 'Username'}</InputLabel>
                             <OutlinedInput defaultValue={username} error={!!usernameError} {...register('username')}
                                            id='username' sx={{
                                 my: 1
@@ -204,6 +204,7 @@ export default function UserProfile() {
                                 Cancel Changing
                             </Button>
                             <Button
+                                disabled={isErrors}
                                 type='submit'
                                 onClick={onSubmit}>
                                 Save changes

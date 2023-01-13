@@ -17,7 +17,8 @@ export const validateTags = (string: string | undefined) => {
 }
 
 export const imagePresenceValidation = (value: any) => {
-    return value && value[0]
+    console.log('presenceValidation', value)
+    return !!value.length
 }
 
 export const imageSizeValidation = (value: FileList) => {
@@ -30,7 +31,9 @@ export const imageSizeValidation = (value: FileList) => {
     return value[0].size < twentyMB
 }
 
-const oneImageValidationSchema = Yup.mixed().test('required', 'Image is required', imagePresenceValidation).test('size', 'Max image size is 20mb', imageSizeValidation).required('Image is required')
+const oneImageValidationSchema = Yup.mixed().test('size', 'Max image size is 20mb', imageSizeValidation).required('Image is required').test('required', 'Image is required', imagePresenceValidation)
+
+// .test('size', 'Max image size is 20mb', imageSizeValidation).required('Image is required')
 
 export const createPostValidationSchema = Yup.object({
     title: Yup.string().min(MIN_POST_TITLE_LENGTH, `Min length is ${MIN_POST_TITLE_LENGTH} symbols`).max(MAX_POST_TITLE_LENGTH, `Max length is ${MAX_POST_TITLE_LENGTH} symbols`),

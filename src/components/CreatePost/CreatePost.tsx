@@ -27,7 +27,7 @@ import {IResponseNotification, pushResponse} from "../../redux/slices/responseNo
 import {createPostValidationSchema} from "../../utils/validationSchemas";
 
 
-
+export const breakableText = {wordBreak: 'break-all', whiteSpace: 'break-spaces'}
 
 interface IFormData {
     title: string,
@@ -42,7 +42,7 @@ export default function CreatePost() {
     const {id: collectionId = ''} = useParams<{ id: string }>()!
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
 
-    const [avatarFile, setImageFile] = useState<null | string>(null);
+    const [imageFile, setImageFile] = useState<null | string>(null);
     const [isPostCreating, setIsPostCreating] = useState(false);
     const [isCreateCollectionModalOpen, setIsCreateCollectionModalOpen] = useState(false);
 
@@ -55,9 +55,7 @@ export default function CreatePost() {
 
     const [createPost] = postsApi.useCreatePostMutation()
 
-
     const navigate = useNavigate()
-
 
     const {
         register,
@@ -66,13 +64,7 @@ export default function CreatePost() {
         handleSubmit,
         control,
         formState: {
-            errors: {
-                title: titleError,
-                body: bodyError,
-                imageList: imageError,
-                tags: tagsError,
-                collectionId: collectionIdError
-            }
+            errors
         }
     } = useForm<IFormData>({
         resolver: yupResolver(createPostValidationSchema),
@@ -82,6 +74,14 @@ export default function CreatePost() {
             body: '',
         }
     });
+
+    const {
+        title: titleError,
+        body: bodyError,
+        imageList: imageError,
+        tags: tagsError,
+        collectionId: collectionIdError
+    } = errors
 
 
     const findIndexOfCollection = (id: string) => userCollections.findIndex(({_id}) => _id === id)
@@ -215,17 +215,17 @@ export default function CreatePost() {
                                 </Button>
                             </Menu>
                         </Grid>
-                        <Grid item>
-                            <InputLabel htmlFor='title' error={!!titleError} sx={{my: 1}}>
+                        <Grid sx={{...breakableText}} item>
+                            <InputLabel htmlFor='title' error={!!titleError} sx={{my: 1, ...breakableText}}>
                                 {titleError?.message || 'Title'}
                             </InputLabel>
-                            <OutlinedInput fullWidth id='title' {...register('title')}/>
+                            <OutlinedInput error={!!titleError} fullWidth id='title' {...register('title')}/>
                         </Grid>
                         <Grid item>
-                            <InputLabel htmlFor='body' error={!!bodyError} sx={{my: 1}}>
+                            <InputLabel htmlFor='body' error={!!bodyError} sx={{my: 1, ...breakableText}}>
                                 {bodyError?.message || 'Body'}
                             </InputLabel>
-                            <OutlinedInput fullWidth id='body' {...register('body')}/>
+                            <OutlinedInput error={!!bodyError} fullWidth id='body' {...register('body')}/>
                         </Grid>
                         <Grid item>
                             <Button
@@ -239,7 +239,7 @@ export default function CreatePost() {
                                     sx={{cursor: 'pointer', color: 'inherit', width: '100%'}}
                                     htmlFor='imageList'
                                 >
-                                    {imageError?.message || (watch('imageList')?.length > 0) ? 'Selected' : 'Select a photo'}
+                                    {imageFile ? 'Selected' : 'Select a photo' }
                                 </InputLabel>
                                 <input
                                     {...register('imageList')}
@@ -251,10 +251,10 @@ export default function CreatePost() {
                             </Button>
                         </Grid>
                         <Grid item>
-                            <InputLabel htmlFor='tags' error={!!tagsError} sx={{my: 1}}>
+                            <InputLabel htmlFor='tags' error={!!tagsError} sx={{my: 1, ...breakableText}}>
                                 {tagsError?.message || 'Tags'}
                             </InputLabel>
-                            <OutlinedInput fullWidth id='tags' {...register('tags')}/>
+                            <OutlinedInput error={!!tagsError} fullWidth id='tags' {...register('tags')}/>
                         </Grid>
                         <Button type='submit' sx={{my: 1, justifySelf: 'center'}}>
                             Upload
@@ -264,7 +264,7 @@ export default function CreatePost() {
                 <Box
                     sx={{ml: 3}}
                 >
-                    <img style={{maxHeight: '70vh', width: '400px', objectFit: 'contain'}} src={avatarFile || ''}/>
+                    <img style={{maxHeight: '70vh', width: '400px', objectFit: 'contain'}} src={imageFile || ''}/>
                 </Box>
             </Box>
         </Container>
