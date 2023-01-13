@@ -3,8 +3,12 @@ import {IPostsApi} from "../../types/postsApi";
 import {IPost} from "../../types/post";
 import {IUser} from "../../types/user";
 import {ICollection} from "../../types/collection";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 
 
+const returnTransformedError = (baseQueryReturnValue: FetchBaseQueryError) =>  {
+    return baseQueryReturnValue.data
+}
 
 
 export const postsApi = createApi({
@@ -19,7 +23,8 @@ export const postsApi = createApi({
                 url: '/'
             }),
             providesTags: result => ['Posts'],
-            transformResponse: (response: IPostsApi) => response.data.posts
+            transformResponse: (response: IPostsApi) => response.data.posts,
+            transformErrorResponse: returnTransformedError
         }),
         createPost: builder.mutation<IPost, {
             token: string, body: {
@@ -38,7 +43,8 @@ export const postsApi = createApi({
                     authorization: `Bearer ${token}`,
                 },
             }),
-            invalidatesTags: ['Post', 'Posts']
+            invalidatesTags: ['Post', 'Posts'],
+            transformErrorResponse: returnTransformedError
         }),
         delete: builder.mutation<void, {id: string, token: string}>({
             query: ({token, id}) => ({
@@ -48,13 +54,15 @@ export const postsApi = createApi({
                     authorization: `Bearer ${token}`,
                 },
             }),
+            transformErrorResponse: returnTransformedError
         }),
         getPostById: builder.query<IPost, string>({
             query: (id) => ({
                 url: `/${id}`
             }),
             providesTags: result => ['Post'],
-            transformResponse: (response: { code: number, data: { post: IPost }, status: string }) => response.data.post
+            transformResponse: (response: { code: number, data: { post: IPost }, status: string }) => response.data.post,
+            transformErrorResponse: returnTransformedError
         }),
         likePost: builder.mutation<void, {token: string, postId: string}>({
             query: ({token, postId}) => ({
@@ -64,6 +72,7 @@ export const postsApi = createApi({
                     authorization: `Bearer ${token}`,
                 }
             }),
+            transformErrorResponse: returnTransformedError
         }),
         unlikePost: builder.mutation<void, {token: string, postId: string}>({
             query: ({token, postId}) => ({
@@ -72,7 +81,8 @@ export const postsApi = createApi({
                 headers: {
                     authorization: `Bearer ${token}`,
                 },
-            })
+            }),
+            transformErrorResponse: returnTransformedError
         }),
         savePost: builder.mutation<IPost, {token: string, postId: string, collectionId: string}>({
             query: ({token, postId, collectionId}) => ({
@@ -82,7 +92,8 @@ export const postsApi = createApi({
                     authorization: `Bearer ${token}`,
                 },
                 invalidatesTags: ['Collection']
-            })
+            }),
+            transformErrorResponse: returnTransformedError
         }),
         unsavePost: builder.mutation<IPost, {token: string, postId: string, collectionId: string}>({
             query: ({token, postId, collectionId}) => ({
@@ -92,7 +103,8 @@ export const postsApi = createApi({
                     authorization: `Bearer ${token}`,
                 },
                 invalidatesTags: ['Collection']
-            })
+            }),
+            transformErrorResponse: returnTransformedError
         }),
     })
 })

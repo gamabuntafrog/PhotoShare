@@ -4,6 +4,7 @@ import {getCurrentUser, removeErrors, register as registerUser} from "../../redu
 import {Alert, Box, Button, Container, FormGroup, InputLabel, OutlinedInput, Snackbar, Typography} from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import { registerValidationSchema } from "../../utils/validationSchemas";
 
 interface IFormData {
     username: string,
@@ -19,17 +20,12 @@ enum htmlInputId {
     repeatPassword
 }
 
-const registerSchema = Yup.object({
-    username: Yup.string().min(6, "Min username length is 6 symbols").max(24, "Max username length is 24 symbols").required('Username is a required'),
-    email: Yup.string().required('Email is a required').email('Wrong email'),
-    password: Yup.string().required('Password is a required').min(3, 'Min password length is 3 symbols').max(24, "Max password length is 24 symbols"),
-    repeatPassword: Yup.string().required('You need to repeat password').min(3, 'Min passwords length is 3 symbols').max(24).oneOf([Yup.ref("password")], "Passwords do not match")
-}).required()
+
 
 export default function Register() {
     const {authError} = useAppSelector(state => state.userReducer.errors)
     const { register, setValue, handleSubmit, formState: { errors } } = useForm<IFormData>({
-        resolver: yupResolver(registerSchema),
+        resolver: yupResolver(registerValidationSchema),
         mode: 'all'
     });
     const {username: usernameError, email: emailError, password: passwordError, repeatPassword: repeatPasswordError} = errors

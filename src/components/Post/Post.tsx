@@ -90,7 +90,7 @@ export default function Post() {
         )
     }
 
-    if (!post) {
+    if (!post || !author) {
         return (
             <Box>
                 <Typography variant='h1'>404 Not Found</Typography>

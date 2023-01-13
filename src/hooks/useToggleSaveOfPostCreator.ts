@@ -3,6 +3,8 @@ import {postsApi} from "../redux/api/postsApi";
 import {IToggleSaveProps, useToggleSaveReturnValue} from "../types/types";
 import {collectionsApi} from "../redux/api/collectionsApi";
 import {ICollection} from "../types/collection";
+import {useAppDispatch} from "../redux/hooks";
+import {IResponseNotification, pushResponse} from "../redux/slices/responseNotificationsSlice";
 
 
 export default function useToggleSaveOfPostCreator({token}: { token: string }) {
@@ -10,6 +12,7 @@ export default function useToggleSaveOfPostCreator({token}: { token: string }) {
     const [savePost] = postsApi.useSavePostMutation()
     const [unsavePost] = postsApi.useUnsavePostMutation()
     const {data: userCollections = [], isLoading, refetch} = collectionsApi.useGetCurrentQuery({token})
+    const dispatch = useAppDispatch()
 
     function useToggleSave({savesCount, postId, skip}: IToggleSaveProps): useToggleSaveReturnValue {
 
@@ -43,7 +46,7 @@ export default function useToggleSaveOfPostCreator({token}: { token: string }) {
         const toggleSave = async ({collectionId, isSavedInCollection}: { collectionId: string, isSavedInCollection: boolean }) => {
             try {
                 if (isSavedInCollection) {
-                    await unsavePost({postId, token, collectionId}).unwrap()
+                    await savePost({postId, token, collectionId}).unwrap()
 
                     setSavesState(prev => {
                         return {
@@ -57,7 +60,7 @@ export default function useToggleSaveOfPostCreator({token}: { token: string }) {
                         }
                     })
                 } else {
-                    await savePost({postId, token, collectionId}).unwrap()
+                    await unsavePost({postId, token, collectionId}).unwrap()
 
                     setSavesState(prev => {
                         return {
@@ -73,6 +76,8 @@ export default function useToggleSaveOfPostCreator({token}: { token: string }) {
                 }
             } catch (e) {
                 console.log(e)
+                dispatch(pushResponse(e as IResponseNotification))
+                // обробити так щоб приходило "Post already saved IN COLLECTION 'TITLE'"
             }
         }
 

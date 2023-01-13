@@ -7,14 +7,9 @@ import {Button, Container, InputLabel, Modal, OutlinedInput, Typography} from "@
 import React from "react";
 import * as Yup from "yup";
 import {useNavigate, useParams} from "react-router-dom";
+import {createCollectionValidationSchema} from "../../utils/validationSchemas";
 
-const collectionSchema = Yup.object({
-    title: Yup.string().max(48, "Max title length is 48 symbols").required(),
-    tags: Yup.string().min(3, "min 1 tag ang length 3 symbols").required().test('validation', 'every tag must have "#"', (string) => {
-        const check = string?.split(' ').find((str) => str[0] !== '#' || str.length < 2)
-        return !check
-    })
-}).required()
+
 
 interface ICollectionFormData {
     title: string,
@@ -35,7 +30,7 @@ export default function CreateCollectionModal({closeModal, isModalOpen, refetch}
         handleSubmit,
         formState: {errors: {title: titleError, tags: tagsError}}
     } = useForm<ICollectionFormData>({
-        resolver: yupResolver(collectionSchema),
+        resolver: yupResolver(createCollectionValidationSchema),
         mode: 'all'
     });
 

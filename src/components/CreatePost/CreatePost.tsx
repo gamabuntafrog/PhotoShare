@@ -11,10 +11,10 @@ import {
     Typography
 } from "@mui/material";
 import * as Yup from "yup";
-import {useForm} from "react-hook-form";
+import {useForm, useFormState} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from "react";
-import {useAppSelector} from "../../redux/hooks";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
 import {postsApi} from "../../redux/api/postsApi";
 import {useNavigate, useParams} from "react-router-dom";
@@ -23,24 +23,9 @@ import convertImageToString from "../../utils/convertImageToString";
 import {collectionsApi} from "../../redux/api/collectionsApi";
 import {ICollection} from "../../types/collection";
 import CreateCollectionModal from "../CreateCollectionModal";
+import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
+import {createPostValidationSchema} from "../../utils/validationSchemas";
 
-const postSchema = Yup.object({
-    title: Yup.string().max(48, "Max title length is 48 symbols"),
-    body: Yup.string().max(256, "Max body length is 48 symbols"),
-    imageList: Yup.mixed().required('image is required').test('required', 'file is required', (value) => {
-        return value && value[0]
-    }).test('size', 'max file size is 20mb', (value) => {
-        const twentyMB = 20000000
-
-        return value && value[0] && value[0].size < twentyMB
-    }),
-    tags: Yup.string().min(3, "min 1 tag ang length 3 symbols").required().test('validation', 'every tag must have "#"', (string) => {
-        const check = string?.split(' ').find((str) => str[0] !== '#' || str.length < 2)
-
-        return !check
-    }),
-    collectionId: Yup.string().required()
-}).required()
 
 
 
@@ -64,6 +49,8 @@ export default function CreatePost() {
     const closeModal = () => setIsCreateCollectionModalOpen(false)
     const openModal = () => setIsCreateCollectionModalOpen(true)
 
+    const dispatch = useAppDispatch()
+
     const {data: userCollections = [], isLoading: isUserCollectionsLoading} = collectionsApi.useGetCurrentQuery({token})
 
     const [createPost] = postsApi.useCreatePostMutation()
@@ -77,6 +64,7 @@ export default function CreatePost() {
         watch,
         setValue,
         handleSubmit,
+        control,
         formState: {
             errors: {
                 title: titleError,
@@ -87,10 +75,15 @@ export default function CreatePost() {
             }
         }
     } = useForm<IFormData>({
-        resolver: yupResolver(postSchema),
-        mode: 'all'
+        resolver: yupResolver(createPostValidationSchema),
+        mode: 'all',
+        defaultValues: {
+            title: '',
+            body: '',
+        }
     });
 
+    console.log(watch('title'))
 
     const findIndexOfCollection = (id: string) => userCollections.findIndex(({_id}) => _id === id)
     useEffect(() => void setValue('collectionId', collectionId), []);
@@ -100,12 +93,12 @@ export default function CreatePost() {
     const onSubmit = handleSubmit(async ({title, body, imageList, tags, collectionId}) => {
         const filteredTags = tags.split(' ').filter((str) => str !== '')
         const image = await convertImageToString(imageList)
-
-        await uploadPhoto({title, body, image, tags: filteredTags, collectionId})
+        // console.log(image)
+        await uploadPost({title, body, image, tags: filteredTags, collectionId})
     });
 
     // переробити завантаження аватарки так само як тут
-    const uploadPhoto = async (body: {
+    const uploadPost = async (body: {
         title: string,
         body: string,
         image: string,
@@ -114,9 +107,15 @@ export default function CreatePost() {
     }) => {
         setIsPostCreating(true)
 
-        const result = await createPost({body, token})
+        try {
+            await createPost({body, token}).unwrap()
 
-        navigate('/')
+            navigate('/')
+        } catch (e) {
+            dispatch(pushResponse(e as IResponseNotification))
+            setIsPostCreating(false)
+        }
+
     }
 
     useEffect(() => setPreviewImage(watch('imageList'), setImageFile), [watch('imageList')]);

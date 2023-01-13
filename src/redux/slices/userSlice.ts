@@ -5,20 +5,21 @@ import {IUserSlice} from "../../types/userSlice";
 import {INotificationWithUser} from "../../types/notification";
 import {IResponseNotification} from "./responseNotificationsSlice";
 
-class StatusError extends Error {
-    code: number | undefined;
+export interface IResponseError {message: string, code: number, status: 'success' | 'error'}
+
+export const createStandardCustomError = (err: any): IResponseError => {
+    if (!err) err = {}
+
+    if (!err.status) err.status = 'error'
+    if (!err.message) err.message = 'Unexpected error'
+    if (!err.code) err.code = 400
+
+    if (err.message == 'Failed to fetch') err.message = 'Check connection'
+
+    return err
 }
 
-const createCustomError = (err: {message: string, code: number, status: 'success' | 'error'}) => {
-    throw err
-}
 
-export interface IResponseError {
-    code: number,
-    message: string,
-    status: string
-}
-//
 
 const initialState: IUserSlice = {
     isLoggedIn: false,
@@ -49,7 +50,7 @@ const fetchToken = async ({email, password}: { email: string, password: string }
 
     if (!response.ok) {
         const error = await response.json()
-        createCustomError(error)
+        throw createStandardCustomError(error)
     }
 
     const responseData: IResponse<{token: string}> = await response.json()
@@ -69,7 +70,7 @@ const fetchUser = async (token: string): Promise<ICurrentUser> => {
 
     if (!response.ok) {
         const error = await response.json()
-        createCustomError(error)
+        throw createStandardCustomError(error)
     }
 
     const responseData: IResponse<{user: ICurrentUser}> = await response.json()
@@ -88,7 +89,7 @@ export const getCurrentUser = createAsyncThunk<{ user: ICurrentUser, token: stri
         return {user, token}
     } catch (e) {
         console.log(e)
-        return rejectWithValue(e as IResponseNotification)
+        return rejectWithValue(createStandardCustomError(e as IResponseError))
     }
 })
 
@@ -104,7 +105,7 @@ export const login = createAsyncThunk<{ user: ICurrentUser, token: string }, { e
         return {user, token}
     } catch (e) {
         console.log(e)
-        return rejectWithValue(e as IResponseNotification)
+        return rejectWithValue(createStandardCustomError(e as IResponseError))
     }
 })
 

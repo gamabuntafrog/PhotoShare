@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     RouterProvider,
 } from "react-router-dom";
@@ -12,7 +12,7 @@ import userSlice, {
     addNotification,
     disableLoading,
     getNotifications,
-    getCurrentUser, removeErrors
+    getCurrentUser, removeErrors, logout
 } from "./redux/slices/userSlice";
 import {AppDispatch} from "./redux/store";
 import {chooseRouter} from "./components/router";
@@ -33,13 +33,38 @@ const tryAuth = async (dispatch: AppDispatch) => {
 // 5. Доробити notifications ( зробити хук useClickOutside )
 // // зробити логін та регістраціюю та логін через гугл
 
+
+const responsedNotificationsCleaner = (dispatch: AppDispatch, notificationsLength: number) => {
+    let id: NodeJS.Timer | null = null
+
+    if (notificationsLength) {
+        id = setInterval(() => dispatch(pullResponse()), 3000);
+    }
+
+    return () => {
+        if (id) clearInterval(id)
+    }
+}
+const logoutWhenSessionIsOver = (logOutCallback: () => void, notifications: IResponseNotification[]) => {
+    const isSessionIsOver = notifications.some(({code}) => code === 401)
+    if (isSessionIsOver) {
+        logOutCallback()
+        return
+    }
+}
+
 export default function App() {
     const {user, isLoading, isLoggedIn, token} = useAppSelector((state) => state.userReducer)
-    const {mode} = useAppSelector((state) => state.themeReducer)
-    const {notifications} = useAppSelector(state => state.responseNotificationsReducer)
+    const mode = useAppSelector((state) => state.themeReducer.mode)
+    const notifications = useAppSelector(state => state.responseNotificationsReducer.notifications)
     const dispatch = useAppDispatch()
 
     console.log(notifications)
+
+
+    useEffect(() => responsedNotificationsCleaner(dispatch, notifications.length), [notifications.length]);
+    useEffect(() => logoutWhenSessionIsOver(() => dispatch(logout()), notifications), [notifications.length]);
+
 
     const subscribe = async (token: string) => {
         try {
@@ -71,15 +96,6 @@ export default function App() {
     //     }
     // }, [token, user]);
 
-    useEffect(() => {
-        // const sub = setInterval(() => dispatch(pushResponse({status: 'error', message: 'failed login'})), 2000)
-        const sub = setInterval(() => dispatch(pullResponse()), 6000)
-
-        if (notifications.length < 1) {
-            clearInterval(sub)
-        }
-        return () => clearInterval(sub)
-    }, [notifications.length > 0]);
 
 
     if (isLoading) {
@@ -107,10 +123,10 @@ export default function App() {
             maxHeight: '100vh',
             overflow: 'hidden',
         }}>
-            <Stack sx={{ position: "fixed", bottom: 24, left: 24, zIndex: 1000 }} spacing={2}>
+            <Stack sx={{position: "fixed", bottom: 24, left: 24, zIndex: 1000}} spacing={2}>
                 {notifications.map(({message, status, code}, index) => {
                     return (
-                        <Alert key={index} severity={status}>
+                        <Alert key={index} sx={{alignItems: 'center'}} severity={status}>
                             <Typography variant='h6'>{message}</Typography>
                         </Alert>
                     )

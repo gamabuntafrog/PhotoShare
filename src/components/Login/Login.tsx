@@ -20,6 +20,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup'
 import CloseIcon from '@mui/icons-material/Close';
 import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
+import {loginValidationSchema} from "../../utils/validationSchemas";
 
 
 
@@ -33,15 +34,12 @@ enum htmlInputId {
     password
 }
 
-const loginSchema = yup.object({
-    email: yup.string().required('Email is a required').email('Wrong email'),
-    password: yup.string().required('Password is a required').min(3, 'Minimium passwords length is 3 symbols').max(24)
-}).required()
+
 
 export default function Login() {
 
     const { register, setValue, handleSubmit, formState: { errors } } = useForm<IFormData>({
-        resolver: yupResolver(loginSchema),
+        resolver: yupResolver(loginValidationSchema),
         mode: 'all'
     });
     const {email: emailError, password: passwordError} = errors
