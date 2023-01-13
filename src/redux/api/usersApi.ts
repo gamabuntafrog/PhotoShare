@@ -1,5 +1,7 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {IUser, IUserWithPosts} from "../../types/user";
+import {IResponseWithMessage} from "../slices/userSlice";
+import {ICollection} from "../../types/collection";
 
 
 export const usersApi = createApi({
@@ -26,9 +28,9 @@ export const usersApi = createApi({
             },
             providesTags: result => ['User']
         }),
-        updateById: builder.mutation<IUser, {token: string, body: {username: string, avatar: string | null}}>({
+        updateCurrent: builder.mutation<IResponseWithMessage<{user: IUser}>, {token: string, body: {username: string, avatar: string}}>({
             query: ({token, body}) => ({
-                url: '/',
+                url: '/current',
                 method: 'PATCH',
                 headers: {
                     authorization: `Bearer ${token}`

@@ -24,7 +24,7 @@ const hardCodeNotifications = [
 ] as IResponseNotification[]
 
 const initialState = {
-    notifications: hardCodeNotifications
+    notifications: []
 } as IResponseNotificationInitialState
 
 export const responseNotificationsSlice = createSlice({

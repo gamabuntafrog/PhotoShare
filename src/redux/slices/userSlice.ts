@@ -20,7 +20,6 @@ export const createStandardCustomError = (err: any): IResponseError => {
 }
 
 
-
 const initialState: IUserSlice = {
     isLoggedIn: false,
     user: null,
@@ -36,6 +35,7 @@ const usersBaseURL = 'http://localhost:3001/users'
 const authBaseURL = 'http://localhost:3001/auth'
 
 export interface IResponse<T> { code: number, data: T, status: string }
+export interface IResponseWithMessage<T> { code: number, data: T, status: string, message: string }
 
 const fetchToken = async ({email, password}: { email: string, password: string }): Promise<string> => {
 

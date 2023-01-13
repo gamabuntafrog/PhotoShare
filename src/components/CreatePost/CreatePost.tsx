@@ -51,7 +51,7 @@ export default function CreatePost() {
 
     const dispatch = useAppDispatch()
 
-    const {data: userCollections = [], isLoading: isUserCollectionsLoading} = collectionsApi.useGetCurrentQuery({token})
+    const {data: userCollections = [], isLoading: isUserCollectionsLoading, refetch: refetchCollections} = collectionsApi.useGetCurrentQuery({token})
 
     const [createPost] = postsApi.useCreatePostMutation()
 
@@ -83,7 +83,6 @@ export default function CreatePost() {
         }
     });
 
-    console.log(watch('title'))
 
     const findIndexOfCollection = (id: string) => userCollections.findIndex(({_id}) => _id === id)
     useEffect(() => void setValue('collectionId', collectionId), []);
@@ -108,7 +107,8 @@ export default function CreatePost() {
         setIsPostCreating(true)
 
         try {
-            await createPost({body, token}).unwrap()
+            const response = await createPost({body, token}).unwrap()
+            dispatch(pushResponse(response as IResponseNotification))
 
             navigate('/')
         } catch (e) {
@@ -155,7 +155,7 @@ export default function CreatePost() {
                 overflowY: 'auto'
             }}
         >
-            <CreateCollectionModal closeModal={closeModal} isModalOpen={isCreateCollectionModalOpen}/>
+            <CreateCollectionModal refetch={() => refetchCollections()} closeModal={closeModal} isModalOpen={isCreateCollectionModalOpen}/>
             <Box
                 sx={{
                     display: 'flex',

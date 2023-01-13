@@ -4,10 +4,12 @@ import {IPost} from "../../types/post";
 import {IUser} from "../../types/user";
 import {ICollection} from "../../types/collection";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {IResponseWithMessage} from "../slices/userSlice";
+import {IResponseNotification} from "../slices/responseNotificationsSlice";
 
 
-const returnTransformedError = (baseQueryReturnValue: FetchBaseQueryError) =>  {
-    return baseQueryReturnValue.data
+export const returnTransformedError = (baseQueryReturnValue: FetchBaseQueryError) =>  {
+    return baseQueryReturnValue.data as IResponseNotification
 }
 
 
@@ -26,7 +28,7 @@ export const postsApi = createApi({
             transformResponse: (response: IPostsApi) => response.data.posts,
             transformErrorResponse: returnTransformedError
         }),
-        createPost: builder.mutation<IPost, {
+        createPost: builder.mutation<IResponseWithMessage<{post: IPost}>, {
             token: string, body: {
                 title: string,
                 body: string,

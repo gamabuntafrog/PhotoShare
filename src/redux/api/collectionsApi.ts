@@ -2,6 +2,8 @@ import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {IUser} from "../../types/user";
 import {IPost} from "../../types/post";
 import {ICollection, ICollectionWithPosts} from "../../types/collection";
+import {IResponse, IResponseWithMessage} from "../slices/userSlice";
+import {returnTransformedError} from "./postsApi";
 
 
 
@@ -12,7 +14,7 @@ export const collectionsApi = createApi({
     }),
     tagTypes: ['Collection'],
     endpoints: (builder) => ({
-        create: builder.mutation<ICollection, {
+        create: builder.mutation<IResponseWithMessage<{collection: ICollection}>, {
             token: string, body: {
                 tags: string[],
                 title: string
@@ -27,7 +29,7 @@ export const collectionsApi = createApi({
                 },
             }),
             invalidatesTags: ['Collection'],
-            transformResponse: (response: {data: {collection: ICollection}, status: string, code: number}) => response.data.collection
+            transformErrorResponse: returnTransformedError
         }),
         delete: builder.mutation<void, {id: string, token: string}>({
             query: ({id, token}) => ({

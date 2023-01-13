@@ -1,4 +1,4 @@
-import {useAppSelector} from "../../redux/hooks";
+import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
 import {collectionsApi} from "../../redux/api/collectionsApi";
 import {useForm} from "react-hook-form";
@@ -8,7 +8,7 @@ import React from "react";
 import * as Yup from "yup";
 import {useNavigate, useParams} from "react-router-dom";
 import {createCollectionValidationSchema} from "../../utils/validationSchemas";
-
+import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 
 
 interface ICollectionFormData {
@@ -16,7 +16,11 @@ interface ICollectionFormData {
     tags: string,
 }
 
-export default function CreateCollectionModal({closeModal, isModalOpen, refetch}: { closeModal: () => void, isModalOpen: boolean, refetch?: () => void }) {
+export default function CreateCollectionModal({
+                                                  closeModal,
+                                                  isModalOpen,
+                                                  refetch
+                                              }: { closeModal: () => void, isModalOpen: boolean, refetch?: () => void }) {
     const {id: collectionId = ''} = useParams<{ id: string }>()!
 
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
@@ -35,29 +39,35 @@ export default function CreateCollectionModal({closeModal, isModalOpen, refetch}
     });
 
     const navigate = useNavigate()
+    const dispatch = useAppDispatch()
 
     const onSubmit = handleSubmit(({title, tags}) => {
         const formattedTags = tags.split(' ')
-        console.log({title, tags})
 
         createNewUserCollection({title, tags: formattedTags})
     })
 
     const createNewUserCollection = async (body: { title: string, tags: string[] }) => {
 
-        const collection = await createCollection({token, body})
+        try {
+            const response = await createCollection({token, body}).unwrap()
 
-        resetForm()
-        closeModal()
+            resetForm()
+            closeModal()
 
-        if (!!refetch && 'data' in collection) {
-            refetch()
-            console.log(collection.data)
-        }
+            if (!!refetch) {
+                refetch()
+                navigate(response.data.collection._id)
 
-        if (!!collectionId && 'data' in collection) {
+                dispatch(pushResponse(response as IResponseNotification))
 
-            navigate(collection.data._id)
+                console.log(response.data)
+            }
+
+
+
+        } catch (e) {
+            dispatch(pushResponse(e as IResponseNotification))
         }
     }
 
@@ -92,8 +102,9 @@ export default function CreateCollectionModal({closeModal, isModalOpen, refetch}
                     <Typography color='text.standard' variant='h1'>Loading...</Typography>
                     :
                     <>
-                        <Button color='error'  sx={{alignSelf: 'end'}} onClick={closeModal}>Close</Button>
-                        <Typography color='text.standard' textAlign='center' mx='auto' my={2} variant='h3'>Create new collection</Typography>
+                        <Button color='error' sx={{alignSelf: 'end'}} onClick={closeModal}>Close</Button>
+                        <Typography color='text.standard' textAlign='center' mx='auto' my={2} variant='h3'>Create new
+                            collection</Typography>
                         <form style={{
                             display: 'flex',
                             flexDirection: 'column',

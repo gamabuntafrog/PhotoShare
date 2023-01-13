@@ -25,12 +25,9 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import {useTheme} from '@mui/material/styles';
 import {collectionsApi} from "../../redux/api/collectionsApi";
 import {skipToken} from "@reduxjs/toolkit/query";
+import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
+import {changeProfileValidationSchema} from "../../utils/validationSchemas";
 
-
-const userSchema = Yup.object({
-    imageList: Yup.mixed(),
-    username: Yup.string().min(6).required()
-})
 
 interface IFormData {
     imageList: FileList,
@@ -44,10 +41,8 @@ export default function UserProfile() {
 
     const {data: user, isLoading, error} = usersApi.useGetByIdQuery({id, token, posts: true, collections: true})
     // const {data: userCollections = [], isLoading: isUserCollectionsLoading} = collectionsApi.useGetCurrentQuery({token: user?.token || ''}, {skip: !user})
-    console.log(user)
     // console.log(userCollections)
-
-    const [updateUser] = usersApi.useUpdateByIdMutation()
+    const [updateUser] = usersApi.useUpdateCurrentMutation()
     const [subscribe] = usersApi.useSubscribeMutation()
     const [unsubscribe] = usersApi.useUnsubscribeMutation()
 
@@ -56,14 +51,16 @@ export default function UserProfile() {
         setValue,
         handleSubmit,
         watch,
-        formState: {errors: {username: usernameError}}
+        formState: {errors}
     } = useForm<IFormData>({
-        resolver: yupResolver(userSchema),
+        resolver: yupResolver(changeProfileValidationSchema),
         mode: 'all'
     });
-
+    const {username: usernameError} = errors
+    console.log(errors)
     const theme = useTheme();
     const {palette: {primary: {main}}} = theme
+    console.log(watch('imageList'))
 
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
@@ -73,14 +70,23 @@ export default function UserProfile() {
     const [avatarFile, setAvatarFile] = useState<null | string>(null);
     const [isChangingMode, setIsChangingMode] = useState(false);
 
+    const dispatch = useAppDispatch()
 
     const saveChanges = async ({username, imageList}: { username: string, imageList: FileList }) => {
-        const avatar = await convertImageToString(imageList)
+        const avatar = imageList.length ? await convertImageToString(imageList) : ''
 
-        await updateUser({token, body: {username, avatar: avatarFile}})
-        setIsChangingMode(false)
+        try {
+            const response = await updateUser({token, body: {username, avatar}}).unwrap()
 
-        document.location.reload()
+            dispatch(pushResponse(response as IResponseNotification))
+
+            setIsChangingMode(false)
+
+            document.location.reload()
+        } catch (e) {
+            dispatch(pushResponse(e as IResponseNotification))
+
+        }
     }
 
     const onSubmit = handleSubmit(({username, imageList}) => saveChanges({username, imageList}));
@@ -290,7 +296,6 @@ export default function UserProfile() {
                                         }}
                                     >
                                         {posts.map((post, i) => {
-                                            console.log(post)
                                             const isLengthSmall = posts.length < 2
                                             const rows = i === 0 ? isLengthSmall ? 2 : 2 : 1
                                             const cols = i === 0 ? isLengthSmall ? 2 : 1 : 1
