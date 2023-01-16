@@ -12,6 +12,7 @@ import React, {useEffect, useState} from "react";
 import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
 import useToggleSaveOfPostCreator from "../../hooks/useToggleSaveOfPostCreator";
 import CreateCollectionModal from "../CreateCollectionModal";
+import {extendedPostsApi} from "../../redux/api/rootApi";
 
 
 export default function Posts() {
@@ -24,7 +25,13 @@ export default function Posts() {
         data: allPosts,
         isLoading: isAllPostsLoading,
         error: allPostsError,
-    } = postsApi.useFetchAllPostsQuery()
+    } = extendedPostsApi.useGetManyQuery(undefined, {
+        refetchOnMountOrArgChange: true
+    })
+
+    useEffect(() => {
+        console.log(allPosts)
+    }, [allPosts]);
 
 
     const useToggleLike = useToggleLikeOfPostCreator({token, currentUserId})
@@ -38,7 +45,7 @@ export default function Posts() {
     const openModal = () => setIsModalOpen(true)
     const closeModal = () => setIsModalOpen(false)
 
-    console.log(allPosts, allPostsError)
+    // console.log(allPosts, allPostsError)
 
     if (isAllPostsLoading || isLoading) {
         return (
@@ -85,8 +92,6 @@ export default function Posts() {
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
                 {allPosts.map((post) => <PostItem
-                    useToggleSave={useToggleSave}
-                    useToggleLike={useToggleLike}
                     openModal={openModal}
                     post={post}
                     key={post._id}

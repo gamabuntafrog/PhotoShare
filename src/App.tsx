@@ -18,6 +18,7 @@ import {AppDispatch} from "./redux/store";
 import {chooseRouter} from "./components/router";
 import {INotification} from "./types/notification";
 import {IResponseNotification, pullResponse, pushResponse} from "./redux/slices/responseNotificationsSlice";
+import {extendedPostsApi, extendedUsersApi} from "./redux/api/rootApi";
 
 
 const tryAuth = async (dispatch: AppDispatch) => {
@@ -59,31 +60,44 @@ export default function App() {
     const notifications = useAppSelector(state => state.responseNotificationsReducer.notifications)
     const dispatch = useAppDispatch()
 
-    console.log(notifications)
+    // const {data} = extendedApi.useGetPostsQuery()
+    // const {data} = extendedPostsApi.useGetPostByIdQuery('63c2c87a9217dfcf74700f28')
+    // // const [testCreatePost] = extendedApi.useCreatePostMutation()
+    // const [testFn] = extendedUsersApi.useUpdateUserMutation()
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         console.log('testFn')
+    //         testFn()
+    //     }, 3000)
+    // }, []);
+    //
+    // useEffect(() => {
+    //     console.log(data)
+    // }, [data]);
 
 
     useEffect(() => responsedNotificationsCleaner(dispatch, notifications.length), [notifications.length]);
     useEffect(() => logoutWhenSessionIsOver(() => dispatch(logout()), notifications), [notifications.length]);
 
 
-    const subscribe = async (token: string) => {
-        try {
-            const {data}: { data: { notification: INotification } } = await fetch('http://localhost:3001/users/notifications/', {
-                method: 'GET',
-                headers: {
-                    authorization: `Bearer ${token}`
-                }
-            }).then((res) => res.json())
-
-            dispatch(addNotification(data.notification))
-            // console.log(data)
-            subscribe(token)
-
-        } catch (e) {
-            console.log(e)
-            setTimeout(() => subscribe(token), 500)
-        }
-    }
+    // const subscribe = async (token: string) => {
+    //     try {
+    //         const {data}: { data: { notification: INotification } } = await fetch('http://localhost:3001/users/notifications/', {
+    //             method: 'GET',
+    //             headers: {
+    //                 authorization: `Bearer ${token}`
+    //             }
+    //         }).then((res) => res.json())
+    //
+    //         dispatch(addNotification(data.notification))
+    //         // console.log(data)
+    //         subscribe(token)
+    //
+    //     } catch (e) {
+    //         console.log(e)
+    //         setTimeout(() => subscribe(token), 500)
+    //     }
+    // }
 
     useEffect(() => {
         !!token ? tryAuth(dispatch) : dispatch(disableLoading())

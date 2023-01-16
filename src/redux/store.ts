@@ -7,6 +7,7 @@ import {usersApi} from "./api/usersApi";
 import userSlice from "./slices/userSlice";
 import {collectionsApi} from "./api/collectionsApi";
 import {responseNotificationsSlice} from "./slices/responseNotificationsSlice";
+import {extendedPostsApi, rootApi} from "./api/rootApi";
 
 
 const persistUserConfig = {
@@ -29,6 +30,8 @@ export const store = configureStore({
     [postsApi.reducerPath]: postsApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
     [collectionsApi.reducerPath]: collectionsApi.reducer,
+    // [extendedApi.reducerPath]: extendedApi.reducer,
+    [rootApi.reducerPath]: rootApi.reducer,
     userReducer: persistedUserReducer,
     themeReducer: persistedThemeReducer,
     responseNotificationsReducer: responseNotificationsSlice.reducer
@@ -36,10 +39,10 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
       serializableCheck: false
-    }).concat(postsApi.middleware, usersApi.middleware, collectionsApi.middleware)
+    }).concat(postsApi.middleware, usersApi.middleware, collectionsApi.middleware, rootApi.middleware)
   }
 });
-
+//, extendedApi.middleware
 export const persistor = persistStore(store)
 
 export type AppDispatch = typeof store.dispatch;

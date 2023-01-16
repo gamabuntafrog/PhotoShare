@@ -1,4 +1,4 @@
-import {IUser} from "./user";
+import {IUser, IUserInPost} from "./user";
 
 export interface IComment {
     author: IUser,
@@ -10,18 +10,21 @@ export interface IComment {
 export interface IPost {
     savesCount: number,
     comments: IComment[],
-    image: {
-        url: string,
-        id: string
-    },
+    image: string,
     _id: string,
-    author: IUser,
+    author: IUserInPost,
     title: string,
     body: string,
     tags: string[],
-    usersLiked: string[],
-    savedInCollections: string[],
     likesCount: number,
     createdAt: string,
-    updatedAt: string
+    updatedAt: string,
+    isLiked: boolean,
+    isSomewhereSaved: boolean,
+    savesInfo: {
+        collectionId: string,
+        title: string,
+        isSaved: boolean
+    }[]
 }
+

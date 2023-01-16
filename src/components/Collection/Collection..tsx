@@ -13,6 +13,7 @@ import useToggleSaveOfPostCreator from "../../hooks/useToggleSaveOfPostCreator";
 import React, {useState} from "react";
 import CreateCollectionModal from "../CreateCollectionModal";
 import {usersApi} from "../../redux/api/usersApi";
+import {extendedCollectionsApi} from "../../redux/api/rootApi";
 
 
 export default function Collection() {
@@ -25,17 +26,13 @@ export default function Collection() {
         data: collection,
         isLoading: isCollectionLoading,
         error: collectionError,
-        refetch: collectionRefetch
-    } = collectionsApi.useGetCollectionWithPostsQuery({id, token})
-    console.log(collection)
-    const {data: author, isLoading: isUserLoading} = usersApi.useGetByIdQuery({id: collection?.author?._id || '', token, posts: false, collections: false})
+    } = extendedCollectionsApi.useGetOneWithPostsAndAuthorQuery({id}) // collectionId
 
+    console.log(collection)
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-    const useToggleLike = useToggleLikeOfPostCreator({token, currentUserId})
-    const [{isLoading, refetch}, useToggleSave] = useToggleSaveOfPostCreator({token})
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true)
@@ -54,7 +51,7 @@ export default function Collection() {
         isSubscribed ? unsubscribe({userId, token}) : subscribe({userId, token})
     }
 
-    if (isCollectionLoading || isLoading || isUserLoading) {
+    if (isCollectionLoading) {
         return (
             <Container className={styles.posts} sx={{
                 margin: '0 auto',
@@ -85,14 +82,16 @@ export default function Collection() {
         )
     }
 
-    const {_id: collectionId, posts, title, tags} = collection
-    const {_id: authorId, avatar: {url: avatarUrl}, username, subscribers} = author!
-
+    const {_id: collectionId, posts, title, tags, author} = collection
+    const {_id: authorId, avatar: avatarUrl, username} = author!
+    console.log(posts)
     const formattedTags = tags.join(' ')
-    const subscribersAmount = subscribers.length
+    const subscribersAmount = 0
+        // subscribers.length
     const isCurrentUserAuthorOfThisCollection = user._id === authorId
     const isProfileOfCurrentUser = currentUserId === collection.author._id
-    const isSubscribed = !!subscribers.find((id) => id === currentUserId)
+    const isSubscribed = false
+// !!subscribers.find((id) => id === currentUserId)
 
     return (
         <Box sx={{overflowY: 'auto', height: '91vh'}}>
@@ -155,7 +154,8 @@ export default function Collection() {
                     </Button>}
                 </Box>
             </Box>
-            <CreateCollectionModal refetch={refetch} closeModal={closeModal} isModalOpen={isModalOpen}/>
+            {/*refetch()*/}
+            <CreateCollectionModal closeModal={closeModal} isModalOpen={isModalOpen}/>
             <ImageList
                 variant="masonry"
                 sx={{
@@ -167,10 +167,9 @@ export default function Collection() {
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
                 {posts.map((post) => <PostItem
-                    useToggleSave={useToggleSave}
-                    useToggleLike={useToggleLike}
                     openModal={openModal}
                     post={post}
+                    collectionId={collectionId}
                     key={post._id}
                 />)}
             </ImageList>

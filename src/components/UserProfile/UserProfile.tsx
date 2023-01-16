@@ -27,6 +27,7 @@ import {collectionsApi} from "../../redux/api/collectionsApi";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 import {changeProfileValidationSchema} from "../../utils/validationSchemas";
+import {extendedUsersApi} from "../../redux/api/rootApi";
 
 
 interface IFormData {
@@ -39,9 +40,9 @@ export default function UserProfile() {
 
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
 
-    const {data: user, isLoading, error} = usersApi.useGetByIdQuery({id, token, posts: true, collections: true})
-    // const {data: userCollections = [], isLoading: isUserCollectionsLoading} = collectionsApi.useGetCurrentQuery({token: user?.token || ''}, {skip: !user})
-    // console.log(userCollections)
+    const {data: user, isLoading, error} = extendedUsersApi.useGetUserByIdQuery({id})
+    console.log(user)
+
     const [updateUser] = usersApi.useUpdateCurrentMutation()
     const [subscribe] = usersApi.useSubscribeMutation()
     const [unsubscribe] = usersApi.useUnsubscribeMutation()
@@ -58,7 +59,7 @@ export default function UserProfile() {
     });
     const {username: usernameError, imageList: avatarError} = errors
     const isErrors = !!(usernameError || avatarError)
-    console.log(isErrors)
+    // console.log(isErrors)
     const theme = useTheme();
     const {palette: {primary: {main}}} = theme
 
@@ -128,16 +129,16 @@ export default function UserProfile() {
     }
 
 
-    const {avatar, username, age, email, createdAt, _id: userId, posts, subscribes, subscribers, collections} = user
-    const avatarURL = avatar.url || avatarFile || ''
+    const {avatar, username, email, createdAt, _id: userId, subscribesCount, subscribersCount, postsCount, collections} = user
+    const avatarURL = avatar || ''
     const [month, day, year] = new Date(createdAt).toLocaleDateString('en-US').split('/')
     const formattedCreatedAt = [day, month, year].join('.')
 
     const {_id: currentUserId} = currentUser
 
     const isProfileOfCurrentUser = currentUserId === userId
-    const isSubscribed = !!subscribers.find((id) => id === currentUserId)
-
+    const isSubscribed = false
+    // !!subscribers.find((id) => id === currentUserId)
     const turnOnChangingMode = () => setIsChangingMode(true)
     const turnOffChangingMode = () => {
         setAvatarFile(null)
@@ -215,9 +216,9 @@ export default function UserProfile() {
                             <Typography variant='h4'>{username}</Typography>
                             <Typography variant='body1'>{email}</Typography>
                             <Box sx={{display: 'flex', margin: 1}}>
-                                <Typography sx={{mx: 1}}>{posts.length} posts</Typography>
-                                <Typography sx={{mx: 1}}>{subscribes.length} subscribes</Typography>
-                                <Typography sx={{mx: 1}}>{subscribers.length} subscribers</Typography>
+                                <Typography sx={{mx: 1}}>{postsCount} posts</Typography>
+                                <Typography sx={{mx: 1}}>{subscribesCount} subscribes</Typography>
+                                <Typography sx={{mx: 1}}>{subscribersCount} subscribers</Typography>
                             </Box>
                             <Typography>Created at {formattedCreatedAt}</Typography>
                         </>
@@ -308,7 +309,7 @@ export default function UserProfile() {
                                                     cols={cols}
                                                     key={i}
                                                 >
-                                                    <img src={post.image.url}/>
+                                                    <img src={post.image}/>
                                                 </ImageListItem>
                                             )
                                         })}

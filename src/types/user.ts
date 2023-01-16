@@ -1,6 +1,16 @@
 import {IPost} from "./post";
 import {ICollection, ICollectionWithPosts} from "./collection";
 
+export interface IUserInPost {
+    username: string,
+    avatar: string | null,
+    age: number,
+    posts: string[],
+    createdAt: string,
+    updatedAt: string,
+    _id: string,
+}
+
 export interface IUser {
     username: string,
     email: string,
@@ -38,6 +48,29 @@ export interface IUserWithPosts {
     token: string,
     _id: string,
     collections: ICollectionWithPosts[]
+}
+
+export interface IPostForICollection {
+    _id: string,
+    image: string
+}
+
+export interface ICollectionForIUser {
+    _id: string,
+    title: string,
+    posts: IPostForICollection[]
+}
+
+export interface IUserWithCollections {
+    _id: string,
+    username: string,
+    avatar: string | null,
+    email: string,
+    subscribesCount: number,
+    subscribersCount: number,
+    postsCount: number,
+    createdAt: string,
+    collections: ICollectionForIUser[]
 }
 
 export interface ICurrentUser {

@@ -11,9 +11,13 @@ import {useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
 import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import {usersApi} from "../../redux/api/usersApi";
+import useAnchorEl from "../../hooks/useAnchorEl";
+import {extendedCollectionsApi, extendedPostsApi, extendedUsersApi} from "../../redux/api/rootApi";
+import Loader from "../Loader";
+
 
 
 export default function Post() {
@@ -31,28 +35,36 @@ export default function Post() {
         await deletePostFn({id: postId, token})
     }
 
-    const {data: post, isLoading: isPostLoading} = postsApi.useGetPostByIdQuery(id)
-    const {data: author, isLoading: isUserLoading} = usersApi.useGetByIdQuery({
-        id: post?.author?._id || '',
-        token,
-        posts: false,
-        collections: false
-    })
+    // const {data: post, isLoading: isPostLoading} = postsApi.useGetPostByIdQuery(id)
+    // const {data: author, isLoading: isUserLoading} = usersApi.useGetByIdQuery({
+    //     id: post?.author?._id || '',
+    //     token,
+    //     posts: false,
+    //     collections: false
+    // })
+    const {data: post, isLoading: isPostLoading} = extendedPostsApi.useGetOneByIdQuery({id})
+    console.log(post)
 
     const useToggleLike = useToggleLikeOfPostCreator({token, currentUserId})
-    const [{isLiked, likes}, toggleLike] = useToggleLike({
-        skip: isPostLoading,
-        postId: id,
-        usersLiked: post?.usersLiked || [],
-        likesCount: post?.likesCount || 0
-    })
+    // const [{isLiked, likes}, toggleLike] = useToggleLike({
+    //     skip: isPostLoading,
+    //     postId: id,
+    //     usersLiked: post?.usersLiked || [],
+    //     likesCount: post?.likesCount || 0
+    // })
 
-    const [{isLoading, refetch}, useToggleSave] = useToggleSaveOfPostCreator({token})
-    const [{isSaved, saves, savesInfo}, toggleSave, addNewCollectionInSavesInfo] = useToggleSave({
-        skip: isPostLoading,
-        savesCount: post?.savesCount || 0,
-        postId: id
-    })
+
+    const [updateUser] = extendedUsersApi.useUpdateUserMutation()
+    const [subscribeToUser] = extendedUsersApi.useSubscribeToUserByIdMutation()
+    const [unsubscribeToUser] = extendedUsersApi.useUnsubscribeFromUserByIdMutation()
+
+
+    // const [{isLoading, refetch}, useToggleSave] = useToggleSaveOfPostCreator({token})
+    // const [{isSaved, saves, savesInfo}, toggleSave, addNewCollectionInSavesInfo] = useToggleSave({
+    //     skip: isPostLoading,
+    //     savesCount: post?.savesCount || 0,
+    //     postId: id
+    // })
 
     const theme = useTheme()
     const {main} = theme.palette.primary
@@ -60,37 +72,25 @@ export default function Post() {
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
+    const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const toggleSubscribe = async (userId: string, token: string, isSubscribed: boolean) => {
-        isSubscribed ? unsubscribe({userId, token}) : subscribe({userId, token})
+    const toggleSubscribe = async () => {
+        try {
+            isSubscribed ? unsubscribeToUser({id: authorId}).unwrap() : subscribeToUser({id: authorId}).unwrap()
+        } catch (e) {
+            console.log(e)
+        }
     }
 
-    if (isPostLoading || isLoading || isUserLoading) {
-        return (
-            <Box sx={{
-                bgcolor: 'background.default',
-                color: 'var(--text-primary)',
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}>
-                <Typography variant='h1'>Loading...</Typography>
-            </Box>
-        )
-    }
+    const [unlikePost] = extendedPostsApi.useUnlikeOneByIdMutation()
+    const [likePost] = extendedPostsApi.useLikeOneByIdMutation()
 
-    if (!post || !author) {
+    const [unsavePost] = extendedCollectionsApi.useDeletePostFromCollectionMutation()
+    const [savePost] = extendedCollectionsApi.useSavePostInCollectionMutation()
+
+    if (isPostLoading) return <Loader/>
+
+    if (!post || !post.author) {
         return (
             <Box>
                 <Typography variant='h1'>404 Not Found</Typography>
@@ -98,14 +98,44 @@ export default function Post() {
         )
     }
 
-    const {_id: postId, title, body, tags, likesCount, image: {url: postImageURL}} = post
-    const {username, _id: authorId, avatar: {url: avatarURL = ''}, subscribers} = author!
-    const subscribersAmount = subscribers.length
+    const {
+        _id: postId,
+        author,
+        title,
+        body,
+        tags,
+        likesCount,
+        savesCount,
+        image: postImageURL,
+        isLiked,
+        isSomewhereSaved: isSaved,
+        savesInfo
+    } = post
+    const {username, _id: authorId, avatar: avatarURL = ''} = author
+
+    const subscribersAmount = 0
+        // subscribers.length
     const formattedTags = tags.join(' ')
     const isProfileOfCurrentUser = currentUserId === post.author._id
-    const isSubscribed = !!subscribers.find((id) => id === currentUserId)
+    const isSubscribed = false
+        // !!subscribers.find((id) => id === currentUserId)
     const isUserAuthorOfPost = authorId === currentUserId
 
+    const toggleLike = async () => {
+        try {
+            isLiked ? await unlikePost({id: postId}).unwrap() : await likePost({id: postId}).unwrap()
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const toggleSave = async ({collectionId, isSaved}: {collectionId: string, isSaved: boolean}) => {
+        try {
+            isSaved ? await unsavePost({postId, collectionId}) : await savePost({postId, collectionId})
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return (
         <Box
@@ -156,13 +186,13 @@ export default function Post() {
                                 {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
                             </IconButton>
                             <Typography sx={{ml: 0.5}}>
-                                {likes}
+                                {likesCount}
                             </Typography>
                             <IconButton
                                 id="basic-button"
-                                aria-controls={open ? 'basic-menu' : undefined}
+                                aria-controls={isAnchorEl ? 'basic-menu' : undefined}
                                 aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
+                                aria-expanded={isAnchorEl ? 'true' : undefined}
                                 onClick={handleClick}
                                 sx={{ml: 'auto'}}
                             >
@@ -177,7 +207,7 @@ export default function Post() {
                                 <Menu
                                     id="basic-menu"
                                     anchorEl={anchorEl}
-                                    open={open}
+                                    open={isAnchorEl}
                                     onClose={handleClose}
                                     MenuListProps={{
                                         'aria-labelledby': 'basic-button',
@@ -186,13 +216,13 @@ export default function Post() {
                                         maxHeight: '300px'
                                     }}
                                 >
-                                    {savesInfo.map(({savedInCollectionTitle, postId, isSaved, collectionId}, i) => {
+                                    {savesInfo.map(({title, isSaved, collectionId}, i) => {
                                         return (
                                             <MenuItem key={i} onClick={() => {
                                                 handleClose()
-                                                toggleSave({collectionId, isSavedInCollection: isSaved})
+                                                toggleSave({collectionId, isSaved})
                                             }}>
-                                                {isSaved ? 'saved in' : 'not saved in'} {savedInCollectionTitle}
+                                                {isSaved ? 'saved in' : 'not saved in'} {title}
                                             </MenuItem>
                                         )
                                     })}
@@ -243,7 +273,7 @@ export default function Post() {
                                     borderRadius: 4,
                                 }}
                                 variant='contained'
-                                onClick={() => toggleSubscribe(authorId, token, isSubscribed)}
+                                onClick={toggleSubscribe}
                             >
                                 {!isSubscribed ? 'Subscribe' : 'Unsubscribe'}
                             </Button>}

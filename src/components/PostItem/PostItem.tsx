@@ -25,17 +25,17 @@ import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {SerializedError} from "@reduxjs/toolkit";
 import {collectionsApi} from "../../redux/api/collectionsApi";
 import {IToggleLikeProps, useToggleLikeType, useToggleSaveType} from "../../types/types";
+import useAnchorEl from "../../hooks/useAnchorEl";
+import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
 
 interface IPostItem {
     post: IPost,
-    useToggleLike: useToggleLikeType,
-    useToggleSave: useToggleSaveType,
-    openModal: () => void
+    openModal: () => void,
+    collectionId?: string
 }
 
 
-export default function PostItem({post, useToggleLike, useToggleSave, openModal}: IPostItem) {
-    const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
+export default function PostItem({post, openModal, collectionId = ''}: IPostItem) {
 
     const {
         _id: postId,
@@ -45,21 +45,38 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
         tags,
         likesCount,
         savesCount,
-        image: {url: postImageURL},
-        usersLiked,
+        image: postImageURL,
+        isLiked,
+        isSomewhereSaved: isSaved,
+        savesInfo
     } = post
-    const {username, _id: authorId, avatar: {url: avatarURL = ''}} = author
+    const {username, _id: authorId, avatar: avatarURL = ''} = author
 
+    const [unlikePost] = extendedPostsApi.useUnlikeOneByIdMutation()
+    const [likePost] = extendedPostsApi.useLikeOneByIdMutation()
+    const [unsavePost] = extendedCollectionsApi.useDeletePostFromCollectionMutation()
+    const [savePost] = extendedCollectionsApi.useSavePostInCollectionMutation()
 
+    const toggleLike = async () => {
+        try {
+            isLiked ? await unlikePost({id: postId}).unwrap() : await likePost({id: postId}).unwrap()
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
-    const [{isLiked, likes}, toggleLike] = useToggleLike({postId, usersLiked, likesCount})
+    const toggleSave = async ({collectionId, isSaved}: {collectionId: string, isSaved: boolean}) => {
+        try {
+            isSaved ? await unsavePost({postId, collectionId}) : await savePost({postId, collectionId})
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     const formattedTags = tags.join(' ')
     const theme = useTheme()
     const {main} = theme.palette.primary
 
-
-    const [{isSaved, saves, savesInfo}, toggleSave, addNewCollectionInSavesInfo] = useToggleSave({postId, savesCount})
 
     const PostItemTitle = <>
         <Box
@@ -85,15 +102,7 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
         </NavLink>
     </>
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
 
     return (
         <ImageListItem
@@ -140,9 +149,9 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
                 >
                     <IconButton
                         id="basic-button"
-                        aria-controls={open ? 'basic-menu' : undefined}
+                        aria-controls={isAnchorEl ? 'basic-menu' : undefined}
                         aria-haspopup="true"
-                        aria-expanded={open ? 'true' : undefined}
+                        aria-expanded={isAnchorEl ? 'true' : undefined}
                         onClick={handleClick}
                         sx={{ml: 'auto'}}
                     >
@@ -152,7 +161,7 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
                         <Menu
                             id="basic-menu"
                             anchorEl={anchorEl}
-                            open={open}
+                            open={isAnchorEl}
                             onClose={handleClose}
                             MenuListProps={{
                                 'aria-labelledby': 'basic-button',
@@ -161,13 +170,14 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
                                 maxHeight: '300px'
                             }}
                         >
-                            {savesInfo.map(({savedInCollectionTitle, postId, isSaved, collectionId}, i) => {
+                            {savesInfo.map(({title, isSaved, collectionId}, i) => {
                                 return (
                                     <MenuItem key={i} onClick={() => {
                                         handleClose()
-                                        toggleSave({collectionId, isSavedInCollection: isSaved})
+                                        toggleSave({collectionId, isSaved})
+                                        // toggleSave({collectionId, isSavedInCollection: isSaved})
                                     }}>
-                                        {isSaved ? 'saved in' : 'not saved in'} {savedInCollectionTitle}
+                                        {isSaved ? 'saved in' : 'not saved in'} {title}
                                     </MenuItem>
                                 )
                             })}
@@ -200,7 +210,7 @@ export default function PostItem({post, useToggleLike, useToggleSave, openModal}
                         {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
                     </IconButton>
                     <Typography sx={{ml: 0.5}}>
-                        {likes}
+                        {likesCount}
                     </Typography>
                 </Box>
             </Box>

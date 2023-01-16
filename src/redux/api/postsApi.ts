@@ -88,7 +88,7 @@ export const postsApi = createApi({
         }),
         savePost: builder.mutation<IPost, {token: string, postId: string, collectionId: string}>({
             query: ({token, postId, collectionId}) => ({
-                url: `/${postId}/saves/${collectionId}`,
+                url: `/${postId}/unsaves/${collectionId}`,
                 method: 'PATCH',
                 headers: {
                     authorization: `Bearer ${token}`,
@@ -99,7 +99,7 @@ export const postsApi = createApi({
         }),
         unsavePost: builder.mutation<IPost, {token: string, postId: string, collectionId: string}>({
             query: ({token, postId, collectionId}) => ({
-                url: `/${postId}/unsaves/${collectionId}`,
+                url: `/${postId}/saves/${collectionId}`,
                 method: 'PATCH',
                 headers: {
                     authorization: `Bearer ${token}`,

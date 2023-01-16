@@ -25,6 +25,7 @@ import {ICollection} from "../../types/collection";
 import CreateCollectionModal from "../CreateCollectionModal";
 import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 import {createPostValidationSchema} from "../../utils/validationSchemas";
+import useAnchorEl from "../../hooks/useAnchorEl";
 
 
 export const breakableText = {wordBreak: 'break-all', whiteSpace: 'break-spaces'}
@@ -36,6 +37,7 @@ interface IFormData {
     tags: string,
     collectionId: string
 }
+
 
 
 export default function CreatePost() {
@@ -120,15 +122,9 @@ export default function CreatePost() {
 
     useEffect(() => setPreviewImage(watch('imageList'), setImageFile), [watch('imageList')]);
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const open = Boolean(anchorEl);
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
 
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
+    const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
+
 
     if (isPostCreating || isUserCollectionsLoading) {
         return (
@@ -172,9 +168,9 @@ export default function CreatePost() {
                         <Grid item ml='auto'>
                             <Button
                                 id="basic-button"
-                                aria-controls={open ? 'basic-menu' : undefined}
+                                aria-controls={isAnchorEl ? 'basic-menu' : undefined}
                                 aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
+                                aria-expanded={isAnchorEl ? 'true' : undefined}
                                 onClick={handleClick}
                                 sx={{
                                     color: !!collectionIdError ? 'red' : 'primary.main'
@@ -185,7 +181,7 @@ export default function CreatePost() {
                             <Menu
                                 id="basic-menu"
                                 anchorEl={anchorEl}
-                                open={open}
+                                open={isAnchorEl}
                                 onClose={handleClose}
                                 MenuListProps={{
                                     'aria-labelledby': 'basic-button',

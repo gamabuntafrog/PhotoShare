@@ -1,4 +1,4 @@
-import {IUser} from "./user";
+import {IUser, IUserInPost} from "./user";
 import {IPost} from "./post";
 
 export interface ICollection {
@@ -10,7 +10,7 @@ export interface ICollection {
 }
 
 export interface ICollectionWithPosts {
-    author: IUser,
+    author: IUserInPost,
     tags: string[],
     posts: IPost[],
     title: string,
