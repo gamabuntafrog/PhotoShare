@@ -11,6 +11,14 @@ export interface IUserInPost {
     _id: string,
 }
 
+export interface IUserInOnePost {
+    username: string,
+    avatar: string | null,
+    subscribersCount: number,
+    createdAt: string,
+    _id: string,
+}
+
 export interface IUser {
     username: string,
     email: string,
@@ -66,8 +74,8 @@ export interface IUserWithCollections {
     username: string,
     avatar: string | null,
     email: string,
-    subscribesCount: number,
     subscribersCount: number,
+    subscribesCount: number,
     postsCount: number,
     createdAt: string,
     collections: ICollectionForIUser[]

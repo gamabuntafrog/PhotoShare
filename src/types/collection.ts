@@ -9,8 +9,12 @@ export interface ICollection {
     _id: string
 }
 
+export interface IAuthorOfCollection extends IUserInPost {
+    subscribersCount: number
+}
+
 export interface ICollectionWithPosts {
-    author: IUserInPost,
+    author: IAuthorOfCollection,
     tags: string[],
     posts: IPost[],
     title: string,

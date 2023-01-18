@@ -9,6 +9,8 @@ import * as Yup from "yup";
 import {useNavigate, useParams} from "react-router-dom";
 import {createCollectionValidationSchema} from "../../utils/validationSchemas";
 import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
+import {updateSavesInfo} from "../../hooks/usePostsActions";
+import {extendedCollectionsApi} from "../../redux/api/rootApi";
 
 
 interface ICollectionFormData {
@@ -16,20 +18,23 @@ interface ICollectionFormData {
     tags: string,
 }
 
-export default function CreateCollectionModal({
-                                                  closeModal,
-                                                  isModalOpen,
-                                                  refetch
-                                              }: { closeModal: () => void, isModalOpen: boolean, refetch?: () => void }) {
+interface ICreateCollectionModalProps {
+    closeModal: () => void,
+    isModalOpen: boolean,
+    onCreate?: updateSavesInfo,
+    refetch?: () => void
+}
+
+const isFunction = (any: any): any is Function => typeof any === 'function'
+
+export default function CreateCollectionModal({closeModal, isModalOpen, onCreate, refetch}: ICreateCollectionModalProps) {
     const {id: collectionId = ''} = useParams<{ id: string }>()!
 
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
-    const [createCollection, {data, isLoading: isCollectionCreatingLoading}] = collectionsApi.useCreateMutation()
+    const [createCollection, {isLoading: isCollectionCreatingLoading}] = extendedCollectionsApi.useCreateCollectionMutation()
 
     const {
         register,
-        watch,
-        setValue,
         reset: resetForm,
         handleSubmit,
         formState: {errors: {title: titleError, tags: tagsError}}
@@ -50,21 +55,24 @@ export default function CreateCollectionModal({
     const createNewUserCollection = async (body: { title: string, tags: string[] }) => {
 
         try {
-            const response = await createCollection({token, body}).unwrap()
+            const response = await createCollection({body}).unwrap()
 
             resetForm()
             closeModal()
 
-            if (!!refetch) {
-                refetch()
-                navigate(response.data.collection._id)
+            if (isFunction(onCreate)) {
+                onCreate(body.title, response.data.collection._id)
 
                 dispatch(pushResponse(response as IResponseNotification))
 
                 console.log(response.data)
             }
 
+            if (isFunction(refetch)) {
 
+                refetch()
+                navigate(response.data.collection._id)
+            }
 
         } catch (e) {
             dispatch(pushResponse(e as IResponseNotification))

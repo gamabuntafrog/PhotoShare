@@ -8,25 +8,27 @@ import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import styles from "../Posts/Posts.module.css";
 import PostItem from "../PostItem";
-import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
-import useToggleSaveOfPostCreator from "../../hooks/useToggleSaveOfPostCreator";
 import React, {useState} from "react";
 import CreateCollectionModal from "../CreateCollectionModal";
 import {usersApi} from "../../redux/api/usersApi";
 import {extendedCollectionsApi} from "../../redux/api/rootApi";
+import usePostsActions from "../../hooks/usePostsActions";
+import {useToggleSubscribe} from "../Post/Post";
 
 
 export default function Collection() {
     const {id = ''} = useParams<{ id: string }>()!
 
     const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
-    const {savedPosts, likedPosts, _id: currentUserId} = user
+    const {_id: currentUserId} = user
 
     const {
         data: collection,
         isLoading: isCollectionLoading,
         error: collectionError,
-    } = extendedCollectionsApi.useGetOneWithPostsAndAuthorQuery({id}) // collectionId
+    } = extendedCollectionsApi.useGetOneWithPostsAndAuthorQuery({id})
+
+    const [posts, postsActions] = usePostsActions({initPosts: collection?.posts})
 
     console.log(collection)
     const theme = useTheme()
@@ -38,18 +40,13 @@ export default function Collection() {
     const openModal = () => setIsModalOpen(true)
     const closeModal = () => setIsModalOpen(false)
 
-    const [subscribe] = usersApi.useSubscribeMutation()
-    const [unsubscribe] = usersApi.useUnsubscribeMutation()
-
-    const [deleteColl] = collectionsApi.useDeleteMutation()
+    const [deleteColl] = extendedCollectionsApi.useDeleteCollectionMutation()
 
     const deleteCollection = async () => {
-        await deleteColl({id: collectionId, token})
+        await deleteColl({id})
     }
 
-    const toggleSubscribe = async (userId: string, token: string, isSubscribed: boolean) => {
-        isSubscribed ? unsubscribe({userId, token}) : subscribe({userId, token})
-    }
+    const {toggleSubscribe, isSubscribed} = useToggleSubscribe(collection?.author._id || '')
 
     if (isCollectionLoading) {
         return (
@@ -82,16 +79,12 @@ export default function Collection() {
         )
     }
 
-    const {_id: collectionId, posts, title, tags, author} = collection
-    const {_id: authorId, avatar: avatarUrl, username} = author!
-    console.log(posts)
+    const {_id: collectionId, title, tags, author} = collection
+    const {_id: authorId, avatar: avatarUrl, username, subscribersCount} = author
     const formattedTags = tags.join(' ')
-    const subscribersAmount = 0
-        // subscribers.length
-    const isCurrentUserAuthorOfThisCollection = user._id === authorId
-    const isProfileOfCurrentUser = currentUserId === collection.author._id
-    const isSubscribed = false
-// !!subscribers.find((id) => id === currentUserId)
+    const isCurrentUserAuthorOfCollection = currentUserId === authorId
+
+    const onToggleSubscribe = () => toggleSubscribe(authorId, isSubscribed)
 
     return (
         <Box sx={{overflowY: 'auto', height: '91vh'}}>
@@ -132,8 +125,8 @@ export default function Collection() {
                         <Avatar sx={{width: '80px', height: '80px'}} src={avatarUrl || ''} alt={username}/>
                         <Typography sx={{ml: 1}} variant='h5'>{username}</Typography>
                     </NavLink>
-                    <Typography sx={{my: 1}}>{subscribersAmount} subscribers</Typography>
-                    {isCurrentUserAuthorOfThisCollection &&
+                    <Typography sx={{my: 1}}>{subscribersCount} subscribers</Typography>
+                    {isCurrentUserAuthorOfCollection &&
                         <>
                             <Button onClick={deleteCollection} sx={{mb: 1}} color='error'>Delete Collection</Button>
                             <Button>
@@ -143,12 +136,12 @@ export default function Collection() {
                             </Button>
                         </>
                     }
-                    {!isProfileOfCurrentUser && <Button
+                    {!isCurrentUserAuthorOfCollection && <Button
                         sx={{
                             borderRadius: 4,
                         }}
                         variant='contained'
-                        onClick={() => toggleSubscribe(authorId, token, isSubscribed)}
+                        onClick={onToggleSubscribe}
                     >
                         {!isSubscribed ? 'Subscribe' : 'Unsubscribe'}
                     </Button>}
@@ -167,9 +160,9 @@ export default function Collection() {
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
                 {posts.map((post) => <PostItem
+                    postsActions={postsActions}
                     openModal={openModal}
                     post={post}
-                    collectionId={collectionId}
                     key={post._id}
                 />)}
             </ImageList>

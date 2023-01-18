@@ -1,16 +1,17 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {RootState} from "../store";
 import {createStandardCustomError, IResponse, IResponseWithMessage} from "../slices/userSlice";
-import {IPost} from "../../types/post";
+import {IOnePost, IPost} from "../../types/post";
 import {returnTransformedError} from "./postsApi";
 import {IUser, IUserWithCollections} from "../../types/user";
 import {IPostsApi} from "../../types/postsApi";
-import {ICollectionWithPosts} from "../../types/collection";
+import {ICollection, ICollectionWithPosts} from "../../types/collection";
 
 
 export const rootApi = createApi({
     reducerPath: 'rootApi',
-    tagTypes: ['Post', 'Posts', 'User', 'Collections', 'Collection'],
+    refetchOnMountOrArgChange: true,
+    tagTypes: ['Post', 'User'],
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:3001',
         prepareHeaders: (headers, {getState}) => {
@@ -62,21 +63,18 @@ export type idType = {
 }
 
 
-
 export const extendedPostsApi = rootApi.injectEndpoints({
     endpoints: (build) => ({
         getMany: build.query<IPost[], void>({
             query: () => '/posts',
-            transformResponse: (response: IResponse<{posts: IPost[]}>) => response.data.posts,
-            providesTags: ['Posts', 'User']
+            transformResponse: (response: IResponse<{ posts: IPost[] }>) => response.data.posts,
         }),
-        getOneById: build.query<IPost, idType>({
+        getOneById: build.query<IOnePost, idType>({
             query: ({id}) => ({
                 url: `/posts/${id}`
             }),
-            providesTags: result => ['Post', 'User'],
             transformErrorResponse: returnTransformedError,
-            transformResponse: (response: IResponse<{post: IPost}>) => response.data.post
+            transformResponse: (response: IResponse<{ post: IOnePost }>) => response.data.post
         }),
         createOneById: build.mutation<IResponseWithMessage<{ post: IPost }>, ICRUDOperationWithoutId<ICreatePostBody>>({
             query: ({body}) => ({
@@ -84,7 +82,6 @@ export const extendedPostsApi = rootApi.injectEndpoints({
                 method: 'POST',
                 body: body,
             }),
-            invalidatesTags: ['Posts', 'Post', 'Collection', 'Collections'],
             transformErrorResponse: returnTransformedError
         }),
         deleteOneById: build.mutation<void, idType>({
@@ -92,130 +89,21 @@ export const extendedPostsApi = rootApi.injectEndpoints({
                 url: `/posts/${id}`,
                 method: 'DELETE',
             }),
-            transformErrorResponse: returnTransformedError
+            transformErrorResponse: returnTransformedError,
         }),
-        likeOneById: build.mutation<IPost, idType>({
+        likeOneById: build.mutation<unknown, idType>({
             query: ({id}) => ({
                 url: `/posts/${id}/like`,
                 method: 'PATCH',
             }),
-            async onQueryStarted({id}, {dispatch, queryFulfilled, getState}) {
-                try {
-                    await queryFulfilled
-
-
-                    const likePostInCollectionsCache = dispatch(
-                                                                                                            // collectionId
-                        extendedCollectionsApi.util.updateQueryData('getOneWithPostsAndAuthor', {id}, (collectionsDraft) => {
-                            console.log('helloooooooooooooooooo') // не виводиться
-
-
-                            // let postDraft = collectionsDraft.posts.find((el) => el._id === id)
-                            // console.log(id)
-                            //
-                            // if (postDraft) {
-                            //     postDraft.likesCount += 1
-                            //     postDraft.isLiked = true
-                            // }
-                        })
-                    )
-
-                    queryFulfilled.catch(likePostInCollectionsCache.undo)
-
-                    const likePostInPostsCache = dispatch(
-                        extendedPostsApi.util.updateQueryData('getMany', void 0, (postsDraft) => {
-                            let postDraft = postsDraft.find((el) => el._id === id)
-                            console.log(id)
-
-                            if (postDraft) {
-                                postDraft.likesCount += 1
-                                postDraft.isLiked = true
-                            }
-                        })
-                    )
-
-                    queryFulfilled.catch(likePostInPostsCache.undo)
-
-                    const likePostInCache = dispatch(
-                        extendedPostsApi.util.updateQueryData('getOneById', {id}, (postDraft) => {
-                            console.log(id)
-
-                            if (postDraft && id === postDraft._id) {
-                                postDraft.likesCount += 1
-                                postDraft.isLiked = true
-                            }
-                        })
-                    )
-                    queryFulfilled.catch(likePostInCache.undo)
-
-
-                } catch (e) {
-                    console.error(e)
-                }
-            },
-            transformResponse: (response: IResponse<{post: IPost}>) => response.data.post,
             transformErrorResponse: returnTransformedError,
-            invalidatesTags: ['Collection'],
-            // 'Posts', 'Post', 'User'
         }),
-        unlikeOneById: build.mutation<IPost, idType>({
+        unlikeOneById: build.mutation<unknown, idType>({
             query: ({id}) => ({
                 url: `/posts/${id}/unlike`,
                 method: 'PATCH',
             }),
-            async onQueryStarted({id}, {dispatch, queryFulfilled, getState}) {
-                try {
-                    const {data} = await queryFulfilled
-                    const {user} = (getState() as RootState).userReducer
-
-                    if (!user) throw createStandardCustomError({message: 'Unathorized'})
-
-                    const {_id: currentUserId} = user
-
-                    const unlikePostInPostsCache = dispatch(
-                        extendedPostsApi.util.updateQueryData('getMany', void 0, (postsDraft) => {
-                            let postDraft = postsDraft.find((el) => el._id === id)
-                            console.log('heldfskljasdfdlkskj;lfd')
-
-                            if (postDraft) {
-                                postDraft.likesCount -= 1
-                                postDraft.isLiked = false
-                            }
-                        })
-                    )
-                    queryFulfilled.catch(unlikePostInPostsCache.undo)
-
-                    const unlikePostInCollectionsCache = dispatch(
-                        extendedCollectionsApi.util.updateQueryData('getOneWithPostsAndAuthor', {id}, (collectionsDraft) => {
-                            let postDraft = collectionsDraft.posts.find((el) => el._id === id)
-                            console.log(id)
-
-                            if (postDraft) {
-                                postDraft.likesCount -= 1
-                                postDraft.isLiked = false
-                            }
-                        })
-                    )
-                    queryFulfilled.catch(unlikePostInCollectionsCache.undo)
-
-                    const unlikePostInCache = dispatch(
-                        extendedPostsApi.util.updateQueryData('getOneById', {id}, (postDraft) => {
-                            if (postDraft && id === postDraft._id) {
-                                postDraft.likesCount -= 1
-                                postDraft.isLiked = false
-                            }
-                        })
-                    )
-
-                    queryFulfilled.catch(unlikePostInCache.undo)
-                } catch (e) {
-                    console.error(e)
-                }
-            },
-            // transformResponse: (response: IResponse<{post: IPost}>) => response.data.post,
             transformErrorResponse: returnTransformedError,
-            invalidatesTags: ['Collection'],
-            // 'Posts', 'Post', 'User'
         }),
     }),
     overrideExisting: false
@@ -227,62 +115,47 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
             query: ({id}) => ({
                 url: `/collections/${id}`,
             }),
-            providesTags: result => ['Posts', 'User', 'Collections', 'Collection'],
-            transformResponse: (response: IResponse<{collection: ICollectionWithPosts}>) => response.data.collection,
+            transformResponse: (response: IResponse<{ collection: ICollectionWithPosts }>) => response.data.collection,
         }),
-        savePostInCollection: build.mutation<unknown, {collectionId: string, postId: string}>({
+        getCurrentUserCollections: build.query<ICollection[], void>({
+            query: () => ({
+                url: `/collections`,
+            }),
+            transformResponse: (response: IResponse<{ collections: ICollection[] }>) => response.data.collections
+        }),
+        createCollection: build.mutation<IResponseWithMessage<{ collection: ICollection }>, {
+            body: {
+                tags: string[],
+                title: string
+            }
+        }>({
+            query: ({body}) => ({
+                url: `/collections`,
+                method: 'POST',
+                body,
+            }),
+            transformErrorResponse: returnTransformedError
+        }),
+        deleteCollection: build.mutation<unknown, idType>({
+            query: ({id}) => ({
+                url: `/${id}`,
+                method: 'DELETE',
+            }),
+            transformErrorResponse: returnTransformedError,
+        }),
+        savePostInCollection: build.mutation<unknown, { collectionId: string, postId: string }>({
             query: ({collectionId, postId}) => ({
                 url: `/posts/${postId}/saves/${collectionId}`,
                 method: 'PATCH',
             }),
-            async onQueryStarted({collectionId, postId}, {dispatch, queryFulfilled, getState}) {
-
-                const updateCache = dispatch(
-                    extendedPostsApi.util.updateQueryData('getMany', void 0, (postsDraft) => {
-                        let postDraft = postsDraft.find((el) => el._id === postId)
-
-                        if (postDraft) {
-                            postDraft.savesCount += 1
-                            const find = postDraft.savesInfo.find(({collectionId: id}) => id === collectionId)
-
-                            if (find) {
-                                find.isSaved = true
-                            }
-                        }
-                    })
-                )
-
-                queryFulfilled.catch(updateCache.undo)
-            },
-            invalidatesTags: ['Collection', 'Post'],
-            transformErrorResponse: returnTransformedError
+            transformErrorResponse: returnTransformedError,
         }),
-        deletePostFromCollection: build.mutation<unknown, {collectionId: string, postId: string}>({
+        deletePostFromCollection: build.mutation<unknown, { collectionId: string, postId: string }>({
             query: ({collectionId, postId}) => ({
                 url: `/posts/${postId}/unsaves/${collectionId}`,
                 method: 'PATCH',
             }),
-            async onQueryStarted({collectionId, postId}, {dispatch, queryFulfilled, getState}) {
-
-                const updateCache = dispatch(
-                    extendedPostsApi.util.updateQueryData('getMany', undefined, (postsDraft) => {
-                        let postDraft = postsDraft.find((el) => el._id === postId)
-
-                        if (postDraft) {
-                            postDraft.savesCount -= 1
-                            const find = postDraft.savesInfo.find(({collectionId: id}) => id === collectionId)
-
-                            if (find) {
-                                find.isSaved = false
-                            }
-                        }
-                    })
-                )
-
-                queryFulfilled.catch(updateCache.undo)
-            },
-            invalidatesTags: ['Collection', 'Post'],
-            transformErrorResponse: returnTransformedError
+            transformErrorResponse: returnTransformedError,
         })
     })
 })
@@ -297,7 +170,7 @@ export const extendedUsersApi = rootApi.injectEndpoints({
                     collections: true
                 }
             }),
-            transformResponse: (res: IResponse<{user: IUserWithCollections}>) => res.data.user
+            transformResponse: (res: IResponse<{ user: IUserWithCollections }>) => res.data.user
         }),
         updateUser: build.mutation<void, void>({
             query: () => ({
@@ -314,14 +187,14 @@ export const extendedUsersApi = rootApi.injectEndpoints({
                 url: `/users/${id}/subscribes`,
                 method: "POST",
             }),
-            invalidatesTags: ['User']
+            invalidatesTags: ['User', 'Post']
         }),
         unsubscribeFromUserById: build.mutation<IUser, idType>({
             query: ({id}) => ({
                 url: `/users/${id}/subscribes`,
                 method: "DELETE",
             }),
-            invalidatesTags: ['User']
+            invalidatesTags: ['User', 'Post']
         })
     }),
     overrideExisting: false

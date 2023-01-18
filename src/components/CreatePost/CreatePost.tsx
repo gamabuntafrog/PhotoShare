@@ -26,6 +26,8 @@ import CreateCollectionModal from "../CreateCollectionModal";
 import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 import {createPostValidationSchema} from "../../utils/validationSchemas";
 import useAnchorEl from "../../hooks/useAnchorEl";
+import {extendedCollectionsApi} from "../../redux/api/rootApi";
+import CollectionsInfo from "../CollectionsInfo";
 
 
 export const breakableText = {wordBreak: 'break-all', whiteSpace: 'break-spaces'}
@@ -37,7 +39,6 @@ interface IFormData {
     tags: string,
     collectionId: string
 }
-
 
 
 export default function CreatePost() {
@@ -53,8 +54,12 @@ export default function CreatePost() {
 
     const dispatch = useAppDispatch()
 
-    const {data: userCollections = [], isLoading: isUserCollectionsLoading, refetch: refetchCollections} = collectionsApi.useGetCurrentQuery({token})
-
+    const {
+        data: userCollections = [],
+        isLoading: isUserCollectionsLoading,
+        refetch: refetchCollections
+    } = extendedCollectionsApi.useGetCurrentUserCollectionsQuery()
+    console.log(userCollections)
     const [createPost] = postsApi.useCreatePostMutation()
 
     const navigate = useNavigate()
@@ -65,18 +70,20 @@ export default function CreatePost() {
         setValue,
         handleSubmit,
         control,
+        setError,
         formState: {
             errors
-        }
+        },
+        clearErrors
     } = useForm<IFormData>({
         resolver: yupResolver(createPostValidationSchema),
         mode: 'all',
         defaultValues: {
             title: '',
             body: '',
+            collectionId: collectionId,
         }
     });
-
     const {
         title: titleError,
         body: bodyError,
@@ -84,12 +91,23 @@ export default function CreatePost() {
         tags: tagsError,
         collectionId: collectionIdError
     } = errors
+    const isErrors = !!(titleError || bodyError || imageError || tagsError || collectionIdError)
 
 
     const findIndexOfCollection = (id: string) => userCollections.findIndex(({_id}) => _id === id)
-    useEffect(() => void setValue('collectionId', collectionId), []);
+    useEffect(() => void setValue('collectionId', collectionId), [collectionId]);
+
 
     const willSavedInCollectionIndex = !!watch('collectionId') ? findIndexOfCollection(watch('collectionId')) : findIndexOfCollection(collectionId)
+    const willSavedInCollectionTitle = userCollections[willSavedInCollectionIndex]?.title || 'Select collection'
+
+    useEffect(() => {
+        if (collectionId && findIndexOfCollection(collectionId) < 0) {
+            setError('collectionId', {type: 'custom', message: 'Non-existing collection id'})
+        } else {
+            clearErrors('collectionId')
+        }
+    }, [collectionId, userCollections.length]);
 
     const onSubmit = handleSubmit(async ({title, body, imageList, tags, collectionId}) => {
         const filteredTags = tags.split(' ').filter((str) => str !== '')
@@ -122,8 +140,10 @@ export default function CreatePost() {
 
     useEffect(() => setPreviewImage(watch('imageList'), setImageFile), [watch('imageList')]);
 
-
-    const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
+    const refetchCallback = () => {
+        refetchCollections()
+    }
+    const selectCollectionCallback = (collectionId: string) => navigate(`/post/create/${collectionId}`)
 
 
     if (isPostCreating || isUserCollectionsLoading) {
@@ -151,7 +171,11 @@ export default function CreatePost() {
                 overflowY: 'auto'
             }}
         >
-            <CreateCollectionModal refetch={() => refetchCollections()} closeModal={closeModal} isModalOpen={isCreateCollectionModalOpen}/>
+            <CreateCollectionModal
+                refetch={refetchCallback}
+                closeModal={closeModal}
+                isModalOpen={isCreateCollectionModalOpen}
+            />
             <Box
                 sx={{
                     display: 'flex',
@@ -166,50 +190,13 @@ export default function CreatePost() {
                 >
                     <Grid container flexDirection='column'>
                         <Grid item ml='auto'>
-                            <Button
-                                id="basic-button"
-                                aria-controls={isAnchorEl ? 'basic-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={isAnchorEl ? 'true' : undefined}
-                                onClick={handleClick}
-                                sx={{
-                                    color: !!collectionIdError ? 'red' : 'primary.main'
-                                }}
-                            >
-                                {userCollections[willSavedInCollectionIndex]?.title || 'Select collection'}
-                            </Button>
-                            <Menu
-                                id="basic-menu"
-                                anchorEl={anchorEl}
-                                open={isAnchorEl}
-                                onClose={handleClose}
-                                MenuListProps={{
-                                    'aria-labelledby': 'basic-button',
-                                }}
-                                sx={{
-                                    maxHeight: '300px'
-                                }}
-                            >
-                                {userCollections.map((collection) => {
-                                    // console.log(collection)
-                                    return (
-                                        <MenuItem key={collection._id} onClick={() => {
-                                            handleClose()
-                                            setValue('collectionId', collection._id)
-                                        }}>{collection.title}</MenuItem>
-                                    )
-                                })}
-                                <Button
-                                    variant='contained'
-                                    onClick={() => {
-                                        handleClose()
-                                        openModal()
-                                    }}
-                                    sx={{mx: 1, my: 1}}
-                                >
-                                    Create new collection
-                                </Button>
-                            </Menu>
+                            <CollectionsInfo
+                                selectCollection={selectCollectionCallback}
+                                collections={userCollections}
+                                openModal={openModal}
+                                collectionIdError={!!collectionIdError}
+                                willSavedInCollectionTitle={willSavedInCollectionTitle}
+                            />
                         </Grid>
                         <Grid sx={{...breakableText}} item>
                             <InputLabel htmlFor='title' error={!!titleError} sx={{my: 1, ...breakableText}}>
@@ -235,7 +222,7 @@ export default function CreatePost() {
                                     sx={{cursor: 'pointer', color: 'inherit', width: '100%'}}
                                     htmlFor='imageList'
                                 >
-                                    {imageFile ? 'Selected' : 'Select a photo' }
+                                    {imageFile ? 'Selected' : 'Select a photo'}
                                 </InputLabel>
                                 <input
                                     {...register('imageList')}
@@ -252,7 +239,7 @@ export default function CreatePost() {
                             </InputLabel>
                             <OutlinedInput error={!!tagsError} fullWidth id='tags' {...register('tags')}/>
                         </Grid>
-                        <Button type='submit' sx={{my: 1, justifySelf: 'center'}}>
+                        <Button disabled={isErrors} type='submit' sx={{my: 1, justifySelf: 'center'}}>
                             Upload
                         </Button>
                     </Grid>

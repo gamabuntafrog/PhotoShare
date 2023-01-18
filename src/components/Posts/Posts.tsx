@@ -12,30 +12,22 @@ import React, {useEffect, useState} from "react";
 import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
 import useToggleSaveOfPostCreator from "../../hooks/useToggleSaveOfPostCreator";
 import CreateCollectionModal from "../CreateCollectionModal";
-import {extendedPostsApi} from "../../redux/api/rootApi";
+import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
+import {IPost} from "../../types/post";
+import usePostsActions from "../../hooks/usePostsActions";
+
+
 
 
 export default function Posts() {
-    const {id = ''} = useParams<{ id: string }>()!
-
-    const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
-    const {savedPosts, _id: currentUserId} = user
-
     const {
-        data: allPosts,
-        isLoading: isAllPostsLoading,
-        error: allPostsError,
-    } = extendedPostsApi.useGetManyQuery(undefined, {
-        refetchOnMountOrArgChange: true
-    })
+        data,
+        isLoading: isPostsLoading,
+        error: postsError,
+        refetch
+    } = extendedPostsApi.useGetManyQuery()
 
-    useEffect(() => {
-        console.log(allPosts)
-    }, [allPosts]);
-
-
-    const useToggleLike = useToggleLikeOfPostCreator({token, currentUserId})
-    const [{isLoading, refetch}, useToggleSave] = useToggleSaveOfPostCreator({token})
+    const [posts, postsActions] = usePostsActions({initPosts: data})
 
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
@@ -45,9 +37,7 @@ export default function Posts() {
     const openModal = () => setIsModalOpen(true)
     const closeModal = () => setIsModalOpen(false)
 
-    // console.log(allPosts, allPostsError)
-
-    if (isAllPostsLoading || isLoading) {
+    if (isPostsLoading) {
         return (
             <Container className={styles.posts} sx={{
                 margin: '0 auto',
@@ -63,7 +53,7 @@ export default function Posts() {
     }
 
 
-    if (allPostsError || !allPosts) {
+    if (postsError) {
         return (
             <Container className={styles.posts} sx={{
                 margin: '0 auto',
@@ -79,8 +69,8 @@ export default function Posts() {
     }
     return (
         <Box sx={{overflowY: 'auto', height: '91vh'}}>
-            <CreateCollectionModal refetch={refetch} closeModal={closeModal} isModalOpen={isModalOpen}/>
-
+            <CreateCollectionModal closeModal={closeModal} isModalOpen={isModalOpen}/>
+            {/*refetch={refetch}*/}
             <ImageList
                 variant="masonry"
                 sx={{
@@ -91,7 +81,8 @@ export default function Posts() {
                 gap={12}
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
-                {allPosts.map((post) => <PostItem
+                {posts.map((post) => <PostItem
+                    postsActions={postsActions}
                     openModal={openModal}
                     post={post}
                     key={post._id}

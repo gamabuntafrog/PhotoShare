@@ -166,6 +166,12 @@ const userSlice = createSlice({
         },
         removeErrors: (state) => {
             state.errors = initialState.errors
+        },
+        subscribeToUser: (state, {payload: userId}) => {
+            state.user?.subscribes.push(userId)
+        },
+        unsubscribeFromUser: (state, {payload: userId}) => {
+            state.user!.subscribes = state.user?.subscribes.filter((id) => id !== userId) || []
         }
     },
     extraReducers: (builder) => {
@@ -208,5 +214,5 @@ const userSlice = createSlice({
         })
     }
 })
-export const {disableLoading, addNotification, removeErrors} = userSlice.actions
+export const {disableLoading, addNotification, removeErrors, subscribeToUser, unsubscribeFromUser} = userSlice.actions
 export default userSlice
