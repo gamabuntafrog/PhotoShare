@@ -23,7 +23,6 @@ import convertImageToString from "../../utils/convertImageToString";
 import setPreviewImage from "../../utils/setPreviewImage";
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {useTheme} from '@mui/material/styles';
-import {collectionsApi} from "../../redux/api/collectionsApi";
 import {skipToken} from "@reduxjs/toolkit/query";
 import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 import {changeProfileValidationSchema} from "../../utils/validationSchemas";
@@ -43,9 +42,9 @@ export default function UserProfile() {
     const {data: user, isLoading, error} = extendedUsersApi.useGetUserByIdQuery({id})
     console.log(user)
 
-    const [updateUser] = usersApi.useUpdateCurrentMutation()
-    const [subscribe] = usersApi.useSubscribeMutation()
-    const [unsubscribe] = usersApi.useUnsubscribeMutation()
+    const [updateUser] = extendedUsersApi.useUpdateCurrentUserMutation()
+    const [subscribe] = extendedUsersApi.useSubscribeToUserMutation()
+    const [unsubscribe] = extendedUsersApi.useUnsubscribeFromUserMutation()
 
     const {
         register,
@@ -77,7 +76,7 @@ export default function UserProfile() {
         const avatar = imageList.length ? await convertImageToString(imageList) : ''
 
         try {
-            const response = await updateUser({token, body: {username, avatar}}).unwrap()
+            const response = await updateUser({body: {username, avatar}}).unwrap()
 
             dispatch(pushResponse(response as IResponseNotification))
 
@@ -93,7 +92,7 @@ export default function UserProfile() {
     const onSubmit = handleSubmit(({username, imageList}) => saveChanges({username, imageList}));
 
     const toggleSubscribe = async (userId: string, token: string, isSubscribed: boolean) => {
-        isSubscribed ? unsubscribe({userId, token}) : subscribe({userId, token})
+        isSubscribed ? unsubscribe({id: userId}) : subscribe({id: userId})
     }
 
     useEffect(() => setPreviewImage(watch('imageList'), setAvatarFile), [watch('imageList')]);

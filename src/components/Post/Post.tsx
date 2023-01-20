@@ -1,61 +1,27 @@
 import {Avatar, Box, Button, Container, IconButton, Menu, MenuItem, OutlinedInput, Typography} from "@mui/material";
 import {NavLink, useParams} from "react-router-dom";
-import {postsApi} from "../../redux/api/postsApi";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CommentIcon from "@mui/icons-material/Comment";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import useToggleSaveOfPostCreator from "../../hooks/useToggleSaveOfPostCreator";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {IUserSliceAuthorized} from "../../types/userSlice";
-import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import React, {useEffect, useState} from "react";
-import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
-import {usersApi} from "../../redux/api/usersApi";
-import useAnchorEl from "../../hooks/useAnchorEl";
 import {extendedCollectionsApi, extendedPostsApi, extendedUsersApi} from "../../redux/api/rootApi";
 import Loader from "../Loader";
-import {subscribeToUser, unsubscribeFromUser} from "../../redux/slices/userSlice";
 import PostSavesInfo from "../PostSavesInfo";
 import CreateCollectionModal from "../CreateCollectionModal";
 import usePostActions from "../../hooks/usePostActions";
 import {ICurrentUser} from "../../types/user";
+import useToggleSubscribe from "../../hooks/useToggleSubscribe";
 
-export const useToggleSubscribe = (authorId: string) => {
-    const {subscribes} = useAppSelector((state) => state.userReducer.user) as ICurrentUser
-
-    const isSubscribed = subscribes.some((id) => id === authorId)
-
-    const dispatch = useAppDispatch()
-    const [subscribe] = extendedUsersApi.useSubscribeToUserByIdMutation()
-    const [unsubscribe] = extendedUsersApi.useUnsubscribeFromUserByIdMutation()
-
-    const toggleSubscribe = async (authorId: string, isSubscribed: boolean) => {
-        try {
-            isSubscribed ? unsubscribe({id: authorId}).unwrap() : subscribe({id: authorId}).unwrap()
-
-            isSubscribed ? dispatch(unsubscribeFromUser(authorId)) : dispatch(subscribeToUser(authorId))
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    return {toggleSubscribe, isSubscribed}
-}
 
 export default function Post() {
     const {id = ''} = useParams<{ id: string }>()!
 
-    const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
-    const {_id: currentUserId, subscribes} = user
+    const {_id: currentUserId} = useAppSelector((state) => state.userReducer.user) as ICurrentUser
 
-    const [deletePostFn] = postsApi.useDeleteMutation()
 
-    const deletePost = async () => {
-        await deletePostFn({id: postId, token})
-    }
 
     const {data, isLoading: isPostLoading} = extendedPostsApi.useGetOneByIdQuery({id})
 
@@ -70,10 +36,10 @@ export default function Post() {
     const openModal = () => setIsModalOpen(true)
     const closeModal = () => setIsModalOpen(false)
 
-    const [post, {toggleLike, toggleSave, updateSavesInfo}] = usePostActions({initPost: data})
+    const [post, {toggleLike, toggleSave, updateSavesInfo, deletePost}] = usePostActions({initPost: data})
     const {toggleSubscribe, isSubscribed} = useToggleSubscribe(post?.author._id || '')
 
-    if (isPostLoading) return <Loader/>
+    if (!post && isPostLoading) return <Loader/>
 
     if (!post || !post.author) {
         return (
@@ -102,12 +68,13 @@ export default function Post() {
 
     const onToggleLike = () => toggleLike(postId, isLiked)
     const onToggleSubscribe = () => toggleSubscribe(authorId, isSubscribed)
+    const onDeletePost = () => deletePost(postId)
 
     return (
         <Box
             sx={{overflowY: 'auto', height: '92vh'}}
         >
-            <CreateCollectionModal onCreate={updateSavesInfo} closeModal={closeModal} isModalOpen={isModalOpen}/>
+            <CreateCollectionModal postId={postId} onCreate={updateSavesInfo} closeModal={closeModal} isModalOpen={isModalOpen}/>
             <Container
                 maxWidth={isSmallerLaptop ? 'tablet' : 'laptop'}
                 sx={{
@@ -155,7 +122,7 @@ export default function Post() {
                             </Typography>
                             <PostSavesInfo collections={savesInfo} toggleSave={toggleSave} postId={postId} isSaved={isSaved} openModal={openModal}/>
                             {isUserAuthorOfPost &&
-                                <Button color='error' onClick={deletePost}>
+                                <Button color='error' onClick={onDeletePost}>
                                     Delete
                                 </Button>
                             }

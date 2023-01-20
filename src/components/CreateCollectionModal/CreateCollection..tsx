@@ -1,6 +1,5 @@
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
-import {collectionsApi} from "../../redux/api/collectionsApi";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {Button, Container, InputLabel, Modal, OutlinedInput, Typography} from "@mui/material";
@@ -22,12 +21,13 @@ interface ICreateCollectionModalProps {
     closeModal: () => void,
     isModalOpen: boolean,
     onCreate?: updateSavesInfo,
+    postId?: string,
     refetch?: () => void
 }
 
 const isFunction = (any: any): any is Function => typeof any === 'function'
 
-export default function CreateCollectionModal({closeModal, isModalOpen, onCreate, refetch}: ICreateCollectionModalProps) {
+export default function CreateCollectionModal({closeModal, isModalOpen, onCreate, refetch, postId}: ICreateCollectionModalProps) {
     const {id: collectionId = ''} = useParams<{ id: string }>()!
 
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
@@ -61,11 +61,9 @@ export default function CreateCollectionModal({closeModal, isModalOpen, onCreate
             closeModal()
 
             if (isFunction(onCreate)) {
-                onCreate(body.title, response.data.collection._id)
+                console.log(body.title, response.data.collection._id, postId)
+                onCreate(body.title, response.data.collection._id, postId as string)
 
-                dispatch(pushResponse(response as IResponseNotification))
-
-                console.log(response.data)
             }
 
             if (isFunction(refetch)) {
@@ -75,7 +73,6 @@ export default function CreateCollectionModal({closeModal, isModalOpen, onCreate
             }
 
         } catch (e) {
-            dispatch(pushResponse(e as IResponseNotification))
         }
     }
 

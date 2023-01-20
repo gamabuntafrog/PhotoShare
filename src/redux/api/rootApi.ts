@@ -1,29 +1,62 @@
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
+import {BaseQueryFn, createApi, FetchArgs, fetchBaseQuery} from "@reduxjs/toolkit/dist/query/react";
 import {RootState} from "../store";
-import {createStandardCustomError, IResponse, IResponseWithMessage} from "../slices/userSlice";
+import {createStandardCustomError, IResponse, IResponseWithMessage, logout} from "../slices/userSlice";
 import {IOnePost, IPost} from "../../types/post";
-import {returnTransformedError} from "./postsApi";
 import {IUser, IUserWithCollections} from "../../types/user";
 import {IPostsApi} from "../../types/postsApi";
 import {ICollection, ICollectionWithPosts} from "../../types/collection";
+import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
+import {pushResponse} from "../slices/responseNotificationsSlice";
+import {returnTransformedError} from "../utils";
 
+const baseQuery = fetchBaseQuery({
+    baseUrl: 'http://localhost:3001',
+    prepareHeaders: (headers, {getState}) => {
+        const token = (getState() as RootState).userReducer.token
+
+        if (token) {
+            headers.set('authorization', `Bearer ${token}`)
+        }
+
+        return headers
+    },
+})
+
+const isMessageInData = (data: any): data is IResponseWithMessage<any> => !!data && 'message' in data
+
+export const baseQueryWithInteceptors: BaseQueryFn<string | FetchArgs,
+    unknown,
+    FetchBaseQueryError> = async (args, api, extraOptions) => {
+    let result = await baseQuery(args, api, extraOptions)
+
+    const {error, data} = result
+
+    if (error) {
+        const errorData = result.error.data as IResponse<any> | IResponseWithMessage<any>
+
+        if ('message' in errorData) {
+            api.dispatch(pushResponse(errorData))
+        }
+    }
+
+    if (error && error.status === 401) {
+        api.dispatch(logout())
+    }
+
+    if (isMessageInData(data)) {
+        api.dispatch(pushResponse(data))
+    }
+    console.log(isMessageInData(data))
+    console.log(data)
+
+    return result
+}
 
 export const rootApi = createApi({
     reducerPath: 'rootApi',
     refetchOnMountOrArgChange: true,
     tagTypes: ['Post', 'User'],
-    baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:3001',
-        prepareHeaders: (headers, {getState}) => {
-            const token = (getState() as RootState).userReducer.token
-
-            if (token) {
-                headers.set('authorization', `Bearer ${token}`)
-            }
-
-            return headers
-        },
-    }),
+    baseQuery: baseQueryWithInteceptors,
     endpoints: () => ({})
 })
 
@@ -76,7 +109,7 @@ export const extendedPostsApi = rootApi.injectEndpoints({
             transformErrorResponse: returnTransformedError,
             transformResponse: (response: IResponse<{ post: IOnePost }>) => response.data.post
         }),
-        createOneById: build.mutation<IResponseWithMessage<{ post: IPost }>, ICRUDOperationWithoutId<ICreatePostBody>>({
+        createPost: build.mutation<IResponseWithMessage<{ post: IPost }>, ICRUDOperationWithoutId<ICreatePostBody>>({
             query: ({body}) => ({
                 url: '/posts',
                 method: 'POST',
@@ -84,7 +117,7 @@ export const extendedPostsApi = rootApi.injectEndpoints({
             }),
             transformErrorResponse: returnTransformedError
         }),
-        deleteOneById: build.mutation<void, idType>({
+        deletePost: build.mutation<void, idType>({
             query: ({id}) => ({
                 url: `/posts/${id}`,
                 method: 'DELETE',
@@ -138,24 +171,36 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
         }),
         deleteCollection: build.mutation<unknown, idType>({
             query: ({id}) => ({
-                url: `/${id}`,
+                url: `/collections/${id}`,
                 method: 'DELETE',
             }),
             transformErrorResponse: returnTransformedError,
         }),
         savePostInCollection: build.mutation<unknown, { collectionId: string, postId: string }>({
             query: ({collectionId, postId}) => ({
-                url: `/posts/${postId}/saves/${collectionId}`,
-                method: 'PATCH',
+                url: `/collections/${collectionId}/saves/${postId}`,
+                method: 'POST',
             }),
             transformErrorResponse: returnTransformedError,
         }),
         deletePostFromCollection: build.mutation<unknown, { collectionId: string, postId: string }>({
             query: ({collectionId, postId}) => ({
-                url: `/posts/${postId}/unsaves/${collectionId}`,
-                method: 'PATCH',
+                url: `/collections/${collectionId}/saves/${postId}`,
+                method: 'DELETE',
             }),
             transformErrorResponse: returnTransformedError,
+        }),
+        addAuthorToCollection: build.mutation<unknown, {collectionId: string, authorId: string}>({
+            query: ({collectionId, authorId}) => ({
+                url: `/collections/${collectionId}/author/${authorId}`,
+                method: `POST`
+            })
+        }),
+        deleteAuthorFromCollection: build.mutation<unknown, {collectionId: string, authorId: string}>({
+            query: ({collectionId, authorId}) => ({
+                url: `/collections/${collectionId}/author/${authorId}`,
+                method: `DELETE`
+            })
         })
     })
 })
@@ -172,29 +217,24 @@ export const extendedUsersApi = rootApi.injectEndpoints({
             }),
             transformResponse: (res: IResponse<{ user: IUserWithCollections }>) => res.data.user
         }),
-        updateUser: build.mutation<void, void>({
-            query: () => ({
+        updateCurrentUser: build.mutation<unknown, {body: {username: string, avatar: string}}>({
+            query: ({body}) => ({
                 url: `/users/current`,
                 method: 'PATCH',
-                body: {
-                    username: 'gamabuntafrog'
-                }
+                body
             }),
-            invalidatesTags: ['User']
         }),
-        subscribeToUserById: build.mutation<IUser, idType>({
+        subscribeToUser: build.mutation<IUser, idType>({
             query: ({id}) => ({
                 url: `/users/${id}/subscribes`,
                 method: "POST",
             }),
-            invalidatesTags: ['User', 'Post']
         }),
-        unsubscribeFromUserById: build.mutation<IUser, idType>({
+        unsubscribeFromUser: build.mutation<IUser, idType>({
             query: ({id}) => ({
                 url: `/users/${id}/subscribes`,
                 method: "DELETE",
             }),
-            invalidatesTags: ['User', 'Post']
         })
     }),
     overrideExisting: false

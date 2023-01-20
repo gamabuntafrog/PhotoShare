@@ -46,13 +46,7 @@ const responsedNotificationsCleaner = (dispatch: AppDispatch, notificationsLengt
         if (id) clearInterval(id)
     }
 }
-const logoutWhenSessionIsOver = (logOutCallback: () => void, notifications: IResponseNotification[]) => {
-    const isSessionIsOver = notifications.some(({code}) => code === 401)
-    if (isSessionIsOver) {
-        logOutCallback()
-        return
-    }
-}
+
 
 export default function App() {
     const {user, isLoading, isLoggedIn, token} = useAppSelector((state) => state.userReducer)
@@ -60,25 +54,7 @@ export default function App() {
     const notifications = useAppSelector(state => state.responseNotificationsReducer.notifications)
     const dispatch = useAppDispatch()
 
-    // const {data} = extendedApi.useGetPostsQuery()
-    // const {data} = extendedPostsApi.useGetPostByIdQuery('63c2c87a9217dfcf74700f28')
-    // // const [testCreatePost] = extendedApi.useCreatePostMutation()
-    // const [testFn] = extendedUsersApi.useUpdateUserMutation()
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         console.log('testFn')
-    //         testFn()
-    //     }, 3000)
-    // }, []);
-    //
-    // useEffect(() => {
-    //     console.log(data)
-    // }, [data]);
-
-
     useEffect(() => responsedNotificationsCleaner(dispatch, notifications.length), [notifications.length]);
-    useEffect(() => logoutWhenSessionIsOver(() => dispatch(logout()), notifications), [notifications.length]);
-
 
     // const subscribe = async (token: string) => {
     //     try {

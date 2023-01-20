@@ -23,6 +23,7 @@ import React, {Dispatch, useState} from "react";
 import useAnchorEl from "../../hooks/useAnchorEl";
 import {IPostsActions} from "../../hooks/usePostsActions";
 import PostSavesInfo from "../PostSavesInfo";
+import CreateCollectionModal from "../CreateCollectionModal";
 
 interface IPostItemProps {
     post: IPost,
@@ -31,10 +32,10 @@ interface IPostItemProps {
 }
 
 
-export default function PostItem({post, openModal, postsActions}: IPostItemProps) {
+export default function PostItem({post, postsActions}: IPostItemProps) {
 
     const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
-    const {toggleLike, toggleSave} = postsActions
+    const {toggleLike, toggleSave, updateSavesInfo} = postsActions
 
     const {
         _id: postId,
@@ -60,6 +61,10 @@ export default function PostItem({post, openModal, postsActions}: IPostItemProps
     }
 
     const formattedTags = tags.join(' ')
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const openModal = () => setIsModalOpen(true)
+    const closeModal = () => setIsModalOpen(false)
 
     const PostItemTitle = <>
         <Box
@@ -87,75 +92,79 @@ export default function PostItem({post, openModal, postsActions}: IPostItemProps
 
 
     return (
-        <ImageListItem
-            key={postId}
-            sx={{
-                display: 'inline-block',
-                '&:hover .buttonsBar': {
-                    opacity: 1
-                }
-            }}
-
-        >
-            <Box
+        <>
+            <CreateCollectionModal onCreate={updateSavesInfo} postId={post._id} closeModal={closeModal}
+                                   isModalOpen={isModalOpen}/>
+            <ImageListItem
+                key={postId}
                 sx={{
-                    position: 'relative',
-                    '&:hover .postImage': {
-                        filter: 'brightness(80%)',
-                    },
+                    display: 'inline-block',
+                    '&:hover .buttonsBar': {
+                        opacity: 1
+                    }
                 }}
-            >
-                <NavLink style={{position: 'relative'}} to={`/posts/${postId}`}>
-                    <img
-                        src={postImageURL}
-                        style={{
-                            width: '100%',
-                            objectFit: 'cover',
-                            borderRadius: '8px',
-                            backgroundColor: main,
-                        }}
-                        className='postImage'
-                    />
-                </NavLink>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: 0.5,
-                        position: 'absolute',
-                        top: '0',
-                        right: '0',
-                        zIndex: 100,
-                        opacity: 0
-                    }}
-                    className='buttonsBar'
-                >
-                    <PostSavesInfo collections={savesInfo} toggleSave={toggleSave} postId={postId} isSaved={isSaved} openModal={openModal}/>
-                </Box>
-                <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: 0.5,
-                        position: 'absolute',
-                        top: '100%',
-                        transform: 'translateY(-110%)',
-                        zIndex: 100,
-                        opacity: 0
-                    }}
-                    className='buttonsBar'
-                >
-                    <IconButton onClick={onToggleLike}>
-                        {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
-                    </IconButton>
-                    <Typography sx={{ml: 0.5}}>
-                        {likesCount}
-                    </Typography>
-                </Box>
-            </Box>
-            <ImageListItemBar sx={{display: 'inline-flex'}} position="below" title={PostItemTitle}/>
-        </ImageListItem>
 
+            >
+                <Box
+                    sx={{
+                        position: 'relative',
+                        '&:hover .postImage': {
+                            filter: 'brightness(80%)',
+                        },
+                    }}
+                >
+                    <NavLink style={{position: 'relative'}} to={`/posts/${postId}`}>
+                        <img
+                            src={postImageURL}
+                            style={{
+                                width: '100%',
+                                objectFit: 'cover',
+                                borderRadius: '8px',
+                                backgroundColor: main,
+                            }}
+                            className='postImage'
+                        />
+                    </NavLink>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: 0.5,
+                            position: 'absolute',
+                            top: '0',
+                            right: '0',
+                            zIndex: 100,
+                            opacity: 0
+                        }}
+                        className='buttonsBar'
+                    >
+                        <PostSavesInfo collections={savesInfo} toggleSave={toggleSave} postId={postId} isSaved={isSaved}
+                                       openModal={openModal}/>
+                    </Box>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            padding: 0.5,
+                            position: 'absolute',
+                            top: '100%',
+                            transform: 'translateY(-110%)',
+                            zIndex: 100,
+                            opacity: 0
+                        }}
+                        className='buttonsBar'
+                    >
+                        <IconButton onClick={onToggleLike}>
+                            {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
+                        </IconButton>
+                        <Typography sx={{ml: 0.5}}>
+                            {likesCount}
+                        </Typography>
+                    </Box>
+                </Box>
+                <ImageListItemBar sx={{display: 'inline-flex'}} position="below" title={PostItemTitle}/>
+            </ImageListItem>
+        </>
     )
 }
 

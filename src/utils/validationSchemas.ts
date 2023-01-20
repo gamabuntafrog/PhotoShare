@@ -17,7 +17,6 @@ export const validateTags = (string: string | undefined) => {
 }
 
 export const imagePresenceValidation = (value: any) => {
-    console.log('presenceValidation', value)
     return !!value.length
 }
 
@@ -40,7 +39,7 @@ export const createPostValidationSchema = Yup.object({
     body: Yup.string().min(MIN_BODY_LENGTH, `Min length is ${MIN_BODY_LENGTH} symbols`).max(MAX_BODY_LENGTH, `Max length is ${MAX_BODY_LENGTH} symbols`),
     imageList: oneImageValidationSchema,
     tags: Yup.string().test('validation', `Every tag must have "#", min length is ${MIN_TAG_LENGTH} and max is ${MAX_TAG_LENGTH}`, validateTags).required('Min 1 tag'),
-    collectionId: Yup.string().required()
+    collectionIdIndex: Yup.number().min(0).required()
 }).required()
 
 const MIN_COLLECTION_TITLE_LENGTH = 3

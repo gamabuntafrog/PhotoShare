@@ -13,20 +13,14 @@ import {
 import * as Yup from "yup";
 import {useForm, useFormState} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
-import React, {ChangeEvent, Dispatch, SetStateAction, useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {IUserSliceAuthorized} from "../../types/userSlice";
-import {postsApi} from "../../redux/api/postsApi";
+import React, {useEffect, useState} from "react";
+
 import {useNavigate, useParams} from "react-router-dom";
 import setPreviewImage from "../../utils/setPreviewImage";
 import convertImageToString from "../../utils/convertImageToString";
-import {collectionsApi} from "../../redux/api/collectionsApi";
-import {ICollection} from "../../types/collection";
 import CreateCollectionModal from "../CreateCollectionModal";
-import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 import {createPostValidationSchema} from "../../utils/validationSchemas";
-import useAnchorEl from "../../hooks/useAnchorEl";
-import {extendedCollectionsApi} from "../../redux/api/rootApi";
+import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
 import CollectionsInfo from "../CollectionsInfo";
 
 
@@ -37,42 +31,42 @@ interface IFormData {
     body: string,
     imageList: FileList,
     tags: string,
-    collectionId: string
+    collectionIdIndex: number
 }
 
 
 export default function CreatePost() {
     const {id: collectionId = ''} = useParams<{ id: string }>()!
-    const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
 
     const [imageFile, setImageFile] = useState<null | string>(null);
     const [isPostCreating, setIsPostCreating] = useState(false);
     const [isCreateCollectionModalOpen, setIsCreateCollectionModalOpen] = useState(false);
-
-    const closeModal = () => setIsCreateCollectionModalOpen(false)
-    const openModal = () => setIsCreateCollectionModalOpen(true)
-
-    const dispatch = useAppDispatch()
 
     const {
         data: userCollections = [],
         isLoading: isUserCollectionsLoading,
         refetch: refetchCollections
     } = extendedCollectionsApi.useGetCurrentUserCollectionsQuery()
-    console.log(userCollections)
-    const [createPost] = postsApi.useCreatePostMutation()
+
+    const [createPost] = extendedPostsApi.useCreatePostMutation()
 
     const navigate = useNavigate()
+
+    const findIndexOfCollection = (id: string) => userCollections.findIndex(({_id}) => _id === id)
 
     const {
         register,
         watch,
-        setValue,
         handleSubmit,
-        control,
-        setError,
+        setValue,
         formState: {
-            errors
+            errors: {
+                title: titleError,
+                body: bodyError,
+                imageList: imageError,
+                tags: tagsError,
+                collectionIdIndex: collectionIdIndexError
+            }
         },
         clearErrors
     } = useForm<IFormData>({
@@ -81,42 +75,20 @@ export default function CreatePost() {
         defaultValues: {
             title: '',
             body: '',
-            collectionId: collectionId,
+            collectionIdIndex: -1
         }
     });
-    const {
-        title: titleError,
-        body: bodyError,
-        imageList: imageError,
-        tags: tagsError,
-        collectionId: collectionIdError
-    } = errors
-    const isErrors = !!(titleError || bodyError || imageError || tagsError || collectionIdError)
 
+    const isErrors = !!(titleError || bodyError || imageError || tagsError || collectionIdIndexError)
 
-    const findIndexOfCollection = (id: string) => userCollections.findIndex(({_id}) => _id === id)
-    useEffect(() => void setValue('collectionId', collectionId), [collectionId]);
-
-
-    const willSavedInCollectionIndex = !!watch('collectionId') ? findIndexOfCollection(watch('collectionId')) : findIndexOfCollection(collectionId)
-    const willSavedInCollectionTitle = userCollections[willSavedInCollectionIndex]?.title || 'Select collection'
-
-    useEffect(() => {
-        if (collectionId && findIndexOfCollection(collectionId) < 0) {
-            setError('collectionId', {type: 'custom', message: 'Non-existing collection id'})
-        } else {
-            clearErrors('collectionId')
-        }
-    }, [collectionId, userCollections.length]);
-
-    const onSubmit = handleSubmit(async ({title, body, imageList, tags, collectionId}) => {
+    const onSubmit = handleSubmit(async ({title, body, imageList, tags, collectionIdIndex}) => {
         const filteredTags = tags.split(' ').filter((str) => str !== '')
         const image = await convertImageToString(imageList)
-        // console.log(image)
+        const collectionId = userCollections![collectionIdIndex]._id
+
         await uploadPost({title, body, image, tags: filteredTags, collectionId})
     });
 
-    // переробити завантаження аватарки так само як тут
     const uploadPost = async (body: {
         title: string,
         body: string,
@@ -127,24 +99,35 @@ export default function CreatePost() {
         setIsPostCreating(true)
 
         try {
-            const response = await createPost({body, token}).unwrap()
-            dispatch(pushResponse(response as IResponseNotification))
-
+            await createPost({body}).unwrap()
             navigate('/')
         } catch (e) {
-            dispatch(pushResponse(e as IResponseNotification))
             setIsPostCreating(false)
         }
-
     }
 
+    const closeModal = () => setIsCreateCollectionModalOpen(false)
+    const openModal = () => setIsCreateCollectionModalOpen(true)
+
     useEffect(() => setPreviewImage(watch('imageList'), setImageFile), [watch('imageList')]);
+
+    useEffect(() => {
+        setValue('collectionIdIndex', findIndexOfCollection(collectionId))
+
+        // логіка перевірки чи існує колекція у користувача
+        if (findIndexOfCollection(collectionId) >= 0) {
+            clearErrors('collectionIdIndex')
+        }
+    }, [collectionId, userCollections.length]);
 
     const refetchCallback = () => {
         refetchCollections()
     }
-    const selectCollectionCallback = (collectionId: string) => navigate(`/post/create/${collectionId}`)
+    const selectCollectionCallback = (collectionId: string) => {
+        navigate(`/post/create/${collectionId}`)
+    }
 
+    const willSavedInCollectionTitle = userCollections[watch("collectionIdIndex")]?.title || 'Select collection'
 
     if (isPostCreating || isUserCollectionsLoading) {
         return (
@@ -194,7 +177,7 @@ export default function CreatePost() {
                                 selectCollection={selectCollectionCallback}
                                 collections={userCollections}
                                 openModal={openModal}
-                                collectionIdError={!!collectionIdError}
+                                collectionIdError={!!collectionIdIndexError}
                                 willSavedInCollectionTitle={willSavedInCollectionTitle}
                             />
                         </Grid>

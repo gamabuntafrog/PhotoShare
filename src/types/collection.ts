@@ -14,7 +14,7 @@ export interface IAuthorOfCollection extends IUserInPost {
 }
 
 export interface ICollectionWithPosts {
-    author: IAuthorOfCollection,
+    authors: IAuthorOfCollection[],
     tags: string[],
     posts: IPost[],
     title: string,

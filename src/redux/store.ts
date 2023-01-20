@@ -35,7 +35,7 @@ export const store = configureStore({
     }).concat(rootApi.middleware)
   }
 });
-//, extendedApi.middleware
+
 export const persistor = persistStore(store)
 
 export type AppDispatch = typeof store.dispatch;

@@ -8,12 +8,14 @@ export interface IUsePostProps {
 
 export type toggleLikeOfOnePostType = (id: string, isLiked: boolean) => Promise<void>
 export type toggleSaveOfOnePostType = (postId: string, collectionId: string, isSaved: boolean) => Promise<void>
-export type updateSavesInfoOfOnePost = (title: string, collectionId: string) => void
+export type updateSavesInfoOfOnePost = (title: string, collectionId: string, postId: string) => Promise<void>
+export type deleteOnePostType = (id: string) => Promise<void>
 
 export interface IPostActions {
     readonly toggleLike: toggleLikeOfOnePostType,
     readonly toggleSave: toggleSaveOfOnePostType,
-    readonly updateSavesInfo: updateSavesInfoOfOnePost
+    readonly updateSavesInfo: updateSavesInfoOfOnePost,
+    readonly deletePost: deleteOnePostType
 }
 
 export type usePostActionsReturnValue = readonly [IOnePost | undefined, IPostActions]
@@ -23,6 +25,7 @@ const usePostActions = ({initPost}: IUsePostProps): usePostActionsReturnValue =>
     const [likePost] = extendedPostsApi.useLikeOneByIdMutation()
     const [unsavePost] = extendedCollectionsApi.useDeletePostFromCollectionMutation()
     const [savePost] = extendedCollectionsApi.useSavePostInCollectionMutation()
+    const [deletePostFn] = extendedPostsApi.useDeletePostMutation()
 
     const [post, setPost] = useState(initPost);
 
@@ -61,28 +64,57 @@ const usePostActions = ({initPost}: IUsePostProps): usePostActionsReturnValue =>
                 await savePost({postId, collectionId}).unwrap()
             }
 
-            const changedSavesInfo = post.savesInfo.map((info) => {
-                if (info.collectionId === collectionId) {
-                    return {isSaved: !info.isSaved, collectionId: info.collectionId, title: info.title}
-                }
-                return info
+            setPost(prev => {
+                if (!prev) return prev
+
+                const changedSavesInfo = post.savesInfo.map((info) => {
+                    if (info.collectionId === collectionId) {
+                        return {isSaved: !isSaved, collectionId: info.collectionId, title: info.title}
+                    }
+                    return info
+                })
+
+                const isSomewhereSaved = changedSavesInfo.some(({isSaved}) => !!isSaved)
+
+                return {...post, savesInfo: changedSavesInfo, isSomewhereSaved}
             })
-
-            const isSomewhereSaved = changedSavesInfo.some(({isSaved}) => !!isSaved)
-
-            setPost({...post, savesInfo: changedSavesInfo, isSomewhereSaved})
         } catch (e) {
             console.log(e)
         }
     }
 
-    const updateSavesInfo = (title: string, collectionId: string) => {
+    const updateSavesInfo = async (title: string, collectionId: string, postId: string) => {
         if (!post) return
 
-        setPost({...post, savesInfo: [...post.savesInfo, {title, collectionId, isSaved: false}]})
+        try {
+            await savePost({postId, collectionId}).unwrap()
+
+            setPost(prev => {
+                if (!prev) return prev
+
+                const changedSavesInfo = [...post.savesInfo,  {title, collectionId, isSaved: false}].map((info) => {
+                    if (info.collectionId === collectionId) {
+                        return {isSaved: !info.isSaved, collectionId: info.collectionId, title: info.title}
+                    }
+                    return info
+                })
+
+                const isSomewhereSaved = changedSavesInfo.some(({isSaved}) => !!isSaved)
+
+                return {...post, savesInfo: changedSavesInfo, isSomewhereSaved}
+            })
+        } catch (e) {
+            console.log(e)
+        }
     }
 
-    return [post, {toggleLike, toggleSave, updateSavesInfo}] as const
+    const deletePost = async (id: string) => {
+        await deletePostFn({id})
+
+        setPost(undefined)
+    }
+
+    return [post, {toggleLike, toggleSave, updateSavesInfo, deletePost}] as const
 }
 
 export default usePostActions

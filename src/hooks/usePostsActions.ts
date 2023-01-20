@@ -8,7 +8,7 @@ export interface IUsePostsProps {
 
 export type toggleLikeType = (id: string, isLiked: boolean) => Promise<void>
 export type toggleSaveType = (postId: string, collectionId: string, isSaved: boolean) => Promise<void>
-export type updateSavesInfo = (title: string, collectionId: string) => void
+export type updateSavesInfo = (title: string, collectionId: string, postId: string) => Promise<void>
 
 export interface IPostsActions {
     readonly toggleLike: toggleLikeType,
@@ -50,7 +50,7 @@ const usePostsActions = ({initPosts}: IUsePostsProps): usePostsActionsReturnValu
                     } else {
                         return post
                     }
-                })//
+                })
             )
         } catch (e) {
             console.log(e)
@@ -71,7 +71,7 @@ const usePostsActions = ({initPosts}: IUsePostsProps): usePostsActionsReturnValu
 
                         const changedSavesInfo = savesInfo.map((info) => {
                             if (info.collectionId === collectionId) {
-                                return {isSaved: !info.isSaved, collectionId: info.collectionId, title: info.title}
+                                return {isSaved: !isSaved, collectionId: info.collectionId, title: info.title}
                             }
                             return info
                         })
@@ -89,11 +89,21 @@ const usePostsActions = ({initPosts}: IUsePostsProps): usePostsActionsReturnValu
         }
     }
 
-    const updateSavesInfo = (title: string, collectionId: string) => {
-        setPosts(prev => prev.map((post) => {
-            post.savesInfo.push({title, collectionId, isSaved: false})
-            return post
-        }))
+    const updateSavesInfo = async (title: string, collectionId: string, postId: string) => {
+        try {
+            await savePost({postId, collectionId}).unwrap()
+
+            setPosts(prev => prev.map((post) => {
+                if (post._id === postId) {
+                    return {...post, isSomewhereSaved: true, savesInfo: [...post.savesInfo, {title, collectionId, isSaved: true}]}
+                }
+
+                return {...post, savesInfo: [...post.savesInfo, {title, collectionId, isSaved: false}]}
+            }))
+
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return [posts, {toggleLike, toggleSave, updateSavesInfo}] as const

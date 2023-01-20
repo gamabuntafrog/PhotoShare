@@ -55,11 +55,6 @@ export function Notifications({notifications, setIsNotificationsOpen}: {
                     )
                 })}
             </List>
-            {/*<Box sx={{*/}
-            {/*    width: '300px',*/}
-            {/*    height: '300px',*/}
-            {/*    bgcolor: 'primary.main'*/}
-            {/*}}/>*/}
         </Box>
     )
 }

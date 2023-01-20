@@ -1,19 +1,11 @@
 import styles from './Posts.module.css'
 import {Avatar, Box, Container, IconButton, ImageList, List, ListItem, Typography} from "@mui/material";
-import {NavLink, useParams} from "react-router-dom";
 import PostItem from "../PostItem/PostItem";
-import {useAppSelector} from "../../redux/hooks";
-import {postsApi} from "../../redux/api/postsApi";
-import {IUserSliceAuthorized} from "../../types/userSlice";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {useTheme} from "@mui/material/styles";
-import {collectionsApi} from "../../redux/api/collectionsApi";
 import React, {useEffect, useState} from "react";
-import useToggleLikeOfPostCreator from "../../hooks/useToggleLikeOfPostCreator";
-import useToggleSaveOfPostCreator from "../../hooks/useToggleSaveOfPostCreator";
 import CreateCollectionModal from "../CreateCollectionModal";
 import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
-import {IPost} from "../../types/post";
 import usePostsActions from "../../hooks/usePostsActions";
 
 
@@ -69,8 +61,6 @@ export default function Posts() {
     }
     return (
         <Box sx={{overflowY: 'auto', height: '91vh'}}>
-            <CreateCollectionModal closeModal={closeModal} isModalOpen={isModalOpen}/>
-            {/*refetch={refetch}*/}
             <ImageList
                 variant="masonry"
                 sx={{
