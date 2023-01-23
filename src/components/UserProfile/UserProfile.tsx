@@ -2,31 +2,19 @@ import {
     Avatar,
     Box,
     Button,
-    Container,
-    FormGroup, Grid, ImageList, ImageListItem,
-    Input,
-    InputLabel,
-    List,
-    ListItem,
-    OutlinedInput,
-    Typography
+    MenuItem,
+    Modal,
+    Typography, useTheme
 } from "@mui/material";
 import {NavLink, useParams} from "react-router-dom";
-import {usersApi} from "../../redux/api/usersApi";
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {IUserSliceAuthorized} from "../../types/userSlice";
-import {ChangeEvent, useEffect, useState} from "react";
-import * as Yup from "yup";
-import {useForm} from "react-hook-form";
-import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
-import convertImageToString from "../../utils/convertImageToString";
-import setPreviewImage from "../../utils/setPreviewImage";
-import useMediaQuery from '@mui/material/useMediaQuery';
-import {useTheme} from '@mui/material/styles';
-import {skipToken} from "@reduxjs/toolkit/query";
-import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
-import {changeProfileValidationSchema} from "../../utils/validationSchemas";
-import {extendedUsersApi} from "../../redux/api/rootApi";
+import {useAppSelector} from "../../redux/hooks";
+import React, { useEffect, useState} from "react";
+import {extendedCollectionsApi, extendedUsersApi} from "../../redux/api/rootApi";
+import useToggleSubscribe from "../../hooks/useToggleSubscribe";
+import Collections from "../Collections";
+import ChangeUserProfile from "../ChangeUserProfile";
+import {ICurrentUser} from "../../types/user";
+import MiniLoader from "../Loaders/MiniLoader";
 
 
 interface IFormData {
@@ -34,70 +22,118 @@ interface IFormData {
     username: string
 }
 
+interface IAddAuthorModalProps {
+    isAddUserModalOpen: boolean,
+    closeAddAuthorModal: () => void,
+    authorId: string,
+}
+
+export function AddAuthorModal({isAddUserModalOpen, closeAddAuthorModal, authorId}: IAddAuthorModalProps) {
+
+    const {
+        data: currentUserCollections = [],
+        isLoading: isCurrentUserCollectionsLoading
+    } = extendedCollectionsApi.useGetCurrentUserCollectionsQuery()
+
+    const [addAuthor] = extendedCollectionsApi.useAddAuthorToCollectionMutation()
+    const [deleteAuthor] = extendedCollectionsApi.useDeleteAuthorFromCollectionMutation()
+
+    const collectionsWithoutAuthor = currentUserCollections.filter((col) => col.authors.every((_id) => _id !== authorId))
+    const collectionsWithAuthor = currentUserCollections.filter((col) => col.authors.some((_id) => _id === authorId))
+
+    return (
+        <Modal
+            open={isAddUserModalOpen}
+            onClose={closeAddAuthorModal}
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <Box>
+                {isCurrentUserCollectionsLoading ?
+                    <MiniLoader/>
+                    :
+                    <Box
+                        sx={{
+                            bgcolor: 'background.paper',
+                            width: '50vw',
+                            padding: 2,
+                            color: 'text.primary',
+                            borderRadius: 2,
+                        }}
+                    >
+                        {collectionsWithoutAuthor.length > 0 &&
+                            <>
+                                <Typography color='green' sx={{cursor: 'default', mb: 1}}>Add author</Typography>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        mb: 2
+                                    }}
+                                >
+                                    {collectionsWithoutAuthor.map((collection) => {
+                                        const {_id, title} = collection
+
+                                        return (
+                                            <MenuItem
+                                                key={_id}
+                                                onClick={() => {
+                                                    addAuthor({collectionId: _id, authorId})
+                                                }}
+                                            >
+                                                <Typography>{title}</Typography>
+                                            </MenuItem>
+                                        )
+                                    })}
+                                </Box>
+                            </>
+                        }
+                        {collectionsWithAuthor.length > 0 &&
+                            <>
+                                <Typography color='error' sx={{cursor: 'default', mb: 1}}>Delete author</Typography>
+                                {collectionsWithAuthor.map((collection) => {
+                                    const {_id, title} = collection
+
+                                    return (
+                                        <MenuItem
+                                            key={_id}
+                                            onClick={() => {
+                                                deleteAuthor({collectionId: _id, authorId})
+                                            }}
+                                        >
+                                            <Typography>{title}</Typography>
+                                        </MenuItem>
+                                    )
+                                })}
+                            </>
+                        }
+                    </Box>
+                }
+            </Box>
+        </Modal>
+    )
+}
+
+
 export default function UserProfile() {
     const {id = ''} = useParams<{ id: string }>()!
 
-    const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
+    const currentUser = useAppSelector(state => state.userReducer.user) as ICurrentUser
 
     const {data: user, isLoading, error} = extendedUsersApi.useGetUserByIdQuery({id})
-    console.log(user)
 
-    const [updateUser] = extendedUsersApi.useUpdateCurrentUserMutation()
-    const [subscribe] = extendedUsersApi.useSubscribeToUserMutation()
-    const [unsubscribe] = extendedUsersApi.useUnsubscribeFromUserMutation()
-
-    const {
-        register,
-        setValue,
-        handleSubmit,
-        watch,
-        formState: {errors}
-    } = useForm<IFormData>({
-        resolver: yupResolver(changeProfileValidationSchema),
-        mode: 'all'
-    });
-    const {username: usernameError, imageList: avatarError} = errors
-    const isErrors = !!(usernameError || avatarError)
-    // console.log(isErrors)
-    const theme = useTheme();
-    const {palette: {primary: {main}}} = theme
-
-    const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
-    const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
-    const isSmallerMobile = useMediaQuery(theme.breakpoints.down('mobile'));
-
-
+    const [isUserUpdating, setIsUserUpdating] = useState(false);
     const [avatarFile, setAvatarFile] = useState<null | string>(null);
     const [isChangingMode, setIsChangingMode] = useState(false);
+    const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
-    const dispatch = useAppDispatch()
+    const {isSubscribed, toggleSubscribe} = useToggleSubscribe(id)
+    const theme = useTheme()
 
-    const saveChanges = async ({username, imageList}: { username: string, imageList: FileList }) => {
-        const avatar = imageList.length ? await convertImageToString(imageList) : ''
-
-        try {
-            const response = await updateUser({body: {username, avatar}}).unwrap()
-
-            dispatch(pushResponse(response as IResponseNotification))
-
-            setIsChangingMode(false)
-
-            document.location.reload()
-        } catch (e) {
-            dispatch(pushResponse(e as IResponseNotification))
-
-        }
-    }
-
-    const onSubmit = handleSubmit(({username, imageList}) => saveChanges({username, imageList}));
-
-    const toggleSubscribe = async (userId: string, token: string, isSubscribed: boolean) => {
-        isSubscribed ? unsubscribe({id: userId}) : subscribe({id: userId})
-    }
-
-    useEffect(() => setPreviewImage(watch('imageList'), setAvatarFile), [watch('imageList')]);
-
-    if (isLoading) {
+    if (isLoading || isUserUpdating) {
         return (
             <Box sx={{
                 bgcolor: 'background.default',
@@ -128,35 +164,50 @@ export default function UserProfile() {
     }
 
 
-    const {avatar, username, email, createdAt, _id: userId, subscribesCount, subscribersCount, postsCount, collections} = user
+    const {
+        avatar,
+        username,
+        email,
+        createdAt,
+        _id: userId,
+        subscribesCount,
+        subscribersCount,
+        postsCount,
+        collections
+    } = user
     const avatarURL = avatar || ''
     const [month, day, year] = new Date(createdAt).toLocaleDateString('en-US').split('/')
     const formattedCreatedAt = [day, month, year].join('.')
 
     const {_id: currentUserId} = currentUser
-
     const isProfileOfCurrentUser = currentUserId === userId
-    const isSubscribed = false
-    // !!subscribers.find((id) => id === currentUserId)
+
+    const onToggleSubscribe = () => toggleSubscribe(id, isSubscribed)
+
     const turnOnChangingMode = () => setIsChangingMode(true)
     const turnOffChangingMode = () => {
         setAvatarFile(null)
-        setValue('username', username)
         setIsChangingMode(false)
     }
 
-    const calculateRows = (isSmallerLaptop ? isSmallerTablet ? isSmallerMobile ? 1 : 2 : 3 : 5)
+    const closeAddAuthorModal = () => setIsAddUserModalOpen(false)
 
     return (
         <Box
             sx={{overflowY: 'auto', height: '92vh'}}
         >
+            <AddAuthorModal isAddUserModalOpen={isAddUserModalOpen} closeAddAuthorModal={closeAddAuthorModal}
+                            authorId={id}/>
             <Box
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    my: 3
+                    my: 3,
+                    [theme.breakpoints.down('tablet')]: {
+                        flexDirection: 'column'
+                    }
+
                 }}
             >
                 <Avatar sx={{width: '200px', height: '200px'}} src={avatarFile || avatarURL}/>
@@ -169,203 +220,57 @@ export default function UserProfile() {
                         ml: 2
                     }}
                 >
-                    {isChangingMode ? <FormGroup
-                            sx={{
-                                ml: 1
-                            }}
-                        >
-                            <Button
-                                type='button'
-                                sx={{my: 1}}
-                            >
-                                <InputLabel sx={{cursor: 'pointer', color: 'inherit', width: '100%'}} htmlFor='avatar'>
-                                    Change avatar
-                                </InputLabel>
-                                <input
-                                    {...register('imageList')}
-                                    id='avatar'
-                                    type='file'
-                                    accept="image/*"
-                                    hidden
-                                />
-                            </Button>
-
-                            <InputLabel error={!!usernameError} htmlFor='username'>{usernameError?.message || 'Username'}</InputLabel>
-                            <OutlinedInput defaultValue={username} error={!!usernameError} {...register('username')}
-                                           id='username' sx={{
-                                my: 1
-                            }}/>
-                            <Button
-                                type='button'
-                                color='error'
-                                sx={{mb: 1}}
-                                onClick={turnOffChangingMode}
-                            >
-                                Cancel Changing
-                            </Button>
-                            <Button
-                                disabled={isErrors}
-                                type='submit'
-                                onClick={onSubmit}>
-                                Save changes
-                            </Button>
-                        </FormGroup>
+                    {isChangingMode ?
+                        <ChangeUserProfile
+                            setIsUserUpdating={setIsUserUpdating}
+                            turnOffChangingMode={turnOffChangingMode}
+                            setAvatarFile={setAvatarFile}
+                        />
                         :
                         <>
                             <Typography variant='h4'>{username}</Typography>
                             <Typography variant='body1'>{email}</Typography>
                             <Box sx={{display: 'flex', margin: 1}}>
-                                <Typography sx={{mx: 1}}>{postsCount} posts</Typography>
-                                <Typography sx={{mx: 1}}>{subscribesCount} subscribes</Typography>
-                                <Typography sx={{mx: 1}}>{subscribersCount} subscribers</Typography>
+                                <Typography sx={{mx: 1, textAlign: 'center'}}>{postsCount} posts</Typography>
+                                <Typography sx={{mx: 1, textAlign: 'center'}}>{subscribesCount} subscribes</Typography>
+                                <Typography sx={{mx: 1, textAlign: 'center'}}>{subscribersCount} subscribers</Typography>
                             </Box>
                             <Typography>Created at {formattedCreatedAt}</Typography>
                         </>
                     }
                     {isProfileOfCurrentUser && !isChangingMode &&
-                        <Button onClick={turnOnChangingMode}>Change profile</Button>}
+                        <Button onClick={turnOnChangingMode}>
+                            Change profile
+                        </Button>
+                    }
                     {!isProfileOfCurrentUser &&
                         <Button
                             variant='outlined'
                             sx={{mt: 1}}
-                            onClick={() => toggleSubscribe(id, token, isSubscribed)}>
+                            onClick={onToggleSubscribe}>
                             {!isSubscribed ? 'Subscribe' : 'Unsubscribe'}
                         </Button>
                     }
-
+                    {(!isProfileOfCurrentUser && !isAddUserModalOpen) &&
+                        <Button
+                            variant='outlined'
+                            sx={{mt: 1}}
+                            onClick={() => setIsAddUserModalOpen(true)}>
+                            Add author to your collection
+                        </Button>
+                    }
                 </Box>
             </Box>
             <Box
                 sx={{
-                    width: '95%',
-                    // maxWidth: '1000px',
+                    width: '90%',
                     mx: 'auto',
-                    mb: 4
+                    pb: 4,
                 }}
             >
-                {collections.length > 0 ?
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gridTemplateColumns: `repeat(${calculateRows}, 1fr)`,
-                            gap: 3,
-
-                        }}
-                    >
-                        {collections.map((collection, i) => {
-                            const {_id: collectionId, title, posts} = collection
-
-                            return (
-                                <NavLink style={{
-                                    position: 'relative',
-                                    backgroundColor: theme.palette.primary.main,
-                                    borderRadius: '8px',
-                                    overflow: 'hidden',
-                                    minHeight: isSmallerTablet ? '150px' : '300px'
-
-                                }} key={collection._id} to={`/collections/${collection._id}`}>
-                                    <Box
-                                        sx={{
-                                            position: 'absolute',
-                                            width: '100%',
-                                            height: '100%',
-                                            background: 'rgba(0, 0, 0, 0.2)',
-                                            zIndex: '99',
-                                        }}
-                                    />
-                                    <Typography
-                                        sx={{
-                                            position: 'absolute',
-                                            top: '0px',
-                                            left: '0px',
-                                            textAlign: 'center',
-                                            zIndex: '100',
-                                            padding: 1,
-
-                                        }}
-                                        variant='h4'
-                                    >
-                                        {collection.title}
-                                    </Typography>
-                                    <ImageList
-                                        cols={2}
-                                        rowHeight={150}
-                                        sx={{
-                                            overflow: 'hidden',
-                                            margin: 0,
-                                            background: 'rgba(0, 0, 0, 1)',
-                                        }}
-                                    >
-                                        {posts.map((post, i) => {
-                                            const isLengthSmall = posts.length < 2
-                                            const rows = i === 0 ? isLengthSmall ? 2 : 2 : 1
-                                            const cols = i === 0 ? isLengthSmall ? 2 : 1 : 1
-
-                                            return (
-                                                <ImageListItem
-                                                    sx={{bgcolor: 'primary.main', overflow: 'hidden'}}
-                                                    rows={rows}
-                                                    cols={cols}
-                                                    key={i}
-                                                >
-                                                    <img src={post.image}/>
-                                                </ImageListItem>
-                                            )
-                                        })}
-                                    </ImageList>
-                                </NavLink>
-                            )
-                        })}
-                    </Box>
-                    :
-                    <Typography variant='h3' sx={{mt: '150px'}} textAlign='center'>
-                        There already no collections yet
-                    </Typography>
-                }
+                <Collections collections={collections}/>
             </Box>
         </Box>
     )
 }
 
-// {posts.map((post) => {
-//
-//     const {_id: postId, author, title, body, tags, image: {url}} = post
-//     const formattedTags = tags.join(' ')
-//
-//     return (
-//         <Box
-//             key={postId}
-//             sx={{
-//                 display: 'inline-block',
-//                 width: '100%',
-//                 mb: 1,
-//                 borderRadius: '8px',
-//
-//             }}
-//         >
-//             <Button sx={{color: 'red'}} onClick={() => {
-//
-//             }}>
-//                 Delete
-//             </Button>
-//             <img
-//                 src={url}
-//                 style={{
-//                     width: '100%',
-//                     objectFit: 'cover',
-//                     borderRadius: '8px',
-//                     backgroundColor: main
-//                 }}
-//             />
-//             <Box
-//                 sx={{
-//                     px: 0.5
-//                 }}
-//             >
-//                 <Typography variant='h6'>{title}</Typography>
-//                 <Typography variant='body1'>{formattedTags}</Typography>
-//             </Box>
-//         </Box>
-//     )
-//
-// })}

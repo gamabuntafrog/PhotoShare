@@ -46,29 +46,14 @@ export default function Register() {
         <Box
             sx={{
                 background: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${background})`,
-                height: '92vh',
+                minHeight: '100vh',
                 backgroundPositionY: 'center',
                 backgroundSize: 'cover',
-                overflowY: 'auto',
             }}
         >
-            <Snackbar
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                open={authError}
-                autoHideDuration={6000}
-                onClose={() => dispatch(removeErrors())}
-                sx={{alignItems: 'center'}}
-            >
-                <Alert onClose={() => dispatch(removeErrors())} severity="error" >
-                    <Typography variant='h6'>Email or password is wrong</Typography>
-                </Alert>
-            </Snackbar>
             <Container
                 sx={{
-                    height: '100%',
-                    backdropFilter: 'blur(4px)',
-                    pt: 3,
-                    mb: 3
+                    py: 3,
                 }}
             >
                 <Typography sx={{textAlign: 'center', fontWeight: 'bold'}} variant='h1'>Register</Typography>

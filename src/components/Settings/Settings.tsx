@@ -29,18 +29,31 @@ export default function Settings() {
     const nextColorMode = theme.palette.mode === 'dark' ? 'light' : 'dark'
 
     return (
-        <Container>
-            <Typography variant='h1' sx={{fontWeight: '600', textAlign: 'center'}}>Settings</Typography>
+        <Container
+            sx={{
+                minHeight: '90vh',
+                pt: 4,
+                pb: 2
+            }}
+        >
+            <Typography variant='h1' sx={{
+                fontWeight: '600', textAlign: 'center',
+                [theme.breakpoints.down('tablet')]: {
+                    fontSize: 70
+                }
+            }}>Settings</Typography>
             <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2}}>
-                <Typography  variant='h2'>Color</Typography>
-                <Button variant='outlined' sx={{ml: 1, color: 'primary.main'}} onClick={changeColorMode} color="inherit">
+                <Typography variant='h2'>Color</Typography>
+                <Button variant='outlined' sx={{my: 2, color: 'primary.main'}} onClick={changeColorMode}
+                        color="inherit">
                     Change mode to {nextColorMode}
                 </Button>
                 <List
                     sx={{
                         display: 'flex',
                         flexWrap: 'wrap',
-                        flexDirection: 'row'
+                        flexDirection: 'row',
+                        justifyContent: 'center'
                     }}
                 >
                     {colorsArray.map((color) => {

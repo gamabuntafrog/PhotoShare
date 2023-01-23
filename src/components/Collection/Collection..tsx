@@ -1,5 +1,16 @@
-import {Avatar, Box, Button, Container, ImageList, Typography} from "@mui/material";
-import {NavLink, useParams} from "react-router-dom";
+import {
+    Avatar,
+    Box,
+    Button,
+    Container,
+    ImageList,
+    List, ListItem, ListItemAvatar, ListItemButton, ListItemText, Menu,
+    MenuItem, MenuList,
+    Modal,
+    OutlinedInput,
+    Typography
+} from "@mui/material";
+import {NavLink, useNavigate, useParams} from "react-router-dom";
 import Posts from "../Posts";
 import {useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
@@ -7,18 +18,277 @@ import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import styles from "../Posts/Posts.module.css";
 import PostItem from "../PostItem";
-import React, {useState} from "react";
+import React, {useDeferredValue, useEffect, useState} from "react";
 import CreateCollectionModal from "../CreateCollectionModal";
-import {extendedCollectionsApi} from "../../redux/api/rootApi";
+import {extendedCollectionsApi, extendedUsersApi} from "../../redux/api/rootApi";
 import usePostsActions from "../../hooks/usePostsActions";
-import useToggleSubscribe from "../../hooks/useToggleSubscribe";
+import {ICurrentUser} from "../../types/user";
+import {useDebounce} from "use-debounce";
+import {MIN_USERNAME_LENGTH} from "../../utils/validationSchemas";
+import {IAuthorOfCollection} from "../../types/collection";
+import useAnchorEl from "../../hooks/useAnchorEl";
+import MiniLoader from "../Loaders/MiniLoader";
+import FullScreenLoader from "../Loaders/FullScreenLoader";
+
+interface IAddAuthorToCollectionModalProps {
+    isAddAuthorModalOpen: boolean,
+    closeAddAuthorModal: () => void,
+    collectionId: string,
+}
+
+function AddAuthorToCollectionModal(
+    {
+        isAddAuthorModalOpen,
+        closeAddAuthorModal,
+        collectionId
+    }: IAddAuthorToCollectionModalProps) {
+
+    const [query, setQuery] = useState('');
+    const [debouncedQuery] = useDebounce(query, 1000)
+
+    const [addAuthor] = extendedCollectionsApi.useAddAuthorToCollectionMutation()
+    const [getUsersByUsername, {data: users, isLoading}] = extendedUsersApi.useLazyGetUsersForAddInCollectionQuery()
+
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        if (debouncedQuery.length < 2) return
+
+        getUsersByUsername({username: debouncedQuery, collectionId})
+    }, [debouncedQuery]);
+
+    const showUsersCondition = (users && users.length > 0 && debouncedQuery.length > 2)
+    const showNotFoundCondition = (users && users.length === 0 || !users && debouncedQuery.length > 2)
+
+    const theme = useTheme()
+
+    if (isLoading) return <MiniLoader/>
+
+    return (
+        <Modal
+            open={isAddAuthorModalOpen}
+            onClose={closeAddAuthorModal}
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <Box
+                sx={{
+                    bgcolor: 'background.paper',
+                    width: '50vw',
+                    maxHeight: '100vh',
+                    overflow: 'auto',
+                    padding: 2,
+                    pt: 8,
+                    color: 'text.primary',
+                    borderRadius: 2,
+                    position: 'relative',
+                    [theme.breakpoints.down('tablet')]: {
+                        width: '80vw',
+                    }
+                }}
+            >
+                <Button color='error' sx={{position: 'absolute', right: 20, top: 20}}
+                        onClick={closeAddAuthorModal}>Close</Button>
+                <Typography
+                    variant='h3'
+                    sx={{padding: 1, textAlign: 'center', color: 'primary.main', wordBreak: 'break-word'}}
+                >
+                    Add authors
+                </Typography>
+                <OutlinedInput
+                    sx={{my: 1}}
+                    fullWidth
+                    placeholder='Enter username'
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                />
+                {showUsersCondition && <List>
+                    {users.map(({_id, username, avatar}) => {
+                        return (
+                            <ListItem
+                                sx={{
+                                    [theme.breakpoints.down('tablet')]: {
+                                        padding: 1
+                                    }
+                                }}
+                                key={_id}>
+                                <ListItemAvatar
+                                    sx={{cursor: 'pointer', minWidth: 'auto'}}
+                                >
+                                    <NavLink to={`/users/${_id}`}>
+                                        <Avatar
+                                            sx={{
+                                                width: 60,
+                                                height: 60,
+                                                [theme.breakpoints.down('tablet')]: {
+                                                    width: 40,
+                                                    height: 40,
+                                                }
+                                            }}
+                                            src={avatar || ''}
+                                        />
+                                    </NavLink>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    sx={{
+                                        ml: 2,
+                                        mr: 1,
+                                        [theme.breakpoints.down('tablet')]: {
+                                            mx: 1
+                                        },
+                                        cursor: 'pointer'
+                                    }}
+                                >
+                                    <NavLink to={`/users/${_id}`}>
+                                        {username}
+                                    </NavLink>
+                                </ListItemText>
+                                <Button
+                                    variant='contained'
+                                    onClick={() => addAuthor({collectionId, authorId: _id})}
+                                >
+                                    Add
+                                </Button>
+                            </ListItem>
+                        )
+                    })}
+                </List>
+                }
+                {showNotFoundCondition &&
+                    <Typography
+                        variant='h5'
+                        sx={{textAlign: 'center', padding: 2}}
+                    >
+                        Not Found
+                    </Typography>
+                }
+            </Box>
+        </Modal>
+    )
+}
+
+interface IDeleteAuthorFromCollectionProps {
+    isDeleteAuthorModalOpen: boolean,
+    closeDeleteAuthorModal: () => void,
+    authors: IAuthorOfCollection[],
+    currentUserId: string,
+    collectionId: string
+}
+
+function DeleteAuthorFromCollection(
+    {
+        isDeleteAuthorModalOpen,
+        closeDeleteAuthorModal,
+        authors,
+        currentUserId,
+        collectionId
+    }: IDeleteAuthorFromCollectionProps) {
+
+    const authorsWithoutCurrentUser = authors.filter(({_id}) => _id !== currentUserId)
+
+    const [deleteAuthor] = extendedCollectionsApi.useDeleteAuthorFromCollectionMutation()
+
+    const theme = useTheme()
+
+    return (
+        <Modal
+            open={isDeleteAuthorModalOpen}
+            onClose={closeDeleteAuthorModal}
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <Box sx={{
+                bgcolor: 'background.paper',
+                width: '50vw',
+                maxHeight: '100vh',
+                overflow: 'auto',
+                padding: 2,
+                pt: 8,
+                color: 'text.primary',
+                borderRadius: 2,
+                position: 'relative',
+                [theme.breakpoints.down('tablet')]: {
+                    width: '80vw',
+                }
+            }}>
+                <Button
+                    color='error'
+                    sx={{position: 'absolute', right: 20, top: 20}}
+                    onClick={closeDeleteAuthorModal}
+                >
+                    Close
+                </Button>
+                {authorsWithoutCurrentUser.length > 0 ?
+                    <>
+                        <Typography
+                            variant='h3'
+                            sx={{padding: 1, textAlign: 'center', wordBreak: 'break-word'}}
+                            color='error'
+                        >
+                            Delete authors
+                        </Typography>
+                        {authorsWithoutCurrentUser.map((author) => {
+                            const {_id, username, avatar} = author
+                            return (
+                                <ListItem key={_id}>
+                                    <ListItemAvatar>
+                                        <NavLink to={`/users/${_id}`}>
+                                            <Avatar
+                                                sx={{
+                                                    width: 60,
+                                                    height: 60
+                                                }}
+                                                src={avatar || ''}
+                                            />
+                                        </NavLink>
+                                    </ListItemAvatar>
+                                    <ListItemText
+                                        sx={{
+                                            ml: 2,
+                                            mr: 1,
+                                        }}
+                                    >
+                                        <NavLink to={`/users/${_id}`}>
+                                            {username}
+                                        </NavLink>
+                                    </ListItemText>
+                                    <Button
+                                        variant='contained'
+                                        color='error'
+                                        onClick={() => deleteAuthor({collectionId, authorId: _id})}
+                                    >
+                                        Delete
+                                    </Button>
+                                </ListItem>
+                            )
+                        })}
+                    </>
+                    :
+                    <Typography
+                        variant='h3'
+                        sx={{padding: 1, textAlign: 'center', wordBreak: 'break-word'}}
+                        color='error'
+                    >
+                        You are the sole author
+                    </Typography>
+                }
+
+            </Box>
+        </Modal>
+    )
+}
 
 
 export default function Collection() {
     const {id = ''} = useParams<{ id: string }>()!
 
-    const {user, token} = useAppSelector((state) => state.userReducer) as IUserSliceAuthorized
-    const {_id: currentUserId} = user
+    const {_id: currentUserId} = useAppSelector((state) => state.userReducer.user) as ICurrentUser
 
     const {
         data: collection,
@@ -34,33 +304,19 @@ export default function Collection() {
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const openModal = () => setIsModalOpen(true)
-    const closeModal = () => setIsModalOpen(false)
+    const [isAddAuthorModalOpen, setIsAddAuthorModalOpen] = useState(false);
+    const [isDeleteAuthorModalOpen, setIsDeleteAuthorModalOpen] = useState(false);
 
     const [deleteColl] = extendedCollectionsApi.useDeleteCollectionMutation()
+    const [deleteCurrentUserFromCollection] = extendedCollectionsApi.useDeleteCurrentUserFromCollectionMutation()
 
     const deleteCollection = async () => {
         await deleteColl({id})
     }
 
-    // const {toggleSubscribe, isSubscribed} = useToggleSubscribe(collection?.author._id || '')
+    const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
 
-    if (isCollectionLoading) {
-        return (
-            <Container className={styles.posts} sx={{
-                margin: '0 auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '90vh',
-                maxHeight: '90vh'
-            }}>
-                <Typography variant='h1' sx={{textAlign: 'center'}}>Loading...</Typography>
-            </Container>
-        )
-    }
-
+    if (isCollectionLoading) return <FullScreenLoader/>
 
     if (collectionError || !collection) {
         return (
@@ -78,24 +334,133 @@ export default function Collection() {
     }
 
     const {_id: collectionId, title, tags, authors} = collection
-    // const {_id: authorId, avatar: avatarUrl, username, subscribersCount} = author
     const formattedTags = tags.join(' ')
     const isCurrentUserAuthorOfCollection = authors.some(({_id}) => currentUserId === _id)
 
-    const onToggleSubscribe = () => {
-        //toggleSubscribe(authorId, isSubscribed)
-    }
+    const closeAddAuthorModal = () => setIsAddAuthorModalOpen(false)
+    const openAddAuthorModal = () => setIsAddAuthorModalOpen(true)
+    const closeDeleteAuthorModal = () => setIsDeleteAuthorModalOpen(false)
+    const openDeleteAuthorModal = () => setIsDeleteAuthorModalOpen(true)
+
 
     return (
-        <Box sx={{overflowY: 'auto', height: '91vh'}}>
+        <Box>
+            <AddAuthorToCollectionModal
+                isAddAuthorModalOpen={isAddAuthorModalOpen}
+                closeAddAuthorModal={closeAddAuthorModal}
+                collectionId={collectionId}
+            />
+            <DeleteAuthorFromCollection
+                isDeleteAuthorModalOpen={isDeleteAuthorModalOpen}
+                closeDeleteAuthorModal={closeDeleteAuthorModal}
+                authors={collection.authors}
+                currentUserId={currentUserId}
+                collectionId={collectionId}
+            />
             <Box sx={{
                 py: 2,
+                position: 'relative'
             }}>
-                <Box sx={{mb: 2}}>
+                {isCurrentUserAuthorOfCollection &&
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            right: 20,
+                            top: 20
+                        }}
+                    >
+                        <Button
+                            id="basic-button"
+                            aria-controls={isAnchorEl ? 'basic-menu' : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={isAnchorEl ? 'true' : undefined}
+                            onClick={handleClick}
+                            variant='contained'
+                        >
+                            Settings
+                        </Button>
+                        <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={isAnchorEl}
+                            onClose={handleClose}
+                            MenuListProps={{
+                                'aria-labelledby': 'basic-button',
+                            }}
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'left',
+                            }}
+                            sx={{
+                                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                                '& .MuiPaper-root': {
+                                    bgcolor: 'background.paper',
+                                    maxHeight: '300px',
+                                },
+                                '& .MuiMenu-list': {
+                                    bgcolor: 'background.paper',
+                                    py: 0
+                                }
+                            }}
+                        >
+                            <MenuItem
+                                sx={{
+                                    bgcolor: 'background.paper',
+                                    position: 'relative'
+                                }}
+                                onClick={() => {
+                                    openAddAuthorModal()
+                                    handleClose()
+                                }}
+                            >
+                                Add new author
+                            </MenuItem>
+                            <MenuItem
+                                sx={{
+                                    bgcolor: 'background.paper',
+                                    position: 'relative'
+                                }}
+                                onClick={() => {
+                                    openDeleteAuthorModal()
+                                    handleClose()
+                                }}>
+                                <Typography color='error'>Delete author</Typography>
+                            </MenuItem>
+                            <MenuItem
+                                sx={{
+                                    bgcolor: 'background.paper',
+                                    position: 'relative'
+                                }}
+                                onClick={() => {
+                                    deleteCurrentUserFromCollection({collectionId})
+                                    handleClose()
+                                }}>
+                                <Typography color='error'>Stop being an author</Typography>
+                            </MenuItem>
+                            <MenuItem
+                                sx={{
+                                    bgcolor: 'background.paper',
+                                    position: 'relative'
+                                }}
+                                onClick={() => {
+                                    deleteCollection()
+                                    handleClose()
+                                }}>
+                                <Typography color='error'>Delete collection</Typography>
+                            </MenuItem>
+                        </Menu>
+                    </Box>
+                }
+                <Box sx={{mb: 2, mt: 6}}>
                     <Typography
                         variant='h1'
                         sx={{
                             textAlign: 'center',
+                            wordBreak: 'break-word',
+                            [theme.breakpoints.down('tablet')]: {
+                                fontSize: 50,
+                            },
+                            padding: 2
                         }}>
                         {title}
                     </Typography>
@@ -116,46 +481,35 @@ export default function Collection() {
                 >
                     <Typography variant='body2'>by</Typography>
                     {authors.map((author) => {
-                        const {_id: authorId, username, avatar, subscribersCount} = author
+                        const {_id: authorId, username, avatar} = author
+
                         return (
-                            <>
-                                <NavLink
-                                    to={`/users/${authorId}`}
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center'
-                                    }}
-                                >
-                                    <Avatar sx={{width: '80px', height: '80px'}} src={avatar || ''} alt={username}/>
-                                    <Typography sx={{ml: 1}} variant='h5'>{username}</Typography>
-                                </NavLink>
-                                <Typography sx={{my: 1}}>{subscribersCount} subscribers</Typography>
-                            </>
+                            <NavLink
+                                to={`/users/${authorId}`}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                }}
+                                key={authorId}
+                            >
+                                <Avatar sx={{width: '80px', height: '80px'}} src={avatar || ''} alt={username}/>
+                                <Typography sx={{ml: 1}} variant='h5'>{username}</Typography>
+                            </NavLink>
                         )
                     })}
                     {isCurrentUserAuthorOfCollection &&
-                        <>
-                            <Button onClick={deleteCollection} sx={{mb: 1}} color='error'>Delete Collection</Button>
-                            <Button>
-                                <NavLink to={`/post/create/${collectionId}`}>
-                                    Add new post
-                                </NavLink>
-                            </Button>
-                        </>
+                        <Button
+                            variant='contained'
+                            sx={{mt: 3}}
+                        >
+                            <NavLink to={`/post/create/${collectionId}`}>
+                                Add new post
+                            </NavLink>
+                        </Button>
                     }
-                    {/*{!isCurrentUserAuthorOfCollection && <Button*/}
-                    {/*    sx={{*/}
-                    {/*        borderRadius: 4,*/}
-                    {/*    }}*/}
-                    {/*    variant='contained'*/}
-                    {/*    onClick={onToggleSubscribe}*/}
-                    {/*>*/}
-                    {/*    {!isSubscribed ? 'Subscribe' : 'Unsubscribe'}*/}
-                    {/*</Button>}*/}
+
                 </Box>
             </Box>
-            {/*refetch()*/}
-            <CreateCollectionModal closeModal={closeModal} isModalOpen={isModalOpen}/>
             <ImageList
                 variant="masonry"
                 sx={{
@@ -168,7 +522,6 @@ export default function Collection() {
             >
                 {posts.map((post) => <PostItem
                     postsActions={postsActions}
-                    openModal={openModal}
                     post={post}
                     key={post._id}
                 />)}

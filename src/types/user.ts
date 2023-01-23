@@ -66,7 +66,8 @@ export interface IPostForICollection {
 export interface ICollectionForIUser {
     _id: string,
     title: string,
-    posts: IPostForICollection[]
+    posts: IPostForICollection[],
+    authors: string[]
 }
 
 export interface IUserWithCollections {
@@ -91,7 +92,7 @@ export interface ICurrentUser {
     collections: string[]
     age: number,
     posts: string[],
-    savedPosts: {post: string, collection: string}[],
+    savedPosts: { post: string, collection: string }[],
     likedPosts: string[],
     subscribes: string[],
     subscribers: string[],
@@ -101,3 +102,8 @@ export interface ICurrentUser {
     _id: string,
 }
 
+export interface IUserForAddInCollection {
+    _id: string,
+    username: string,
+    avatar: string | null
+}

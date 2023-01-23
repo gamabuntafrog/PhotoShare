@@ -1,49 +1,157 @@
-const header = {
-    header: (color: string, colorMode: 'dark' | 'light') => {
+import {styled, Theme} from "@mui/material";
+import {NavLink} from "react-router-dom";
 
-        return ({
-            borderBottom: `15px solid ${color}`,
-            padding: '0 0',
-            bgcolor: colorMode === 'dark' ? 'background.default' : 'background.paper',
+const headerStyles = (theme: Theme) => {
+
+    const {palette, breakpoints} = theme
+    const {primary, secondary, mode, background} = palette
+    const {main, dark, light} = primary
+
+
+    return {
+        header: {
+            borderBottom: `15px solid ${main}`,
+            padding: 0,
+            bgcolor: mode === 'dark' ? 'background.default' : 'background.paper',
             color: 'text.primary',
-            zIndex: 100,
-            boxShadow: `0px 10px 30px -14px ${color}`,
-            // borderRadius: '0px 0px 60px 60px'
-        })
-    },
-    container: () => {
-
-        return ({
+            zIndex: 1000,
+            boxShadow: `0px 10px 30px -14px ${main}`,
+            position: 'fixed',
+            width: '100%',
+            [theme.breakpoints.up('mobile')]: {
+                top: 0,
+            },
+            [theme.breakpoints.down('mobile')]: {
+                bottom: 0,
+            }
+        },
+        container: {
             display: 'flex',
             alignItems: 'center',
-            // justifyContent: 'space-around',
-            fontSize: '24px'
-        })
-    },
-    link: () => {
-
-        return ({
-            // color: 'black',
-            marginLeft: '12px'
-        })
-    },
-    activeLink: (color: string) => {
-
-        return ({
-            color: color,
+            fontSize: '24px',
+            my: 1,
+            [theme.breakpoints.down('mobile')]: {
+                px: 1
+            }
+        },
+        link: {
+            color: theme.palette.text.primary,
             marginLeft: '12px',
-            textShadow: `0px 0px 30px ${color}`
-        })
-    },
-    navContainer: () => {
-
-        return ({
+            textShadow: `0px 0px 30px ${theme.palette.primary.main}`,
+            // filter: 'drop-shadow(-3px 4px 4px var(--primary-500))',
+            '&:hover': {
+                color: theme.palette.primary.main
+            },
+            '&.active': {
+                color: theme.palette.primary.main
+            }
+        },
+        activeLink: {
+            color: main,
+            marginLeft: '12px',
+            textShadow: `0px 0px 30px ${main}`,
+            '&:hover': {
+                color: 'green'
+            }
+        },
+        navMobileContainer: {
+            ml: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-around',
+            [theme.breakpoints.up('laptop')]: {
+                display: 'none'
+            }
+        },
+        navContainer: {
             marginLeft: 'auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-around',
-        })
+            [theme.breakpoints.down('laptop')]: {
+                display: 'none'
+            }
+        },
+        openMenuButton: {
+            ml: 1,
+            '& svg': {
+                width: 30,
+                height: 30
+            }
+        },
+        menuContainer: {
+            marginLeft: 'auto',
+            display: 'flex',
+            alignItems: 'center',
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+        }
     }
 }
 
-export default header
+export const StyledHeaderNavLink = styled(NavLink)(({theme}) => ({
+    color: theme.palette.text.primary,
+    marginLeft: '12px',
+    textShadow: `0px 0px 30px ${theme.palette.primary.main}`,
+    [theme.breakpoints.down('mobile')]: {
+        marginLeft: theme.spacing(1),
+    },
+    '&:hover': {
+        color: theme.palette.primary.main
+    },
+    '&.active': {
+        color: theme.palette.primary.main
+    },
+    '&.first': {
+        marginLeft: 0,
+    },
+}))
+
+export const StyledMenuNavLink = styled(NavLink)(({theme}) => ({
+    color: theme.palette.text.primary,
+    marginTop: theme.spacing(1),
+    display: 'block',
+    textShadow: `0px 0px 30px ${theme.palette.primary.main}`,
+    // [theme.breakpoints.down('mobile')]: {
+    //     marginLeft: theme.spacing(1),
+    // },
+    '&:hover': {
+        color: theme.palette.primary.main
+    },
+    '&.active': {
+        color: theme.palette.primary.main
+    },
+    '&.first': {
+        marginTop: 0,
+    },
+}))
+
+export const StyledHeaderLogo = styled("svg")(({theme}) => ({
+    width: 200,
+    height: 50,
+    [theme.breakpoints.down('tablet')]: {
+        width: 100,
+        height: 35
+    },
+    [theme.breakpoints.down('mobile')]: {
+        display: 'none'
+    },
+    filter: `drop-shadow(-3px 4px 4px ${theme.palette.primary.main})`,
+    fill: theme.palette.mode === 'dark' ? 'white' : 'black',
+    '&:hover': {
+        fill: theme.palette.primary.main
+    }
+}))
+
+export const StyledMobileHeaderLogo = styled(StyledHeaderLogo)(({theme}) => ({
+    [theme.breakpoints.up('mobile')]: {
+        display: 'none',
+    },
+    [theme.breakpoints.down('mobile')]: {
+        display: 'block',
+        height: 50,
+        width: 75
+    },
+}))
+
+export default headerStyles

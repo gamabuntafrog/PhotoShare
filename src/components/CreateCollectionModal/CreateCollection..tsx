@@ -2,7 +2,7 @@ import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {IUserSliceAuthorized} from "../../types/userSlice";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
-import {Button, Container, InputLabel, Modal, OutlinedInput, Typography} from "@mui/material";
+import {Button, Container, InputLabel, Modal, OutlinedInput, Typography, useTheme} from "@mui/material";
 import React from "react";
 import * as Yup from "yup";
 import {useNavigate, useParams} from "react-router-dom";
@@ -27,7 +27,13 @@ interface ICreateCollectionModalProps {
 
 const isFunction = (any: any): any is Function => typeof any === 'function'
 
-export default function CreateCollectionModal({closeModal, isModalOpen, onCreate, refetch, postId}: ICreateCollectionModalProps) {
+export default function CreateCollectionModal({
+                                                  closeModal,
+                                                  isModalOpen,
+                                                  onCreate,
+                                                  refetch,
+                                                  postId
+                                              }: ICreateCollectionModalProps) {
     const {id: collectionId = ''} = useParams<{ id: string }>()!
 
     const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
@@ -76,6 +82,8 @@ export default function CreateCollectionModal({closeModal, isModalOpen, onCreate
         }
     }
 
+    const theme = useTheme()
+
     return (
         <Modal
             open={isModalOpen}
@@ -98,7 +106,8 @@ export default function CreateCollectionModal({closeModal, isModalOpen, onCreate
                     flexDirection: 'column',
                     alignItems: isCollectionCreatingLoading ? 'center' : 'center',
                     justifyContent: 'center',
-                    minHeight: '50vh'
+                    minHeight: '50vh',
+                    borderRadius: 4,
                 }}
                 maxWidth='tablet'
 
@@ -108,8 +117,18 @@ export default function CreateCollectionModal({closeModal, isModalOpen, onCreate
                     :
                     <>
                         <Button color='error' sx={{alignSelf: 'end'}} onClick={closeModal}>Close</Button>
-                        <Typography color='text.standard' textAlign='center' mx='auto' my={2} variant='h3'>Create new
-                            collection</Typography>
+                        <Typography
+                            variant='h3'
+                            sx={{
+                                color: theme.palette.text.standard,
+                                textAlign: 'center',
+                                mx: 'auto',
+                                my: 2,
+                                wordBreak: 'break-word'
+                            }}
+                        >
+                            Create new collection
+                        </Typography>
                         <form style={{
                             display: 'flex',
                             flexDirection: 'column',

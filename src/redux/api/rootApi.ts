@@ -2,7 +2,7 @@ import {BaseQueryFn, createApi, FetchArgs, fetchBaseQuery} from "@reduxjs/toolki
 import {RootState} from "../store";
 import {createStandardCustomError, IResponse, IResponseWithMessage, logout} from "../slices/userSlice";
 import {IOnePost, IPost} from "../../types/post";
-import {IUser, IUserWithCollections} from "../../types/user";
+import {IUser, IUserForAddInCollection, IUserWithCollections} from "../../types/user";
 import {IPostsApi} from "../../types/postsApi";
 import {ICollection, ICollectionWithPosts} from "../../types/collection";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
@@ -55,7 +55,7 @@ export const baseQueryWithInteceptors: BaseQueryFn<string | FetchArgs,
 export const rootApi = createApi({
     reducerPath: 'rootApi',
     refetchOnMountOrArgChange: true,
-    tagTypes: ['Post', 'User'],
+    tagTypes: ['Post', 'User', 'Collection'],
     baseQuery: baseQueryWithInteceptors,
     endpoints: () => ({})
 })
@@ -149,12 +149,14 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
                 url: `/collections/${id}`,
             }),
             transformResponse: (response: IResponse<{ collection: ICollectionWithPosts }>) => response.data.collection,
+            providesTags: ['Collection']
         }),
         getCurrentUserCollections: build.query<ICollection[], void>({
             query: () => ({
                 url: `/collections`,
             }),
-            transformResponse: (response: IResponse<{ collections: ICollection[] }>) => response.data.collections
+            transformResponse: (response: IResponse<{ collections: ICollection[] }>) => response.data.collections,
+            providesTags: ['Collection']
         }),
         createCollection: build.mutation<IResponseWithMessage<{ collection: ICollection }>, {
             body: {
@@ -189,25 +191,46 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
                 method: 'DELETE',
             }),
             transformErrorResponse: returnTransformedError,
+            invalidatesTags: ['Collection']
         }),
-        addAuthorToCollection: build.mutation<unknown, {collectionId: string, authorId: string}>({
+        addAuthorToCollection: build.mutation<unknown, { collectionId: string, authorId: string }>({
             query: ({collectionId, authorId}) => ({
-                url: `/collections/${collectionId}/author/${authorId}`,
+                url: `/collections/${collectionId}/authors/${authorId}`,
                 method: `POST`
-            })
+            }),
+            invalidatesTags: ['Collection']
         }),
-        deleteAuthorFromCollection: build.mutation<unknown, {collectionId: string, authorId: string}>({
+        deleteAuthorFromCollection: build.mutation<unknown, { collectionId: string, authorId: string }>({
             query: ({collectionId, authorId}) => ({
-                url: `/collections/${collectionId}/author/${authorId}`,
+                url: `/collections/${collectionId}/authors/${authorId}`,
                 method: `DELETE`
-            })
+            }),
+            invalidatesTags: ['Collection']
+        }),
+        deleteCurrentUserFromCollection: build.mutation<unknown, {collectionId: string}>({
+            query: ({collectionId}) => ({
+                url: `/collections/${collectionId}/authors`,
+                method: `DELETE`,
+            }),
+            invalidatesTags: ['Collection']
         })
-    })
+    }),
 })
 
 
 export const extendedUsersApi = rootApi.injectEndpoints({
     endpoints: (build) => ({
+        getUsersForAddInCollection: build.query<IUserForAddInCollection[], { username: string, collectionId: string }>({
+            query: ({username, collectionId}) => ({
+                url: `/users/search`,
+                params: {
+                    username,
+                    collectionId
+                }
+            }),
+            providesTags: ['Collection', 'User'],
+            transformResponse: (res: IResponse<{ users: IUserForAddInCollection[] }>) => res.data.users,
+        }),
         getUserById: build.query<IUserWithCollections, idType>({
             query: ({id}) => ({
                 url: `/users/${id}`,
@@ -217,7 +240,7 @@ export const extendedUsersApi = rootApi.injectEndpoints({
             }),
             transformResponse: (res: IResponse<{ user: IUserWithCollections }>) => res.data.user
         }),
-        updateCurrentUser: build.mutation<unknown, {body: {username: string, avatar: string}}>({
+        updateCurrentUser: build.mutation<unknown, { body: { username: string, avatar: string } }>({
             query: ({body}) => ({
                 url: `/users/current`,
                 method: 'PATCH',

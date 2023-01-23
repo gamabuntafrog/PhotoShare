@@ -13,15 +13,14 @@ import {
 import {useEffect} from "react";
 import {disableLoading, getCurrentUser, login, removeErrors} from "../../redux/slices/userSlice";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {Image} from "@mui/icons-material";
-import { yupResolver } from '@hookform/resolvers/yup';
+import {yupResolver} from '@hookform/resolvers/yup';
 
 import * as yup from 'yup'
 import CloseIcon from '@mui/icons-material/Close';
 import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 import {loginValidationSchema} from "../../utils/validationSchemas";
-
 
 
 interface IFormData {
@@ -35,10 +34,9 @@ enum htmlInputId {
 }
 
 
-
 export default function Login() {
 
-    const { register, setValue, handleSubmit, formState: { errors } } = useForm<IFormData>({
+    const {register, setValue, handleSubmit, formState: {errors}} = useForm<IFormData>({
         resolver: yupResolver(loginValidationSchema),
         mode: 'all'
     });
@@ -64,53 +62,52 @@ export default function Login() {
     const isNotValidated = !!emailError || !!passwordError
 
 
-
     return (
         <Box
             sx={{
                 background: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${background})`,
-                height: '92vh',
                 backgroundPositionY: 'center',
                 backgroundSize: 'cover',
-                overflowY: 'auto'
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'stretch'
             }}
         >
-            <Container
+            <Box sx={{
+                py: 2
+            }}>
+            <Typography sx={{textAlign: 'center', fontWeight: 'bold'}} variant='h1'>Login</Typography>
+            <FormGroup
+                onSubmit={onSubmit}
                 sx={{
-                    height: '100%',
-                    backdropFilter: 'blur(4px)',
-                    pt: 3,
-                    mb: 3
-
+                    display: 'flex',
+                    flexDirection: 'column',
+                    // maxWidth: '600px',
+                    width: '70vw',
+                    mx: 'auto',
+                    bgcolor: 'background.default',
+                    padding: 3,
+                    mt: 2,
+                    borderRadius: 1
                 }}
             >
-                <Typography sx={{textAlign: 'center', fontWeight: 'bold'}} variant='h1'>Login</Typography>
-                <FormGroup
-                    onSubmit={onSubmit}
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        maxWidth: '600px',
-                        mx: 'auto',
-                        bgcolor: 'background.default',
-                        padding: 3,
-                        mt: 2,
-                        borderRadius: 1
-                    }}
-                >
-                    <InputLabel sx={{whiteSpace: 'unset'}} error={!!emailError} htmlFor={`${htmlInputId.email}`}>Email</InputLabel>
-                    <OutlinedInput id={`${htmlInputId.email}`} sx={{mt: 1, mb: 2}} error={!!emailError} type='email' {...register('email')}/>
-                    <InputLabel sx={{whiteSpace: 'unset'}} error={!!passwordError} htmlFor={`${htmlInputId.password}`} >{passwordError?.message || 'Password'}</InputLabel>
-                    <OutlinedInput id={`${htmlInputId.password}`} sx={{mt: 1, mb: 2}} error={!!passwordError} type='password'  {...register('password')} />
-                    <Button
-                        type='submit'
-                        variant='contained'
-                        onClick={onSubmit}
-                        disabled={isNotValidated}
-                    >{isNotValidated ? 'Fill in the fields' : 'Let\'s go!'}</Button>
-                </FormGroup>
-            </Container
->
+                <InputLabel sx={{whiteSpace: 'unset'}} error={!!emailError}
+                            htmlFor={`${htmlInputId.email}`}>Email</InputLabel>
+                <OutlinedInput id={`${htmlInputId.email}`} sx={{mt: 1, mb: 2}} error={!!emailError}
+                               type='email' {...register('email')}/>
+                <InputLabel sx={{whiteSpace: 'unset'}} error={!!passwordError}
+                            htmlFor={`${htmlInputId.password}`}>{passwordError?.message || 'Password'}</InputLabel>
+                <OutlinedInput id={`${htmlInputId.password}`} sx={{mt: 1, mb: 2}} error={!!passwordError}
+                               type='password'  {...register('password')} />
+                <Button
+                    type='submit'
+                    variant='contained'
+                    onClick={onSubmit}
+                    disabled={isNotValidated}
+                >{isNotValidated ? 'Fill in the fields' : 'Let\'s go!'}</Button>
+            </FormGroup>
+            </Box>
         </Box>
     )
 }

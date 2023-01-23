@@ -15,13 +15,14 @@ interface ISavesInfoProps {
     selectCollection: (collectionId: string) => void
 }
 
-export default function CollectionsInfo({
-                                            collections,
-                                            openModal,
-                                            collectionIdError,
-                                            willSavedInCollectionTitle,
-                                            selectCollection
-                                        }: ISavesInfoProps) {
+export default function CollectionsInfo(
+    {
+        collections,
+        openModal,
+        collectionIdError,
+        willSavedInCollectionTitle,
+        selectCollection
+    }: ISavesInfoProps) {
 
     const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
 

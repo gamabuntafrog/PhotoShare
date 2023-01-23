@@ -2,7 +2,7 @@ import {IUser, IUserInPost} from "./user";
 import {IPost} from "./post";
 
 export interface ICollection {
-    author: string,
+    authors: string[],
     tags: string[],
     posts: string[],
     title: string,

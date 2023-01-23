@@ -8,7 +8,7 @@ import {
     Input,
     InputLabel, Menu, MenuItem, Modal,
     OutlinedInput,
-    Typography
+    Typography, useTheme
 } from "@mui/material";
 import * as Yup from "yup";
 import {useForm, useFormState} from "react-hook-form";
@@ -22,6 +22,7 @@ import CreateCollectionModal from "../CreateCollectionModal";
 import {createPostValidationSchema} from "../../utils/validationSchemas";
 import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
 import CollectionsInfo from "../CollectionsInfo";
+import FullScreenLoader from "../Loaders/FullScreenLoader";
 
 
 export const breakableText = {wordBreak: 'break-all', whiteSpace: 'break-spaces'}
@@ -126,25 +127,11 @@ export default function CreatePost() {
     const selectCollectionCallback = (collectionId: string) => {
         navigate(`/post/create/${collectionId}`)
     }
+    const theme = useTheme()
 
     const willSavedInCollectionTitle = userCollections[watch("collectionIdIndex")]?.title || 'Select collection'
 
-    if (isPostCreating || isUserCollectionsLoading) {
-        return (
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100%'
-                }}
-            >
-                <Typography variant='h1'>
-                    Loading...
-                </Typography>
-            </Box>
-        )
-    }
+    if (isPostCreating || isUserCollectionsLoading) return <FullScreenLoader/>
 
     return (
         <Container
@@ -163,15 +150,20 @@ export default function CreatePost() {
                 sx={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    [theme.breakpoints.down('tablet')]: {
+                        flexDirection: 'column'
+                    }
                 }}
             >
-
                 <form
                     style={{width: '300px'}}
                     onSubmit={onSubmit}
                 >
-                    <Grid container flexDirection='column'>
+                    <Grid container sx={{
+                        flexDirection: 'column'
+                    }}
+                    >
                         <Grid item ml='auto'>
                             <CollectionsInfo
                                 selectCollection={selectCollectionCallback}
@@ -228,9 +220,17 @@ export default function CreatePost() {
                     </Grid>
                 </form>
                 <Box
-                    sx={{ml: 3}}
-                >
-                    <img style={{maxHeight: '70vh', width: '400px', objectFit: 'contain'}} src={imageFile || ''}/>
+                    sx={{
+                        [theme.breakpoints.up('tablet')]: {
+                            ml: 3,
+                            '& img': {width: '400px'},
+                        },
+                        [theme.breakpoints.down('tablet')]: {
+                            '& img': {width: '90%'}
+                        }
+                    }}>
+                    < img
+                        style={{maxHeight: '70vh',  objectFit: 'contain'}} src={imageFile || ''}/>
                 </Box>
             </Box>
         </Container>

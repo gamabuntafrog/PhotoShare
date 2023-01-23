@@ -1,4 +1,3 @@
-
 import {useEffect, useMemo} from "react";
 import App from "./App";
 import {useAppSelector} from "./redux/hooks";
@@ -8,7 +7,7 @@ import {
     TypeText,
     createTheme,
     useTheme,
-    ThemeProvider
+    ThemeProvider, TypeBackground
 } from "@mui/material/styles";
 
 declare module '@mui/material/styles' {
@@ -25,10 +24,50 @@ declare module '@mui/material/styles' {
         lg: false;
         xl: false;
     }
+
     interface TypeText {
-            standard: string
+        standard: string,
+        light: string
+    }
+
+    interface PaletteColorOptions {
+        standard: string,
+        standardReversed: string
+    }
+
+    interface PaletteColor {
+        standard: string,
+        standardReversed: string
+
+    }
+
+    interface SimplePaletteColorOptions {
+        darker?: string;
     }
 }
+
+declare module '@mui/material/Button' {
+    interface ButtonPropsColorOverrides {
+        standard: true,
+        standardReversed: true
+    }
+
+}
+
+declare module '@mui/material/IconButton' {
+    interface IconButtonPropsColorOverrides {
+        standard: true,
+        standardReversed: true
+    }
+}
+
+declare module '@mui/material/SvgIcon' {
+    interface SvgIconPropsColorOverrides {
+        standard: true,
+        standardReversed: true
+    }
+}
+
 
 let root = document.querySelector(':root') as HTMLElement
 
@@ -41,13 +80,18 @@ export default function ThemeAppWrapper() {
             createTheme({
                 palette: {
                     mode,
-                    primary: getPrimaryTheme(primaryColor, isLoggedIn),
+                    primary: {
+                        ...getPrimaryTheme(primaryColor, isLoggedIn),
+                        standard: mode === 'dark' ? 'white' : 'black',
+                        standardReversed: mode === 'dark' ? 'black' : 'white',
+                    },
                     background: {
                         default: mode === 'dark' ? '#161616' : '#ededed',
                         paper: mode === 'dark' ? '#242424' : '#cfcfcf'
                     },
                     text: {
-                        standard: mode === 'dark' ? 'white' : 'black'
+                        standard: mode === 'dark' ? 'white' : 'black',
+                        light: 'white'
                     }
                 },
                 breakpoints: {
@@ -63,7 +107,7 @@ export default function ThemeAppWrapper() {
     );
 
     const {palette} = theme
-
+    console.log(palette.primary.standard)
     const setColorsInCss = () => {
         Object.keys(palette.primary).forEach((key) => {
             const color = palette.primary[key as keyof PaletteColor]
@@ -75,7 +119,12 @@ export default function ThemeAppWrapper() {
         })
         Object.keys(palette.secondary).forEach((key) => {
             const color = palette.secondary[key as keyof PaletteColor]
-            root.style.setProperty(`--secondary-${color}`, color)
+            root.style.setProperty(`--secondary-${key}`, color)
+        })
+        Object.keys(palette.background).forEach((key) => {
+            const color = palette.background[key as keyof TypeBackground]
+
+            root.style.setProperty(`--background-${key}`, color)
         })
     }
 

@@ -8,12 +8,12 @@ import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import React, {useEffect, useState} from "react";
 import {extendedCollectionsApi, extendedPostsApi, extendedUsersApi} from "../../redux/api/rootApi";
-import Loader from "../Loader";
 import PostSavesInfo from "../PostSavesInfo";
 import CreateCollectionModal from "../CreateCollectionModal";
 import usePostActions from "../../hooks/usePostActions";
 import {ICurrentUser} from "../../types/user";
 import useToggleSubscribe from "../../hooks/useToggleSubscribe";
+import FullScreenLoader from "../Loaders/FullScreenLoader";
 
 
 export default function Post() {
@@ -39,7 +39,7 @@ export default function Post() {
     const [post, {toggleLike, toggleSave, updateSavesInfo, deletePost}] = usePostActions({initPost: data})
     const {toggleSubscribe, isSubscribed} = useToggleSubscribe(post?.author._id || '')
 
-    if (!post && isPostLoading) return <Loader/>
+    if (!post && isPostLoading) return <FullScreenLoader/>
 
     if (!post || !post.author) {
         return (

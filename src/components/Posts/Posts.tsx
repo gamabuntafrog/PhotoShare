@@ -7,6 +7,7 @@ import React, {useEffect, useState} from "react";
 import CreateCollectionModal from "../CreateCollectionModal";
 import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
 import usePostsActions from "../../hooks/usePostsActions";
+import FullScreenLoader from "../Loaders/FullScreenLoader";
 
 
 
@@ -25,24 +26,8 @@ export default function Posts() {
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const openModal = () => setIsModalOpen(true)
-    const closeModal = () => setIsModalOpen(false)
 
-    if (isPostsLoading) {
-        return (
-            <Container className={styles.posts} sx={{
-                margin: '0 auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                height: '90vh',
-                maxHeight: '90vh'
-            }}>
-                <Typography variant='h1' sx={{textAlign: 'center'}}>Loading...</Typography>
-            </Container>
-        )
-    }
+    if (isPostsLoading) return <FullScreenLoader/>
 
 
     if (postsError) {
@@ -60,20 +45,23 @@ export default function Posts() {
         )
     }
     return (
-        <Box sx={{overflowY: 'auto', height: '91vh'}}>
+        <Box
+            sx={{
+                py: 2
+            }}
+        >
             <ImageList
                 variant="masonry"
                 sx={{
                     width: '95%',
-                    py: 2,
-                    mx: 'auto'
+                    mx: 'auto',
+                    my: 0
                 }}
                 gap={12}
                 cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
             >
                 {posts.map((post) => <PostItem
                     postsActions={postsActions}
-                    openModal={openModal}
                     post={post}
                     key={post._id}
                 />)}

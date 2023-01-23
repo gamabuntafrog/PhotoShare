@@ -19,6 +19,8 @@ import {chooseRouter} from "./components/router";
 import {INotification} from "./types/notification";
 import {IResponseNotification, pullResponse, pushResponse} from "./redux/slices/responseNotificationsSlice";
 import {extendedPostsApi, extendedUsersApi} from "./redux/api/rootApi";
+import FullScreenLoader from "./components/Loaders/FullScreenLoader";
+import Header from "./components/Header";
 
 
 const tryAuth = async (dispatch: AppDispatch) => {
@@ -86,22 +88,9 @@ export default function App() {
     //     }
     // }, [token, user]);
 
+    const theme = useTheme()
 
-
-    if (isLoading) {
-        return (
-            <Box sx={{
-                bgcolor: 'background.default',
-                color: 'var(--text-primary)',
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}>
-                <Typography variant='h1'>Loading...</Typography>
-            </Box>
-        )
-    }
+    if (isLoading) return <FullScreenLoader/>
 
     const router = chooseRouter(isLoggedIn)
 
@@ -109,9 +98,13 @@ export default function App() {
         <Box sx={{
             bgcolor: mode === 'dark' ? 'background.default' : 'background.paper',
             color: 'var(--text-primary)',
-            height: '100vh',
-            maxHeight: '100vh',
-            overflow: 'hidden',
+            overflow: 'auto',
+            [theme.breakpoints.down('mobile')]: {
+                pb: '60px'
+            },
+            [theme.breakpoints.up('mobile')]: {
+                pt: '80px'
+            }
         }}>
             <Stack sx={{position: "fixed", bottom: 24, left: 24, zIndex: 1000}} spacing={2}>
                 {notifications.map(({message, status, code}, index) => {

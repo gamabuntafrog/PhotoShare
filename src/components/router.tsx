@@ -1,4 +1,4 @@
-import {createBrowserRouter, Navigate} from "react-router-dom";
+import {createBrowserRouter, Navigate, Outlet} from "react-router-dom";
 import Header from "./Header";
 import Posts from "./Posts";
 import Settings from "./Settings";
@@ -16,112 +16,76 @@ const privateRouter = createBrowserRouter([
         element: (
             <>
                 <Header/>
-                <Posts/>
+                <Outlet/>
             </>
         ),
-    },
-    {
-        path: "/settings",
-        element: (
-            <>
-                <Header/>
-                <Settings/>
-            </>
-        )
-    },
-    {
-        path: "/users/:id",
-        element: (
-            <>
-                <Header/>
-                <UserProfile/>
-            </>
-        )
-    },
-    {
-        path: "/post/create",
-        element: (
-            <>
-                <Header/>
-                <CreatePost/>
-            </>
-        )
-    },
-    {
-        path: "/post/create/:id",
-        element: (
-            <>
-                <Header/>
-                <CreatePost/>
-            </>
-        )
-    },
-    {
-        path: "/posts/:id",
-        element: (
-            <>
-                <Header/>
-                <Post/>
-            </>
-        )
-    },
-    {
-        path: "/collections/:id",
-        element: (
-            <>
-                <Header/>
-                <Collection/>
-            </>
-        )
-    },
-    {
-        path: "*",
-        element: (
-            <>
-                <Header/>
-                <Navigate to='/'/>
-            </>
-        )
+        children: [
+            {
+                path: "",
+                element: <Posts/>
+            },
+            {
+                path: "/settings",
+                element: <Settings/>
+            },
+            {
+                path: "/users/:id",
+                element: <UserProfile/>
+            },
+            {
+                path: "/post/create",
+                element: <CreatePost/>
+            },
+            {
+                path: "/post/create/:id",
+                element: <CreatePost/>
+            },
+            {
+                path: "/posts/:id",
+                element: <Post/>
+            },
+            {
+                path: "collections/:id",
+                element: <Collection/>
+            },
+            {
+                path: "*",
+                element: <Navigate to='/'/>
+            }
+        ]
     }
 ]);
 
 const publicRouter = createBrowserRouter([
     {
-        path: "/login",
+        path: "/",
         element: (
             <>
                 <Header/>
-                <Login/>
+                <Outlet/>
+                {/*<Navigate to='/login'/>*/}
             </>
-        )
-    },
-    {
-        path: "/register",
-        element: (
-            <>
-                <Header/>
-                <Register/>
-            </>
-        )
-    },
-    {
-        path: "/settings",
-        element: (
-            <>
-                <Header/>
-                <Settings/>
-            </>
-        )
-    },
-    {
-        path: "*",
-        element: (
-            <>
-                <Header/>
-                <Navigate to='/login'/>
-            </>
-        )
+        ),
+        children: [
+            {
+                path: "",
+                element: <Login/>
+            },
+            {
+                path: "register",
+                element: <Register/>
+            },
+            {
+                path: "settings",
+                element: <Settings/>
+            },
+            {
+                path: "*",
+                element: <Navigate to='/'/>
+            }
+        ]
     }
 ])
 
 export const chooseRouter = (isLoggedIn: boolean) => isLoggedIn ? privateRouter : publicRouter
+

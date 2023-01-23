@@ -1,8 +1,8 @@
-import {Box, Typography} from "@mui/material";
+import {Box, CircularProgress, Typography} from "@mui/material";
 import React from "react";
 
 
-export default function Loader() {
+export default function FullScreenLoader() {
 
     return (
         <Box sx={{
@@ -13,8 +13,8 @@ export default function Loader() {
             alignItems: 'center',
             justifyContent: 'center',
         }}>
-            <Typography variant='h1'>Loading...</Typography>
+            <CircularProgress size='20vw'/>
         </Box>
     )
-
 }
+

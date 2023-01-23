@@ -27,7 +27,6 @@ import CreateCollectionModal from "../CreateCollectionModal";
 
 interface IPostItemProps {
     post: IPost,
-    openModal: () => void,
     postsActions: IPostsActions
 }
 
@@ -93,8 +92,12 @@ export default function PostItem({post, postsActions}: IPostItemProps) {
 
     return (
         <>
-            <CreateCollectionModal onCreate={updateSavesInfo} postId={post._id} closeModal={closeModal}
-                                   isModalOpen={isModalOpen}/>
+            <CreateCollectionModal
+                onCreate={updateSavesInfo}
+                postId={post._id}
+                closeModal={closeModal}
+                isModalOpen={isModalOpen}
+            />
             <ImageListItem
                 key={postId}
                 sx={{
@@ -134,7 +137,10 @@ export default function PostItem({post, postsActions}: IPostItemProps) {
                             top: '0',
                             right: '0',
                             zIndex: 100,
-                            opacity: 0
+                            opacity: 0,
+                            [theme.breakpoints.down('laptop')]: {
+                                opacity: 100,
+                            }
                         }}
                         className='buttonsBar'
                     >
@@ -150,14 +156,17 @@ export default function PostItem({post, postsActions}: IPostItemProps) {
                             top: '100%',
                             transform: 'translateY(-110%)',
                             zIndex: 100,
-                            opacity: 0
+                            opacity: 0,
+                            [theme.breakpoints.down('laptop')]: {
+                                opacity: 100,
+                            }
                         }}
                         className='buttonsBar'
                     >
-                        <IconButton onClick={onToggleLike}>
-                            {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
+                        <IconButton sx={{color: theme.palette.text.light}} onClick={onToggleLike}>
+                            {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon />}
                         </IconButton>
-                        <Typography sx={{ml: 0.5}}>
+                        <Typography  sx={{ml: 0.5, color: theme.palette.text.light}}>
                             {likesCount}
                         </Typography>
                     </Box>

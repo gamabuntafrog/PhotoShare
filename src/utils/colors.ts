@@ -94,7 +94,7 @@ export const colorsArray = [
 ]
 
 
-export const getPrimaryTheme = (color: colorTypes, isLoggedIn: boolean): PaletteColorOptions => {
+export const getPrimaryTheme = (color: colorTypes, isLoggedIn: boolean) => {
     if (!isLoggedIn) {
         return indigo
     }

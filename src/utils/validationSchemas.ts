@@ -50,8 +50,8 @@ export const createCollectionValidationSchema = Yup.object({
     tags: Yup.string().required().test('validation', 'Every tag must have "#" ang min length 3 symbols', validateTags)
 }).required()
 
-const MIN_USERNAME_LENGTH = 4
-const MAX_USERNAME_LENGTH = 20
+export const MIN_USERNAME_LENGTH = 4
+export const MAX_USERNAME_LENGTH = 20
 const MIN_PASSWORD_LENGTH = 6
 const MAX_PASSWORD_LENGTH = 50
 
