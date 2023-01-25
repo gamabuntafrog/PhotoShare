@@ -87,7 +87,7 @@ export default function ThemeAppWrapper() {
                     },
                     background: {
                         default: mode === 'dark' ? '#161616' : '#ededed',
-                        paper: mode === 'dark' ? '#242424' : '#cfcfcf'
+                        paper: mode === 'dark' ? '#242424' : 'whitesmoke'
                     },
                     text: {
                         standard: mode === 'dark' ? 'white' : 'black',

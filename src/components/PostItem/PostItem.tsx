@@ -1,29 +1,18 @@
 import {
-    Avatar,
     Box,
-    IconButton,
-    ListItem,
-    Typography,
-    Link,
     ImageListItem,
     ImageListItemBar,
-    MenuItem, Button, Menu
 } from "@mui/material";
-import {useTheme} from "@mui/material/styles";
-import styles from "../Posts/Posts.module.css";
 import {NavLink} from "react-router-dom";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
-import CommentIcon from '@mui/icons-material/Comment';
 import {IPost, ISavesInfo} from "../../types/post";
-import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import {IUserSliceAuthorized} from "../../types/userSlice";
 import React, {Dispatch, useState} from "react";
-import useAnchorEl from "../../hooks/useAnchorEl";
 import {IPostsActions} from "../../hooks/usePostsActions";
 import PostSavesInfo from "../PostSavesInfo";
 import CreateCollectionModal from "../CreateCollectionModal";
+import useSx from "../../hooks/useSx";
+import postItemStyles from "./postItemStyles";
+import PostItemBottomButtonsWrapper from "./PostItemComponents/PostItemBottomButtonsWrapper";
+import PostItemTitle from "./PostItemComponents/PostItemTitle";
 
 interface IPostItemProps {
     post: IPost,
@@ -33,7 +22,8 @@ interface IPostItemProps {
 
 export default function PostItem({post, postsActions}: IPostItemProps) {
 
-    const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const {toggleLike, toggleSave, updateSavesInfo} = postsActions
 
     const {
@@ -47,47 +37,16 @@ export default function PostItem({post, postsActions}: IPostItemProps) {
         isSomewhereSaved: isSaved,
         savesInfo
     } = post
+
     const {username, _id: authorId, avatar: avatarURL = ''} = author
-
-
-    const theme = useTheme()
-    const {main} = theme.palette.primary
-
-    const onToggleLike = () => toggleLike(postId, isLiked)
-    const onToggleSave = (postId: string, collectionId: string, isSaved: boolean) => {
-        handleClose()
-        toggleSave(postId, collectionId, isSaved)
-    }
 
     const formattedTags = tags.join(' ')
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const styles = useSx(postItemStyles)
+
     const openModal = () => setIsModalOpen(true)
     const closeModal = () => setIsModalOpen(false)
-
-    const PostItemTitle = <>
-        <Box
-            sx={{
-                px: 0.5,
-                pb: 1,
-                whiteSpace: 'break-spaces',
-                wordBreak: 'break-all'
-            }}
-        >
-            <NavLink to={`/posts/${postId}`}>
-                <Typography variant='h6'>{title}</Typography>
-                <Typography sx={{mt: -1}} variant='caption'>{formattedTags}</Typography>
-            </NavLink>
-        </Box>
-        <NavLink style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'start',
-        }} to={`/users/${authorId}`}>
-            <Avatar sx={{width: '40px', height: '40px'}} src={avatarURL as string}/>
-            <Typography sx={{ml: 1}}>{username}</Typography>
-        </NavLink>
-    </>
+    const onToggleLike = () => toggleLike(postId, isLiked)
 
 
     return (
@@ -100,78 +59,54 @@ export default function PostItem({post, postsActions}: IPostItemProps) {
             />
             <ImageListItem
                 key={postId}
-                sx={{
-                    display: 'inline-block',
-                    '&:hover .buttonsBar': {
-                        opacity: 1
-                    }
-                }}
-
+                sx={styles.postItem}
             >
                 <Box
-                    sx={{
-                        position: 'relative',
-                        '&:hover .postImage': {
-                            filter: 'brightness(80%)',
-                        },
-                    }}
+                    sx={styles.postItemWrapper}
                 >
-                    <NavLink style={{position: 'relative'}} to={`/posts/${postId}`}>
+                    <NavLink to={`/posts/${postId}`}>
                         <img
                             src={postImageURL}
-                            style={{
-                                width: '100%',
-                                objectFit: 'cover',
-                                borderRadius: '8px',
-                                backgroundColor: main,
-                            }}
+                            style={styles.image}
                             className='postImage'
                         />
                     </NavLink>
                     <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: 0.5,
-                            position: 'absolute',
-                            top: '0',
-                            right: '0',
-                            zIndex: 100,
-                            opacity: 0,
-                            [theme.breakpoints.down('laptop')]: {
-                                opacity: 100,
-                            }
-                        }}
+                        sx={styles.postTopButtonsWrapper}
                         className='buttonsBar'
                     >
-                        <PostSavesInfo collections={savesInfo} toggleSave={toggleSave} postId={postId} isSaved={isSaved}
-                                       openModal={openModal}/>
+                        <PostSavesInfo
+                            collections={savesInfo}
+                            toggleSave={toggleSave}
+                            postId={postId}
+                            isSaved={isSaved}
+                            openModal={openModal}
+                        />
                     </Box>
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            padding: 0.5,
-                            position: 'absolute',
-                            top: '100%',
-                            transform: 'translateY(-110%)',
-                            zIndex: 100,
-                            opacity: 0,
-                            [theme.breakpoints.down('laptop')]: {
-                                opacity: 100,
-                            }
-                        }}
-                        className='buttonsBar'
-                    >
-                        <IconButton sx={{color: theme.palette.text.light}} onClick={onToggleLike}>
-                            {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon />}
-                        </IconButton>
-                        <Typography  sx={{ml: 0.5, color: theme.palette.text.light}}>
-                            {likesCount}
-                        </Typography>
-                    </Box>
+                    <PostItemBottomButtonsWrapper
+                        onToggleLike={onToggleLike}
+                        isLiked={isLiked}
+                        likesCount={likesCount}
+                    />
                 </Box>
-                <ImageListItemBar sx={{display: 'inline-flex'}} position="below" title={PostItemTitle}/>
+                <ImageListItemBar
+                    position="below"
+                    sx={{
+                        '& .MuiImageListItemBar-titleWrap': {
+                            padding: 0
+                        }
+                    }}
+                    title={
+                        <PostItemTitle
+                            postId={postId}
+                            title={title}
+                            formattedTags={formattedTags}
+                            authorId={authorId}
+                            avatarURL={avatarURL}
+                            username={username}
+                        />
+                    }
+                />
             </ImageListItem>
         </>
     )

@@ -8,114 +8,16 @@ import {
 } from "@mui/material";
 import {NavLink, useParams} from "react-router-dom";
 import {useAppSelector} from "../../redux/hooks";
-import React, { useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {extendedCollectionsApi, extendedUsersApi} from "../../redux/api/rootApi";
 import useToggleSubscribe from "../../hooks/useToggleSubscribe";
-import Collections from "../Collections";
-import ChangeUserProfile from "../ChangeUserProfile";
 import {ICurrentUser} from "../../types/user";
-import MiniLoader from "../Loaders/MiniLoader";
-
-
-interface IFormData {
-    imageList: FileList,
-    username: string
-}
-
-interface IAddAuthorModalProps {
-    isAddUserModalOpen: boolean,
-    closeAddAuthorModal: () => void,
-    authorId: string,
-}
-
-export function AddAuthorModal({isAddUserModalOpen, closeAddAuthorModal, authorId}: IAddAuthorModalProps) {
-
-    const {
-        data: currentUserCollections = [],
-        isLoading: isCurrentUserCollectionsLoading
-    } = extendedCollectionsApi.useGetCurrentUserCollectionsQuery()
-
-    const [addAuthor] = extendedCollectionsApi.useAddAuthorToCollectionMutation()
-    const [deleteAuthor] = extendedCollectionsApi.useDeleteAuthorFromCollectionMutation()
-
-    const collectionsWithoutAuthor = currentUserCollections.filter((col) => col.authors.every((_id) => _id !== authorId))
-    const collectionsWithAuthor = currentUserCollections.filter((col) => col.authors.some((_id) => _id === authorId))
-
-    return (
-        <Modal
-            open={isAddUserModalOpen}
-            onClose={closeAddAuthorModal}
-            sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}
-        >
-            <Box>
-                {isCurrentUserCollectionsLoading ?
-                    <MiniLoader/>
-                    :
-                    <Box
-                        sx={{
-                            bgcolor: 'background.paper',
-                            width: '50vw',
-                            padding: 2,
-                            color: 'text.primary',
-                            borderRadius: 2,
-                        }}
-                    >
-                        {collectionsWithoutAuthor.length > 0 &&
-                            <>
-                                <Typography color='green' sx={{cursor: 'default', mb: 1}}>Add author</Typography>
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        mb: 2
-                                    }}
-                                >
-                                    {collectionsWithoutAuthor.map((collection) => {
-                                        const {_id, title} = collection
-
-                                        return (
-                                            <MenuItem
-                                                key={_id}
-                                                onClick={() => {
-                                                    addAuthor({collectionId: _id, authorId})
-                                                }}
-                                            >
-                                                <Typography>{title}</Typography>
-                                            </MenuItem>
-                                        )
-                                    })}
-                                </Box>
-                            </>
-                        }
-                        {collectionsWithAuthor.length > 0 &&
-                            <>
-                                <Typography color='error' sx={{cursor: 'default', mb: 1}}>Delete author</Typography>
-                                {collectionsWithAuthor.map((collection) => {
-                                    const {_id, title} = collection
-
-                                    return (
-                                        <MenuItem
-                                            key={_id}
-                                            onClick={() => {
-                                                deleteAuthor({collectionId: _id, authorId})
-                                            }}
-                                        >
-                                            <Typography>{title}</Typography>
-                                        </MenuItem>
-                                    )
-                                })}
-                            </>
-                        }
-                    </Box>
-                }
-            </Box>
-        </Modal>
-    )
-}
+import {AddAuthorModal} from "./UserProfileComponents/AddAuthorModal";
+import useSx from "../../hooks/useSx";
+import userProfileStyles from "./userProfileStyles";
+import Collections from "./UserProfileComponents/Collections";
+import ChangeUserProfile from "./UserProfileComponents/ChangeUserProfile";
+import FullScreenLoader from "../Loaders/FullScreenLoader";
 
 
 export default function UserProfile() {
@@ -131,34 +33,15 @@ export default function UserProfile() {
     const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
     const {isSubscribed, toggleSubscribe} = useToggleSubscribe(id)
-    const theme = useTheme()
 
-    if (isLoading || isUserUpdating) {
-        return (
-            <Box sx={{
-                bgcolor: 'background.default',
-                color: 'var(--text-primary)',
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}>
-                <Typography variant='h1'>Loading...</Typography>
-            </Box>
-        )
-    }
+    const styles = useSx(userProfileStyles)
+
+    if (isLoading || isUserUpdating) return <FullScreenLoader/>
 
     if (!user || error || !currentUser) {
         return (
-            <Box sx={{
-                bgcolor: 'background.default',
-                color: 'var(--text-primary)',
-                minHeight: '100vh',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}>
-                <Typography variant='h1'>404</Typography>
+            <Box sx={styles.loaderOrErrorWrapper}>
+                <Typography variant='h1'>Not Found</Typography>
             </Box>
         )
     }
@@ -191,34 +74,21 @@ export default function UserProfile() {
     }
 
     const closeAddAuthorModal = () => setIsAddUserModalOpen(false)
+    const openAddAuthorModal = () => setIsAddUserModalOpen(true)
 
     return (
-        <Box
-            sx={{overflowY: 'auto', height: '92vh'}}
-        >
-            <AddAuthorModal isAddUserModalOpen={isAddUserModalOpen} closeAddAuthorModal={closeAddAuthorModal}
-                            authorId={id}/>
+        <Box>
+            <AddAuthorModal
+                isAddUserModalOpen={isAddUserModalOpen}
+                closeAddAuthorModal={closeAddAuthorModal}
+                authorId={id}
+            />
             <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    my: 3,
-                    [theme.breakpoints.down('tablet')]: {
-                        flexDirection: 'column'
-                    }
-
-                }}
+                sx={styles.wrapper}
             >
-                <Avatar sx={{width: '200px', height: '200px'}} src={avatarFile || avatarURL}/>
+                <Avatar sx={styles.avatar} src={avatarFile || avatarURL}/>
                 <Box
-                    sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'column',
-                        ml: 2
-                    }}
+                    sx={styles.userInfoWrapper}
                 >
                     {isChangingMode ?
                         <ChangeUserProfile
@@ -230,10 +100,10 @@ export default function UserProfile() {
                         <>
                             <Typography variant='h4'>{username}</Typography>
                             <Typography variant='body1'>{email}</Typography>
-                            <Box sx={{display: 'flex', margin: 1}}>
-                                <Typography sx={{mx: 1, textAlign: 'center'}}>{postsCount} posts</Typography>
-                                <Typography sx={{mx: 1, textAlign: 'center'}}>{subscribesCount} subscribes</Typography>
-                                <Typography sx={{mx: 1, textAlign: 'center'}}>{subscribersCount} subscribers</Typography>
+                            <Box sx={styles.userInfoSecondWrapper}>
+                                <Typography sx={styles.infoItem}>{postsCount} posts</Typography>
+                                <Typography sx={styles.infoItem}>{subscribesCount} subscribes</Typography>
+                                <Typography sx={styles.infoItem}>{subscribersCount} subscribers</Typography>
                             </Box>
                             <Typography>Created at {formattedCreatedAt}</Typography>
                         </>
@@ -255,21 +125,13 @@ export default function UserProfile() {
                         <Button
                             variant='outlined'
                             sx={{mt: 1}}
-                            onClick={() => setIsAddUserModalOpen(true)}>
+                            onClick={openAddAuthorModal}>
                             Add author to your collection
                         </Button>
                     }
                 </Box>
             </Box>
-            <Box
-                sx={{
-                    width: '90%',
-                    mx: 'auto',
-                    pb: 4,
-                }}
-            >
-                <Collections collections={collections}/>
-            </Box>
+            <Collections collections={collections}/>
         </Box>
     )
 }

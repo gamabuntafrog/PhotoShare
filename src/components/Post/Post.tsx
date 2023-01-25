@@ -14,23 +14,73 @@ import usePostActions from "../../hooks/usePostActions";
 import {ICurrentUser} from "../../types/user";
 import useToggleSubscribe from "../../hooks/useToggleSubscribe";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
+import useMediaQueries from "../../hooks/useMediaQueries";
+import useSx from "../../hooks/useSx";
+import postStyles, {StyledPostImage} from "./postStyles";
 
+interface IAuthorOfPostInfoProps {
+    authorId: string,
+    avatarURL: string | null,
+    username: string,
+    subscribersCount: number,
+    isUserAuthorOfPost: boolean,
+    isSubscribed: boolean,
+    onToggleSubscribe: () => void
+}
+
+function AuthorOfPostInfo(
+    {
+        authorId,
+        avatarURL,
+        username,
+        subscribersCount,
+        isUserAuthorOfPost,
+        isSubscribed,
+        onToggleSubscribe
+    }: IAuthorOfPostInfoProps) {
+
+    return (
+        <Box
+            sx={{display: 'flex'}}
+        >
+            <NavLink
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'start',
+                }}
+                to={`/users/${authorId}`}>
+                <Avatar sx={{width: '40px', height: '40px'}} src={avatarURL as string}/>
+                <Box
+                    sx={{
+                        ml: 1,
+                        lineHeight: '0px'
+                    }}
+                >
+                    <Typography variant='h6'>{username}</Typography>
+                    <Typography variant='caption'>{subscribersCount} subscribers</Typography>
+                </Box>
+            </NavLink>
+            {!isUserAuthorOfPost && <Button
+                sx={{
+                    ml: 2,
+                    borderRadius: 4,
+                }}
+                variant='contained'
+                onClick={onToggleSubscribe}
+            >
+                {!isSubscribed ? 'Subscribe' : 'Unsubscribe'}
+            </Button>}
+        </Box>
+    )
+}
 
 export default function Post() {
     const {id = ''} = useParams<{ id: string }>()!
 
     const {_id: currentUserId} = useAppSelector((state) => state.userReducer.user) as ICurrentUser
 
-
-
     const {data, isLoading: isPostLoading} = extendedPostsApi.useGetOneByIdQuery({id})
-
-    const theme = useTheme()
-    const {main} = theme.palette.primary
-
-    const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
-    const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
-
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const openModal = () => setIsModalOpen(true)
@@ -38,6 +88,9 @@ export default function Post() {
 
     const [post, {toggleLike, toggleSave, updateSavesInfo, deletePost}] = usePostActions({initPost: data})
     const {toggleSubscribe, isSubscribed} = useToggleSubscribe(post?.author._id || '')
+
+
+    const styles = useSx(postStyles)
 
     if (!post && isPostLoading) return <FullScreenLoader/>
 
@@ -71,108 +124,56 @@ export default function Post() {
     const onDeletePost = () => deletePost(postId)
 
     return (
-        <Box
-            sx={{overflowY: 'auto', height: '92vh'}}
+        <Container
+            sx={styles.postContainer}
         >
-            <CreateCollectionModal postId={postId} onCreate={updateSavesInfo} closeModal={closeModal} isModalOpen={isModalOpen}/>
-            <Container
-                maxWidth={isSmallerLaptop ? 'tablet' : 'laptop'}
-                sx={{
-                    py: 2,
-                    px: isSmallerLaptop ? 2 : 0
-                }}
+            <CreateCollectionModal
+                postId={postId}
+                onCreate={updateSavesInfo}
+                closeModal={closeModal}
+                isModalOpen={isModalOpen}
+            />
+            <Box
+                key={postId}
+                sx={styles.postWrapper}
             >
+                <StyledPostImage
+                    src={postImageURL}
+                />
                 <Box
-                    key={postId}
-                    sx={{
-                        display: 'flex',
-                        flexDirection: isSmallerLaptop ? 'column' : 'row',
-                        mx: 'auto',
-                        mb: 2,
-                        borderRadius: '8px',
-
-                    }}
+                    sx={styles.postInfo}
                 >
-
-                    <img
-                        src={postImageURL}
-                        style={{
-                            width: isSmallerLaptop ? '100%' : '50%',
-                            objectFit: 'cover',
-                            borderRadius: '8px',
-                            backgroundColor: main
-                        }}
-                    />
-
-                    <Box
-                        sx={{
-                            px: isSmallerLaptop ? 0 : 3,
-                            mt: 1,
-                            width: isSmallerLaptop ? '100%' : '50%'
-                        }}
-                    >
-                        <Box sx={{
-                            display: 'flex', alignItems: 'center', alignSelf: 'flex-start', width: '100%',
-                        }}>
-                            <IconButton onClick={onToggleLike}>
-                                {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
-                            </IconButton>
-                            <Typography sx={{ml: 0.5}}>
-                                {likesCount}
-                            </Typography>
-                            <PostSavesInfo collections={savesInfo} toggleSave={toggleSave} postId={postId} isSaved={isSaved} openModal={openModal}/>
-                            {isUserAuthorOfPost &&
-                                <Button color='error' onClick={onDeletePost}>
-                                    Delete
-                                </Button>
-                            }
-                        </Box>
-                        <Box sx={{
-                            mt: 'auto',
-                            display: 'flex', alignItems: 'center', alignSelf: 'flex-start',
-                        }}>
-                        </Box>
-                        <Typography variant='h3'>{title}</Typography>
-                        <Box
-                            sx={{display: 'flex'}}
-                        >
-                            <NavLink
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'start',
-                                }}
-                                to={`/users/${authorId}`}>
-                                <Avatar sx={{width: '40px', height: '40px'}} src={avatarURL as string}/>
-                                <Box
-                                    sx={{
-                                        ml: 1,
-                                        lineHeight: '0px'
-                                    }}
-                                >
-                                    <Typography variant='h6'>{username}</Typography>
-                                    <Typography variant='caption'>{subscribersCount} subscribers</Typography>
-                                </Box>
-                            </NavLink>
-                            {!isUserAuthorOfPost && <Button
-                                sx={{
-                                    ml: 2,
-                                    borderRadius: 4,
-                                }}
-                                variant='contained'
-                                onClick={onToggleSubscribe}
-                            >
-                                {!isSubscribed ? 'Subscribe' : 'Unsubscribe'}
-                            </Button>}
-                        </Box>
-                        <Box sx={{my: 1}}>
-                            <Typography variant='body1'>{body}</Typography>
-                            <Typography variant='body2'>{formattedTags}</Typography>
-                        </Box>
+                    <Box sx={styles.postButtons}>
+                        <IconButton onClick={onToggleLike}>
+                            {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
+                        </IconButton>
+                        <Typography sx={{ml: 0.5}}>
+                            {likesCount}
+                        </Typography>
+                        <PostSavesInfo collections={savesInfo} toggleSave={toggleSave} postId={postId} isSaved={isSaved}
+                                       openModal={openModal}/>
+                        {isUserAuthorOfPost &&
+                            <Button color='error' onClick={onDeletePost}>
+                                Delete
+                            </Button>
+                        }
                     </Box>
-
+                    <Typography variant='h3'>{title}</Typography>
+                    <AuthorOfPostInfo
+                        authorId={authorId}
+                        avatarURL={avatarURL}
+                        username={username}
+                        subscribersCount={subscribersCount}
+                        isUserAuthorOfPost={isUserAuthorOfPost}
+                        isSubscribed={isSubscribed}
+                        onToggleSubscribe={onToggleSubscribe}
+                    />
+                    <Box sx={{my: 1}}>
+                        <Typography variant='body1'>{body}</Typography>
+                        <Typography variant='body2'>{formattedTags}</Typography>
+                    </Box>
                 </Box>
-            </Container>
-        </Box>
+            </Box>
+        </Container>
     )
 }

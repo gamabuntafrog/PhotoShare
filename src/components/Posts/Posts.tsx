@@ -1,4 +1,4 @@
-import styles from './Posts.module.css'
+import cssStyles from './Posts.module.css'
 import {Avatar, Box, Container, IconButton, ImageList, List, ListItem, Typography} from "@mui/material";
 import PostItem from "../PostItem/PostItem";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -8,31 +8,36 @@ import CreateCollectionModal from "../CreateCollectionModal";
 import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
 import usePostsActions from "../../hooks/usePostsActions";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
+import useSx from "../../hooks/useSx";
+import postsStyles from "./postsStyles";
+import useMediaQueries from "../../hooks/useMediaQueries";
 
 
 
 
 export default function Posts() {
+
     const {
         data,
         isLoading: isPostsLoading,
         error: postsError,
-        refetch
     } = extendedPostsApi.useGetManyQuery()
 
     const [posts, postsActions] = usePostsActions({initPosts: data})
 
-    const theme = useTheme()
-    const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
-    const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
+
+    const styles = useSx(postsStyles)
+
+    const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()
+
+    const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
 
     if (isPostsLoading) return <FullScreenLoader/>
 
-
     if (postsError) {
         return (
-            <Container className={styles.posts} sx={{
+            <Container className={cssStyles.posts} sx={{
                 margin: '0 auto',
                 display: 'flex',
                 alignItems: 'center',
@@ -44,21 +49,16 @@ export default function Posts() {
             </Container>
         )
     }
+
     return (
         <Box
-            sx={{
-                py: 2
-            }}
+            sx={styles.container}
         >
             <ImageList
                 variant="masonry"
-                sx={{
-                    width: '95%',
-                    mx: 'auto',
-                    my: 0
-                }}
+                sx={styles.postsList}
                 gap={12}
-                cols={isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5}
+                cols={postsListCols}
             >
                 {posts.map((post) => <PostItem
                     postsActions={postsActions}

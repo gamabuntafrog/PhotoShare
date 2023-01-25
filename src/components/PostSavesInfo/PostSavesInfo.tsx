@@ -1,10 +1,12 @@
 import {ISavesInfo} from "../../types/post";
 import {toggleSaveType} from "../../hooks/usePostsActions";
 import useAnchorEl from "../../hooks/useAnchorEl";
-import {Box, Button, IconButton, ListItemText, Menu, MenuItem} from "@mui/material";
+import {Box, Button, IconButton, ListItemText, Menu, MenuItem, useTheme} from "@mui/material";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import React from "react";
+import useSx from "../../hooks/useSx";
+import postSavesInfoStyles from "./postSavesInfoStyles";
 
 interface ISavesInfoProps {
     collections: ISavesInfo[],
@@ -17,22 +19,23 @@ interface ISavesInfoProps {
 export default function PostSavesInfo({collections, toggleSave, postId, isSaved, openModal}: ISavesInfoProps) {
 
     const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
+
     const onToggleSave = (postId: string, collectionId: string, isSaved: boolean) => {
         handleClose()
         toggleSave(postId, collectionId, isSaved)
     }
 
+    const styles = useSx(postSavesInfoStyles)
+
     return (
-        <Box sx={{
-            ml: 'auto'
-        }}>
+        <Box sx={styles.wrapper}>
             <IconButton
                 id="basic-button"
                 aria-controls={isAnchorEl ? 'basic-menu' : undefined}
                 aria-haspopup="true"
                 aria-expanded={isAnchorEl ? 'true' : undefined}
                 onClick={handleClick}
-                sx={{ml: 'auto'}}
+                sx={styles.openMenuButton}
             >
                 {isSaved ? <BookmarkAddedIcon/> : <BookmarkBorderIcon/>}
             </IconButton>
@@ -44,34 +47,18 @@ export default function PostSavesInfo({collections, toggleSave, postId, isSaved,
                 MenuListProps={{
                     'aria-labelledby': 'basic-button',
                 }}
-                sx={{
-                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                    '& .MuiPaper-root': {
-                        bgcolor: 'background.paper',
-                        maxHeight: '300px',
-                    },
-                    '& .MuiMenu-list': {
-                        bgcolor: 'background.paper',
-                        py: 0
-                    }
-                }}
+                sx={styles.menuList}
             >
-                {collections.map(({title, isSaved, collectionId}, i) => {
+                {collections.map(({title, isSaved, collectionId}) => {
                     return (
-                        <MenuItem sx={{
-                            '&:hover .saveActionButton': {
-                                display: 'flex'
-                            },
-                            bgcolor: 'background.paper',
-                            position: 'relative'
-                        }} key={i} onClick={() => onToggleSave(postId, collectionId, isSaved)}>
+                        <MenuItem sx={styles.menuItem} key={collectionId} onClick={() => onToggleSave(postId, collectionId, isSaved)}>
                             <ListItemText sx={{mr: 1}}>
                                 {title}
                             </ListItemText>
                             <Button
                                 className='saveActionButton'
                                 color={isSaved ? 'error' : 'success'}
-                                sx={{position: 'absolute', right: 8, display: 'none'}}
+                                sx={styles.menuItemButton}
                                 variant='contained'
                             >
                                 {isSaved ? 'delete' : 'save'}
@@ -80,16 +67,7 @@ export default function PostSavesInfo({collections, toggleSave, postId, isSaved,
                     )
                 })}
                 <Box
-                    sx={{
-                        bgcolor: 'background.paper',
-                        px: 1,
-                        py: 1,
-                        position: 'sticky',
-                        bottom: '-1px',
-                        '&:hover': {
-                            bgcolor: 'background.paper',
-                        }
-                    }}
+                    sx={styles.staticButtonsWrapper}
                 >
                     <Button
                         variant='contained'

@@ -1,18 +1,23 @@
 import {Box, CircularProgress} from "@mui/material";
 import React from "react";
 
-export default function MiniLoader() {
+interface IMiniLoaderProps {
+    size?: string,
+    bgOff?: boolean,
+}
+
+export default function MiniLoader({size, bgOff}: IMiniLoaderProps) {
 
     return (
         <Box sx={{
-            bgcolor: 'background.default',
+            bgcolor: bgOff ? 'none' : 'background.default',
             borderRadius: '50%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             padding: 3
         }}>
-            <CircularProgress size='20vw'/>
+            <CircularProgress size={size || '20vw'}/>
         </Box>
     )
 

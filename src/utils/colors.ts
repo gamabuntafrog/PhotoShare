@@ -11,7 +11,8 @@ import {
     orange,
     pink,
     red,
-    teal, yellow
+    teal,
+    yellow,
 } from "@mui/material/colors";
 import {PaletteColorOptions} from "@mui/material";
 
@@ -98,6 +99,7 @@ export const getPrimaryTheme = (color: colorTypes, isLoggedIn: boolean) => {
     if (!isLoggedIn) {
         return indigo
     }
+
     switch (color) {
         case colorTypes.blue:
             return blue

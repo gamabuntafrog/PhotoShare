@@ -7,13 +7,13 @@ import {
     Grid,
     Input,
     InputLabel, Menu, MenuItem, Modal,
-    OutlinedInput,
+    OutlinedInput, TextField,
     Typography, useTheme
 } from "@mui/material";
 import * as Yup from "yup";
 import {useForm, useFormState} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 
 import {useNavigate, useParams} from "react-router-dom";
 import setPreviewImage from "../../utils/setPreviewImage";
@@ -23,6 +23,8 @@ import {createPostValidationSchema} from "../../utils/validationSchemas";
 import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
 import CollectionsInfo from "../CollectionsInfo";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
+import useSx from "../../hooks/useSx";
+import createPostStyles, {StyledImage} from "./createPostStyles";
 
 
 export const breakableText = {wordBreak: 'break-all', whiteSpace: 'break-spaces'}
@@ -42,6 +44,8 @@ export default function CreatePost() {
     const [imageFile, setImageFile] = useState<null | string>(null);
     const [isPostCreating, setIsPostCreating] = useState(false);
     const [isCreateCollectionModalOpen, setIsCreateCollectionModalOpen] = useState(false);
+
+    const imageInputLabelRef = useRef<null | HTMLLabelElement>(null)
 
     const {
         data: userCollections = [],
@@ -80,6 +84,8 @@ export default function CreatePost() {
         }
     });
 
+    const registeredImageList = register('imageList')
+
     const isErrors = !!(titleError || bodyError || imageError || tagsError || collectionIdIndexError)
 
     const onSubmit = handleSubmit(async ({title, body, imageList, tags, collectionIdIndex}) => {
@@ -110,8 +116,6 @@ export default function CreatePost() {
     const closeModal = () => setIsCreateCollectionModalOpen(false)
     const openModal = () => setIsCreateCollectionModalOpen(true)
 
-    useEffect(() => setPreviewImage(watch('imageList'), setImageFile), [watch('imageList')]);
-
     useEffect(() => {
         setValue('collectionIdIndex', findIndexOfCollection(collectionId))
 
@@ -127,19 +131,20 @@ export default function CreatePost() {
     const selectCollectionCallback = (collectionId: string) => {
         navigate(`/post/create/${collectionId}`)
     }
+
     const theme = useTheme()
 
+    const styles = useSx(createPostStyles)
+
     const willSavedInCollectionTitle = userCollections[watch("collectionIdIndex")]?.title || 'Select collection'
+    const onImageInputLabelClick = () => imageInputLabelRef.current?.click()
+
 
     if (isPostCreating || isUserCollectionsLoading) return <FullScreenLoader/>
 
     return (
         <Container
-            sx={{
-                py: 3,
-                height: '92vh',
-                overflowY: 'auto'
-            }}
+            sx={styles.createPostContainer}
         >
             <CreateCollectionModal
                 refetch={refetchCallback}
@@ -147,22 +152,13 @@ export default function CreatePost() {
                 isModalOpen={isCreateCollectionModalOpen}
             />
             <Box
-                sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    [theme.breakpoints.down('tablet')]: {
-                        flexDirection: 'column'
-                    }
-                }}
+                sx={styles.formWrapper}
             >
                 <form
-                    style={{width: '300px'}}
+                    style={styles.form}
                     onSubmit={onSubmit}
                 >
-                    <Grid container sx={{
-                        flexDirection: 'column'
-                    }}
+                    <Grid container sx={styles.formInputsWrapper}
                     >
                         <Grid item ml='auto'>
                             <CollectionsInfo
@@ -173,17 +169,20 @@ export default function CreatePost() {
                                 willSavedInCollectionTitle={willSavedInCollectionTitle}
                             />
                         </Grid>
-                        <Grid sx={{...breakableText}} item>
-                            <InputLabel htmlFor='title' error={!!titleError} sx={{my: 1, ...breakableText}}>
-                                {titleError?.message || 'Title'}
-                            </InputLabel>
-                            <OutlinedInput error={!!titleError} fullWidth id='title' {...register('title')}/>
+                        <Grid sx={{...styles.breakableText, my: 2}} item>
+                            {titleError &&
+                                <InputLabel htmlFor='title' error={!!titleError} sx={styles.formInputLabel}>
+                                    {titleError.message}
+                                </InputLabel>
+                            }
+                            <Input placeholder={titleError?.message || 'Title'} error={!!titleError}
+                                   fullWidth id='title' {...register('title')}/>
                         </Grid>
                         <Grid item>
-                            <InputLabel htmlFor='body' error={!!bodyError} sx={{my: 1, ...breakableText}}>
-                                {bodyError?.message || 'Body'}
+                            <InputLabel htmlFor='body' error={!!bodyError} sx={styles.formInputLabel}>
+                                {bodyError?.message || 'Description'}
                             </InputLabel>
-                            <OutlinedInput error={!!bodyError} fullWidth id='body' {...register('body')}/>
+                            <TextField placeholder='Enter description' multiline maxRows={6} minRows={3} error={!!bodyError} fullWidth id='body' {...register('body')}/>
                         </Grid>
                         <Grid item>
                             <Button
@@ -191,46 +190,50 @@ export default function CreatePost() {
                                 sx={{my: 1}}
                                 color={!!imageError ? 'error' : 'primary'}
                                 fullWidth
+                                onClick={onImageInputLabelClick}
                             >
                                 <InputLabel
                                     error={!!imageError}
-                                    sx={{cursor: 'pointer', color: 'inherit', width: '100%'}}
+                                    sx={styles.imageButtonInputLabel}
                                     htmlFor='imageList'
+                                    ref={imageInputLabelRef}
                                 >
                                     {imageFile ? 'Selected' : 'Select a photo'}
                                 </InputLabel>
                                 <input
-                                    {...register('imageList')}
+                                    {...registeredImageList}
                                     id='imageList'
                                     type='file'
                                     accept="image/*"
+                                    onChange={(e) => {
+                                        registeredImageList.onChange(e)
+                                        if (e.target.files) {
+                                            setPreviewImage(e.target.files, setImageFile)
+                                        }
+                                    }}
                                     hidden
                                 />
                             </Button>
                         </Grid>
                         <Grid item>
-                            <InputLabel htmlFor='tags' error={!!tagsError} sx={{my: 1, ...breakableText}}>
+                            <InputLabel htmlFor='tags' error={!!tagsError} sx={styles.formInputLabel}>
                                 {tagsError?.message || 'Tags'}
                             </InputLabel>
-                            <OutlinedInput error={!!tagsError} fullWidth id='tags' {...register('tags')}/>
+                            <OutlinedInput placeholder='Enter tags' error={!!tagsError} fullWidth id='tags' {...register('tags')}/>
                         </Grid>
-                        <Button disabled={isErrors} type='submit' sx={{my: 1, justifySelf: 'center'}}>
+                        <Button
+                            variant='contained'
+                            disabled={isErrors}
+                            type='submit'
+                            sx={styles.uploadButton}
+                        >
                             Upload
                         </Button>
                     </Grid>
                 </form>
                 <Box
-                    sx={{
-                        [theme.breakpoints.up('tablet')]: {
-                            ml: 3,
-                            '& img': {width: '400px'},
-                        },
-                        [theme.breakpoints.down('tablet')]: {
-                            '& img': {width: '90%'}
-                        }
-                    }}>
-                    < img
-                        style={{maxHeight: '70vh',  objectFit: 'contain'}} src={imageFile || ''}/>
+                    sx={styles.imageWrapper}>
+                    <StyledImage src={imageFile || ''}/>
                 </Box>
             </Box>
         </Container>

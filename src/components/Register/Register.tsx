@@ -1,10 +1,23 @@
 import {useForm} from "react-hook-form";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {getCurrentUser, removeErrors, register as registerUser} from "../../redux/slices/userSlice";
-import {Alert, Box, Button, Container, FormGroup, InputLabel, OutlinedInput, Snackbar, Typography} from "@mui/material";
+import {
+    Alert,
+    Box,
+    Button,
+    Container,
+    FormGroup, IconButton,
+    InputAdornment,
+    InputLabel,
+    OutlinedInput,
+    Snackbar,
+    Typography
+} from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { registerValidationSchema } from "../../utils/validationSchemas";
+import {registerValidationSchema} from "../../utils/validationSchemas";
+import {Visibility, VisibilityOff} from "@mui/icons-material";
+import {useState} from "react";
 
 interface IFormData {
     username: string,
@@ -21,14 +34,18 @@ enum htmlInputId {
 }
 
 
-
 export default function Register() {
     const {authError} = useAppSelector(state => state.userReducer.errors)
-    const { register, setValue, handleSubmit, formState: { errors } } = useForm<IFormData>({
+    const {register, setValue, handleSubmit, formState: {errors}} = useForm<IFormData>({
         resolver: yupResolver(registerValidationSchema),
         mode: 'all'
     });
-    const {username: usernameError, email: emailError, password: passwordError, repeatPassword: repeatPasswordError} = errors
+    const {
+        username: usernameError,
+        email: emailError,
+        password: passwordError,
+        repeatPassword: repeatPasswordError
+    } = errors
     console.log(errors)
     const dispatch = useAppDispatch()
 
@@ -41,6 +58,11 @@ export default function Register() {
 
     const isNotValidated = !!usernameError || !!emailError || !!passwordError || !!repeatPasswordError
 
+    const [showPassword, setShowPassword] = useState(false);
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
 
     return (
         <Box
@@ -70,14 +92,73 @@ export default function Register() {
                         borderRadius: 1
                     }}
                 >
-                    <InputLabel sx={{whiteSpace: 'unset'}} error={!!usernameError} htmlFor={`${htmlInputId.username}`}>{usernameError?.message || 'Username'}</InputLabel>
-                    <OutlinedInput id={`${htmlInputId.username}`} sx={{mt: 1, mb: 2}} error={!!usernameError} type='name' {...register('username')}/>
-                    <InputLabel sx={{whiteSpace: 'unset'}} error={!!emailError} htmlFor={`${htmlInputId.email}`}>{emailError?.message || 'Email'}</InputLabel>
-                    <OutlinedInput id={`${htmlInputId.email}`} sx={{mt: 1, mb: 2}} error={!!emailError} type='email' {...register('email')}/>
-                    <InputLabel sx={{whiteSpace: 'unset'}} error={!!passwordError} htmlFor={`${htmlInputId.password}`} >{passwordError?.message || 'Password'}</InputLabel>
-                    <OutlinedInput id={`${htmlInputId.password}`} sx={{mt: 1, mb: 2}} error={!!passwordError} type='password'  {...register('password')} />
-                    <InputLabel sx={{whiteSpace: 'unset'}} error={!!repeatPasswordError} htmlFor={`${htmlInputId.repeatPassword}`} >{repeatPasswordError?.message || 'Repeat password'}</InputLabel>
-                    <OutlinedInput id={`${htmlInputId.repeatPassword}`} sx={{mt: 1, mb: 2}} error={!!repeatPasswordError} type='password'  {...register("repeatPassword")} />
+                    <InputLabel
+                        sx={{whiteSpace: 'unset'}}
+                        error={!!usernameError}
+                        htmlFor={`${htmlInputId.username}`}>
+                        {usernameError?.message || 'Username'}
+                    </InputLabel>
+                    <OutlinedInput
+                        id={`${htmlInputId.username}`}
+                        sx={{mt: 1, mb: 2}}
+                        error={!!usernameError}
+                        type='name'
+                        {...register('username')}
+                    />
+                    <InputLabel
+                        sx={{whiteSpace: 'unset'}}
+                        error={!!emailError}
+                        htmlFor={`${htmlInputId.email}`}
+                    >
+                        {emailError?.message || 'Email'}
+                    </InputLabel>
+                    <OutlinedInput
+                        id={`${htmlInputId.email}`}
+                        sx={{mt: 1, mb: 2}}
+                        error={!!emailError}
+                        type='email'
+                        {...register('email')}
+                    />
+                    <InputLabel
+                        sx={{whiteSpace: 'unset'}}
+                        error={!!passwordError}
+                        htmlFor={`${htmlInputId.password}`}>
+                        {passwordError?.message || 'Password'}
+                    </InputLabel>
+                    <OutlinedInput
+                        id={`${htmlInputId.password}`}
+                        sx={{mt: 1, mb: 2}}
+                        error={!!passwordError}
+                        type={showPassword ? 'text' : 'password'}
+                        {...register('password')}
+                        endAdornment={
+                            <InputAdornment  position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={handleClickShowPassword}
+                                    onMouseDown={handleMouseDownPassword}
+                                    edge="end"
+                                    sx={{mr: '-4px'}}
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        }
+                    />
+                    <InputLabel
+                        sx={{whiteSpace: 'unset'}}
+                        error={!!repeatPasswordError}
+                        htmlFor={`${htmlInputId.repeatPassword}`}
+                    >
+                        {repeatPasswordError?.message || 'Repeat password'}
+                    </InputLabel>
+                    <OutlinedInput
+                        id={`${htmlInputId.repeatPassword}`}
+                        sx={{mt: 1, mb: 2}}
+                        error={!!repeatPasswordError}
+                        type='password'
+                        {...register("repeatPassword")}
+                    />
                     <Button
                         type='submit'
                         variant='contained'

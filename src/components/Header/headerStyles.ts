@@ -4,6 +4,7 @@ import {NavLink} from "react-router-dom";
 const headerStyles = (theme: Theme) => {
 
     const {palette, breakpoints} = theme
+    const {up, down} = breakpoints
     const {primary, secondary, mode, background} = palette
     const {main, dark, light} = primary
 
@@ -18,10 +19,10 @@ const headerStyles = (theme: Theme) => {
             boxShadow: `0px 10px 30px -14px ${main}`,
             position: 'fixed',
             width: '100%',
-            [theme.breakpoints.up('mobile')]: {
+            [up('mobile')]: {
                 top: 0,
             },
-            [theme.breakpoints.down('mobile')]: {
+            [down('mobile')]: {
                 bottom: 0,
             }
         },
@@ -30,26 +31,26 @@ const headerStyles = (theme: Theme) => {
             alignItems: 'center',
             fontSize: '24px',
             my: 1,
-            [theme.breakpoints.down('mobile')]: {
+            [down('mobile')]: {
                 px: 1
             }
         },
         link: {
             color: theme.palette.text.primary,
             marginLeft: '12px',
-            textShadow: `0px 0px 30px ${theme.palette.primary.main}`,
+            textShadow: `0px 0px 30px ${primary.main}`,
             // filter: 'drop-shadow(-3px 4px 4px var(--primary-500))',
             '&:hover': {
-                color: theme.palette.primary.main
+                color: primary.main
             },
             '&.active': {
-                color: theme.palette.primary.main
+                color: primary.main
             }
         },
         activeLink: {
-            color: main,
+            color: primary.main,
             marginLeft: '12px',
-            textShadow: `0px 0px 30px ${main}`,
+            textShadow: `0px 0px 30px ${primary.main}`,
             '&:hover': {
                 color: 'green'
             }
@@ -59,7 +60,7 @@ const headerStyles = (theme: Theme) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-around',
-            [theme.breakpoints.up('laptop')]: {
+            [up('laptop')]: {
                 display: 'none'
             }
         },
@@ -68,7 +69,7 @@ const headerStyles = (theme: Theme) => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-around',
-            [theme.breakpoints.down('laptop')]: {
+            [down('laptop')]: {
                 display: 'none'
             }
         },
@@ -85,7 +86,30 @@ const headerStyles = (theme: Theme) => {
             alignItems: 'center',
             flexDirection: 'column',
             justifyContent: 'space-around',
-        }
+        },
+        mobileNavbar: {
+            '& .MuiDrawer-paper': {
+                width: '50vw',
+                mx: 'auto',
+                mt: 5,
+                padding: 5,
+                background: 'none',
+                borderRadius: 4,
+                bgcolor: theme.palette.background.default,
+                [down('tablet')]: {
+                    width: '100%',
+                    borderRadius: '0 0 8px 8px',
+                    padding: 0,
+                    py: 2,
+                    mt: 0
+                },
+                [down('mobile')]: {
+                    borderRadius: '16px 16px 0 0',
+                }
+            }
+        },
+        mobileAccountContainer: {display: 'flex', alignItems: 'center'},
+        mobileNavbarButton: {mt: 2}
     }
 }
 

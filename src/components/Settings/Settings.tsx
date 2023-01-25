@@ -12,6 +12,8 @@ import colorTypes from "../../types/colorTypes";
 import {useAppDispatch} from "../../redux/hooks";
 import {setPrimaryColor, toggleColorMode} from "../../redux/slices/themeSlice";
 import {colorsArray} from "../../utils/colors";
+import useSx from "../../hooks/useSx";
+import settingsStyles from "./settingsStyles";
 
 
 export default function Settings() {
@@ -28,43 +30,35 @@ export default function Settings() {
 
     const nextColorMode = theme.palette.mode === 'dark' ? 'light' : 'dark'
 
+    const styles = useSx(settingsStyles)
+
     return (
         <Container
-            sx={{
-                minHeight: '90vh',
-                pt: 4,
-                pb: 2
-            }}
+            sx={styles.container}
         >
-            <Typography variant='h1' sx={{
-                fontWeight: '600', textAlign: 'center',
-                [theme.breakpoints.down('tablet')]: {
-                    fontSize: 70
-                }
-            }}>Settings</Typography>
-            <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2}}>
+            <Typography variant='h1' sx={styles.title}>Settings</Typography>
+            <Box sx={styles.wrapper}>
                 <Typography variant='h2'>Color</Typography>
-                <Button variant='outlined' sx={{my: 2, color: 'primary.main'}} onClick={changeColorMode}
-                        color="inherit">
+                <Button
+                    variant='outlined'
+                        sx={styles.colorModeButton}
+                    onClick={changeColorMode}
+                        color="inherit"
+                >
                     Change mode to {nextColorMode}
                 </Button>
                 <List
-                    sx={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        flexDirection: 'row',
-                        justifyContent: 'center'
-                    }}
+                    sx={styles.colorsList}
                 >
                     {colorsArray.map((color) => {
                         return (
                             <ListItem
                                 key={color.string}
-                                sx={{width: 'auto'}}
+                                sx={styles.colorItem}
                             >
                                 <Button
                                     variant='contained'
-                                    sx={{bgcolor: `${color.ref} !important`}}
+                                    sx={styles.colorButton(color.ref)}
                                     onClick={() => changePrimaryColor(color.enum)}
                                 >
                                     {color.string}
