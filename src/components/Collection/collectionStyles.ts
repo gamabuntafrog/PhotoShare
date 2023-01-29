@@ -5,6 +5,46 @@ const collectionStyles = (theme: Theme) => {
 
 
     return {
+        backdrop: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        modalWrapper: {
+            bgcolor: 'background.paper',
+            width: '50vw',
+            maxHeight: '100vh',
+            overflow: 'auto',
+            padding: 2,
+            pt: 6,
+            pb: 3,
+            color: 'text.primary',
+            borderRadius: 2,
+            position: 'relative',
+            [theme.breakpoints.down('tablet')]: {
+                width: '100vw',
+                borderRadius: 0,
+                minHeight: '100vh',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center'
+            },
+        },
+        closeIcon: {
+          ml: 'auto'
+        },
+        errorContainer: {
+            margin: '0 auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '90vh',
+            maxHeight: '90vh'
+        },
+        title: {
+            textAlign: 'center',
+            mb: 2
+        },
         collectionWrapper: {
             py: 2,
             position: 'relative'
@@ -109,6 +149,25 @@ const collectionStyles = (theme: Theme) => {
             },
             errorTitle: {padding: 1, textAlign: 'center', wordBreak: 'break-word'}
         },
+        authorInfo: {
+            closeIcon: {position: 'absolute', right: 20, top: 20},
+            title: {padding: 1, textAlign: 'center', wordBreak: 'break-word'},
+            listItem: {
+                [theme.breakpoints.down('tablet')]: {
+                    px: 0
+                }
+            },
+            avatar: {
+                width: 60,
+                height: 60
+            },
+            authorUsernameWrapper: {
+                ml: 2,
+                mr: 1,
+                cursor: 'pointer'
+            },
+            errorTitle: {padding: 1, textAlign: 'center', wordBreak: 'break-word'}
+        },
         contextMenu: {
             openButton: {
                 position: 'absolute',
@@ -151,7 +210,17 @@ const collectionStyles = (theme: Theme) => {
             },
             authorLinkWrapper: {
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                cursor: 'pointer'
+            },
+            authorContainerWrapper: {
+                display: 'flex',
+                alignItems: 'start',
+                flexDirection: 'column',
+            },
+            userRole: {
+                ml: 1,
+                color: 'primary.main'
             },
             avatar: {width: '80px', height: '80px'},
             addNewPostButton: {mt: 3}

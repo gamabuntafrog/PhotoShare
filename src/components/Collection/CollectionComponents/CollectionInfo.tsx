@@ -1,7 +1,7 @@
 import {IAuthorOfCollection} from "../../../types/collection";
 import {useTheme} from "@mui/material/styles";
 import {Avatar, Box, Button, Typography} from "@mui/material";
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import React from "react";
 import useSx from "../../../hooks/useSx";
 import collectionStyles from "../collectionStyles";
@@ -25,6 +25,8 @@ export default function CollectionInfo(
 
     const {collectionInfo: styles} = useSx(collectionStyles)
 
+    const navigate = useNavigate()
+
     return (
         <>
             <Box sx={styles.wrapper}>
@@ -43,16 +45,26 @@ export default function CollectionInfo(
                 sx={styles.secondWrapper}
             >
                 <Typography variant='body2'>by</Typography>
-                {authors.map(({_id: authorId, username, avatar}) => {
+                {authors.map(({_id: authorId, username, avatar, isAdmin}) => {
                     return (
-                        <NavLink
-                            to={`/users/${authorId}`}
-                            style={styles.authorLinkWrapper}
+                        <Box
+                            sx={styles.authorLinkWrapper}
                             key={authorId}
+                            onClick={() => navigate(`/users/${authorId}`)}
                         >
                             <Avatar sx={styles.avatar} src={avatar || ''} alt={username}/>
-                            <Typography sx={{ml: 1}} variant='h5'>{username}</Typography>
-                        </NavLink>
+                            <Box sx={styles.authorContainerWrapper}>
+                                {isAdmin ?
+                                    <Typography sx={styles.userRole} variant='caption'>Admin</Typography>
+                                    :
+                                    <Typography sx={styles.userRole} variant='caption'>Author</Typography>
+                                }
+                                <Typography sx={{ml: 1}} variant='h5'>{username}</Typography>
+                            </Box>
+
+
+
+                        </Box>
                     )
                 })}
                 {isCurrentUserAuthorOfCollection &&

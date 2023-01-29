@@ -2,7 +2,7 @@ import {Avatar, Box, Typography} from "@mui/material";
 import {NavLink} from "react-router-dom";
 import React from "react";
 import useSx from "../../../hooks/useSx";
-import postItemStyles from "../postItemStyles";
+import postItemStyles, {StyledNavLink} from "../postItemStyles";
 
 
 interface IPostItemTitleProps {
@@ -28,10 +28,10 @@ export default function PostItemTitle({postId, title, formattedTags, authorId, a
                     <Typography variant='caption'>{formattedTags}</Typography>
                 </NavLink>
             </Box>
-            <NavLink style={styles.postItemTitleUsernameWrapper} to={`/users/${authorId}`}>
+            <StyledNavLink to={`/users/${authorId}`}>
                 <Avatar sx={styles.authorAvatar} src={avatarURL || ''}/>
-                <Typography sx={{ml: 1}}>{username}</Typography>
-            </NavLink>
+                <Typography className='username' sx={styles.authorUsername}>{username}</Typography>
+            </StyledNavLink>
         </>
     )
 }

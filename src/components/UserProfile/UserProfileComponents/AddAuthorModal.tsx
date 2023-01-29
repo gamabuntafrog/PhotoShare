@@ -62,7 +62,7 @@ export function AddAuthorModal({isAddUserModalOpen, closeAddAuthorModal, authorI
                                             <MenuItem
                                                 key={_id}
                                                 onClick={() => {
-                                                    addAuthor({collectionId: _id, authorId})
+                                                    addAuthor({collectionId: _id, authorId, role: 'AUTHOR'})
                                                 }}
                                             >
                                                 <Typography>{title}</Typography>

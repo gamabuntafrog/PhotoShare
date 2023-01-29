@@ -153,7 +153,7 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
         }),
         getCurrentUserCollections: build.query<ICollection[], void>({
             query: () => ({
-                url: `/collections`,
+                url: `/collections/current`,
             }),
             transformResponse: (response: IResponse<{ collections: ICollection[] }>) => response.data.collections,
             providesTags: ['Collection']
@@ -193,10 +193,23 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
             transformErrorResponse: returnTransformedError,
             invalidatesTags: ['Collection']
         }),
-        addAuthorToCollection: build.mutation<unknown, { collectionId: string, authorId: string }>({
-            query: ({collectionId, authorId}) => ({
+        addAuthorToCollection: build.mutation<unknown, { collectionId: string, authorId: string, role: 'ADMIN' | 'AUTHOR' }>({
+            query: ({collectionId, authorId, role}) => ({
                 url: `/collections/${collectionId}/authors/${authorId}`,
-                method: `POST`
+                method: `POST`,
+                params: {
+                    role
+                }
+            }),
+            invalidatesTags: ['Collection']
+        }),
+        changeAuthorRoleInCollection: build.mutation<unknown, { collectionId: string, authorId: string, role: 'ADMIN' | 'AUTHOR' }>({
+            query: ({collectionId, authorId, role}) => ({
+                url: `/collections/${collectionId}/authors/${authorId}/roles`,
+                method: `PATCH`,
+                params: {
+                    role
+                }
             }),
             invalidatesTags: ['Collection']
         }),
@@ -207,10 +220,17 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ['Collection']
         }),
-        deleteCurrentUserFromCollection: build.mutation<unknown, {collectionId: string}>({
+        deleteCurrentUserFromCollection: build.mutation<unknown, { collectionId: string }>({
             query: ({collectionId}) => ({
                 url: `/collections/${collectionId}/authors`,
                 method: `DELETE`,
+            }),
+            invalidatesTags: ['Collection']
+        }),
+        changeIsPrivate: build.mutation<unknown, { collectionId: string }>({
+            query: ({collectionId}) => ({
+                url: `/collections/${collectionId}/isPrivate`,
+                method: `PATCH`,
             }),
             invalidatesTags: ['Collection']
         })

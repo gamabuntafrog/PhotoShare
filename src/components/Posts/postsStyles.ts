@@ -8,6 +8,14 @@ const postsStyles = (theme: Theme) => {
         container: {
             py: 2
         },
+        errorContainer: {
+            margin: '0 auto',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '90vh',
+            maxHeight: '90vh'
+        },
         postsList: {
             width: '95%',
             mx: 'auto',

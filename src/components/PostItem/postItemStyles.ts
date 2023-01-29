@@ -1,4 +1,5 @@
-import {Theme} from "@mui/material";
+import {styled, Theme} from "@mui/material";
+import {NavLink} from "react-router-dom";
 
 
 const postItemStyles = (theme: Theme) => {
@@ -62,11 +63,6 @@ const postItemStyles = (theme: Theme) => {
                 pb: 0
             }
         },
-        postItemTitleUsernameWrapper: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'start',
-        },
         authorAvatar: {
             width: '40px',
             height: '40px',
@@ -74,8 +70,20 @@ const postItemStyles = (theme: Theme) => {
                 width: 32,
                 height: 32
             }
-        }
+        },
+        authorUsername: {
+            ml: 1,
+        },
     }
 }
 
 export default postItemStyles
+
+export const StyledNavLink = styled(NavLink)(({theme}) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'start',
+    '&:hover p': {
+        color: theme.palette.primary.main
+    }
+}))

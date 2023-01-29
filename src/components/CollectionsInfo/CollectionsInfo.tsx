@@ -1,11 +1,8 @@
-import {ISavesInfo} from "../../types/post";
-import {toggleSaveType} from "../../hooks/usePostsActions";
-import useAnchorEl from "../../hooks/useAnchorEl";
-import {Box, Button, IconButton, ListItemText, Menu, MenuItem} from "@mui/material";
-import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import React from "react";
 import {ICollection} from "../../types/collection";
+import useAnchorEl from "../../hooks/useAnchorEl";
+import {Box, Button, IconButton, ListItemText, Menu, MenuItem} from "@mui/material";;
+
 
 interface ISavesInfoProps {
     collections: ICollection[],

@@ -21,6 +21,10 @@ import * as yup from 'yup'
 import CloseIcon from '@mui/icons-material/Close';
 import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 import {loginValidationSchema} from "../../utils/validationSchemas";
+import useSx from "../../hooks/useSx";
+import loginStyles from "./loginStyles";
+import {NavLink} from "react-router-dom";
+import { StyledHeaderNavLink } from "../Header/headerStyles";
 
 
 interface IFormData {
@@ -53,7 +57,6 @@ export default function Login() {
         tryLogin(email, password)
     });
 
-    const background = 'https://images.unsplash.com/photo-1534484374439-6b8cd79be97c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1887&q=80'
 
     const isNotValidated = !!emailError || !!passwordError
 
@@ -63,34 +66,17 @@ export default function Login() {
         event.preventDefault();
     };
 
+    const styles = useSx(loginStyles)
+
     return (
         <Box
-            sx={{
-                background: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${background})`,
-                backgroundPositionY: 'center',
-                backgroundSize: 'cover',
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'stretch'
-            }}
+            sx={styles.backdrop}
         >
-            <Box sx={{
-                py: 2,
-            }}>
-                <Typography sx={{textAlign: 'center', fontWeight: 'bold'}} variant='h1'>Login</Typography>
+            <Box sx={styles.loginContainer}>
+                <Typography sx={styles.title} variant='h1'>Login</Typography>
                 <FormGroup
                     onSubmit={onSubmit}
-                    sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        width: '70vw',
-                        mx: 'auto',
-                        bgcolor: 'background.default',
-                        padding: 3,
-                        mt: 2,
-                        borderRadius: 1
-                    }}
+                    sx={styles.form}
                 >
                     <InputLabel
                         sx={{whiteSpace: 'unset'}}
@@ -101,7 +87,7 @@ export default function Login() {
                     </InputLabel>
                     <OutlinedInput
                         id={`${htmlInputId.email}`}
-                        sx={{mt: 1, mb: 2}}
+                        sx={styles.formInput}
                         error={!!emailError}
                         type='email'
                         {...register('email')}
@@ -115,7 +101,7 @@ export default function Login() {
                     </InputLabel>
                     <OutlinedInput
                         id={`${htmlInputId.password}`}
-                        sx={{mt: 1, mb: 2}}
+                        sx={styles.formInput}
                         error={!!passwordError}
                         {...register('password')}
                         type={showPassword ? 'text' : 'password'}
@@ -138,9 +124,13 @@ export default function Login() {
                         variant='contained'
                         onClick={onSubmit}
                         disabled={isNotValidated}
+                        sx={styles.signInButton}
                     >
                         {isNotValidated ? 'Fill in the fields' : 'Let\'s go!'}
                     </Button>
+                    <StyledHeaderNavLink style={styles.signUpLink} to='/register'>
+                        Don't have an account?
+                    </StyledHeaderNavLink>
                 </FormGroup>
             </Box>
         </Box>

@@ -105,7 +105,7 @@ export default function DeleteAuthorFromCollectionModal(
                             Delete authors
                         </Typography>
                         {authorsWithoutCurrentUser.map((author) =>
-                            <UserItem author={author} collectionId={collectionId}/>
+                            <UserItem key={author._id} author={author} collectionId={collectionId}/>
                         )}
                     </>
                     :
