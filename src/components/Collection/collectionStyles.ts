@@ -15,23 +15,36 @@ const collectionStyles = (theme: Theme) => {
             width: '50vw',
             maxHeight: '100vh',
             overflow: 'auto',
-            padding: 2,
-            pt: 6,
+            px: 0,
+            pt: 1,
             pb: 3,
             color: 'text.primary',
             borderRadius: 2,
             position: 'relative',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
             [theme.breakpoints.down('tablet')]: {
                 width: '100vw',
                 borderRadius: 0,
                 minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center'
             },
         },
+        modalContainer: {
+            px: 2,
+        },
+        closeIconWrapper: {
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 3,
+            pl: 2,
+            pr: 1,
+            pb: 1,
+            borderBottom: `1px solid rgba(255, 255, 255, 0.2)`
+        },
         closeIcon: {
-          ml: 'auto'
+            ml: 'auto'
         },
         errorContainer: {
             margin: '0 auto',
@@ -42,8 +55,7 @@ const collectionStyles = (theme: Theme) => {
             maxHeight: '90vh'
         },
         title: {
-            textAlign: 'center',
-            mb: 2
+            color: theme.palette.text.secondary
         },
         collectionWrapper: {
             py: 2,
@@ -149,6 +161,14 @@ const collectionStyles = (theme: Theme) => {
             },
             errorTitle: {padding: 1, textAlign: 'center', wordBreak: 'break-word'}
         },
+        authorUsernameWrapper: {
+            ml: 2,
+            mr: 1,
+        },
+        avatar: {
+            width: 60,
+            height: 60
+        },
         authorInfo: {
             closeIcon: {position: 'absolute', right: 20, top: 20},
             title: {padding: 1, textAlign: 'center', wordBreak: 'break-word'},
@@ -224,8 +244,20 @@ const collectionStyles = (theme: Theme) => {
             },
             avatar: {width: '80px', height: '80px'},
             addNewPostButton: {mt: 3}
+        },
+        accordionWrapper: {
+            borderRadius: '16px !important', mb: 1, '&:before': {
+                display: 'none'
+            }
+        },
+        togglePrivateContainer: {
+            mt: 3,
+            mb: 3,
+            px: 1,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
         }
-
     }
 }
 

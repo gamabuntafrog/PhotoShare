@@ -22,7 +22,7 @@ export default function Collections({collections}: ICollectionItemProps) {
             <Box
                 sx={styles.container}
             >
-                <Typography variant='h3' sx={{mt: '150px'}} textAlign='center'>
+                <Typography variant='h5' sx={{mt: 8}} textAlign='center'>
                     There already no collections yet
                 </Typography>
             </Box>

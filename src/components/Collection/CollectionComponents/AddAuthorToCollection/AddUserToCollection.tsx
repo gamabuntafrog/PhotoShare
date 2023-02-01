@@ -11,7 +11,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import useSx from "../../../../hooks/useSx";
 import collectionStyles from "../../collectionStyles";
-import UsersList from "./AddAuthorToCollectionComponents/UsersList";
+import UsersList from "./AddUserToCollectionComponents/UsersList";
 
 
 
@@ -19,7 +19,7 @@ interface IAddAuthorToCollectionModalProps {
     collectionId: string,
 }
 
-export default function AddAuthorToCollection(
+export default function AddUserToCollection(
     {
         collectionId
     }: IAddAuthorToCollectionModalProps) {
@@ -44,18 +44,13 @@ export default function AddAuthorToCollection(
 
     return (
         <>
-            <Typography
-                variant='h3'
-                sx={styles.title}
-            >
-                Add authors
-            </Typography>
             <TextField
                 sx={{my: 1}}
                 fullWidth
-                variant='standard'
                 placeholder='Enter username'
                 value={query}
+                name='users'
+                type='text'
                 onChange={onChangeUsernameQuery}
             />
             {isLoading && <MiniLoader bgOff size='100px'/>}

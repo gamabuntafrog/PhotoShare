@@ -23,6 +23,7 @@ function UserItem({author, collectionId}: IUserItemProps) {
     const {_id: authorId, username, avatar} = author
 
     const [addAuthor] = extendedCollectionsApi.useAddAuthorToCollectionMutation()
+    const [addViewer] = extendedCollectionsApi.useAddViewerToCollectionMutation()
 
     const {addAuthorModal: styles} = useSx(collectionStyles)
     const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
@@ -81,6 +82,16 @@ function UserItem({author, collectionId}: IUserItemProps) {
                 >
                     <ListItemText sx={{mr: 1}}>
                         As admin
+                    </ListItemText>
+                </StyledCustomMenuItem>
+                <StyledCustomMenuItem
+                    onClick={() => {
+                        handleClose()
+                        addViewer({collectionId, viewerId: authorId})
+                    }}
+                >
+                    <ListItemText sx={{mr: 1}}>
+                        As viewer
                     </ListItemText>
                 </StyledCustomMenuItem>
             </StyledCustomMenu>

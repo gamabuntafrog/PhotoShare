@@ -79,7 +79,8 @@ export interface IUserWithCollections {
     subscribesCount: number,
     postsCount: number,
     createdAt: string,
-    collections: ICollectionForIUser[]
+    collections: ICollectionForIUser[],
+    allowedToViewCollections?: ICollectionForIUser[]
 }
 
 export interface ICurrentUser {

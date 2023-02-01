@@ -35,7 +35,7 @@ const userProfileStyles = (theme: Theme) => {
             container: {
                 width: '90%',
                 mx: 'auto',
-                pb: 4,
+                pb: 0,
             },
             wrapper: {
                 display: 'grid',
@@ -76,8 +76,10 @@ const userProfileStyles = (theme: Theme) => {
                 bgcolor: 'primary.main',
                 overflow: 'hidden',
                 height: 'auto'
-            }
-        }
+            },
+        },
+        allowedToViewCollectionsWrapper: {mt: 3, mb: 6, pt: 3, borderTop: `8px solid ${theme.palette.primary.main}`}
+
     }
 }
 

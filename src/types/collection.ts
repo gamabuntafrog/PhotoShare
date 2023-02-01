@@ -20,13 +20,27 @@ export interface IAuthorOfCollection {
     isAdmin: boolean
 }
 
+export interface IViewerOfCollection {
+    username: string,
+    avatar: string | null,
+    _id: string,
+}
+
 export interface ICollectionWithPosts {
     authors: IAuthorOfCollection[],
+    viewers: IViewerOfCollection[],
     tags: string[],
     posts: IPost[],
     title: string,
     _id: string,
-    isAuthor: boolean,
-    isAdmin: boolean,
-    isPrivate: boolean
+    isPrivate: boolean,
+
+}
+
+export interface IFullCollection {
+    collection: ICollectionWithPosts,
+    currentUserStatus: {
+        isAuthor: boolean,
+        isAdmin: boolean
+    }
 }

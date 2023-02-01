@@ -1,2 +1,2 @@
-import AddAuthorToCollection from './AddAuthorToCollection'
-export default AddAuthorToCollection
+import AddUserToCollection from './AddUserToCollection'
+export default AddUserToCollection

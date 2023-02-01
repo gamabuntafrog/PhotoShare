@@ -4,7 +4,7 @@ import {createStandardCustomError, IResponse, IResponseWithMessage, logout} from
 import {IOnePost, IPost} from "../../types/post";
 import {IUser, IUserForAddInCollection, IUserWithCollections} from "../../types/user";
 import {IPostsApi} from "../../types/postsApi";
-import {ICollection, ICollectionWithPosts} from "../../types/collection";
+import {ICollection, ICollectionWithPosts, IFullCollection} from "../../types/collection";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {pushResponse} from "../slices/responseNotificationsSlice";
 import {returnTransformedError} from "../utils";
@@ -144,11 +144,11 @@ export const extendedPostsApi = rootApi.injectEndpoints({
 
 export const extendedCollectionsApi = rootApi.injectEndpoints({
     endpoints: (build) => ({
-        getOneWithPostsAndAuthor: build.query<ICollectionWithPosts, idType>({
+        getOneWithPostsAndAuthor: build.query<IFullCollection, idType>({
             query: ({id}) => ({
                 url: `/collections/${id}`,
             }),
-            transformResponse: (response: IResponse<{ collection: ICollectionWithPosts }>) => response.data.collection,
+            transformResponse: (response: IResponse<IFullCollection>) => response.data,
             providesTags: ['Collection']
         }),
         getCurrentUserCollections: build.query<ICollection[], void>({
@@ -203,6 +203,13 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ['Collection']
         }),
+        addViewerToCollection: build.mutation<unknown, { collectionId: string, viewerId: string }>({
+            query: ({collectionId, viewerId}) => ({
+                url: `/collections/${collectionId}/viewers/${viewerId}`,
+                method: `POST`,
+            }),
+            invalidatesTags: ['Collection']
+        }),
         changeAuthorRoleInCollection: build.mutation<unknown, { collectionId: string, authorId: string, role: 'ADMIN' | 'AUTHOR' }>({
             query: ({collectionId, authorId, role}) => ({
                 url: `/collections/${collectionId}/authors/${authorId}/roles`,
@@ -216,6 +223,13 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
         deleteAuthorFromCollection: build.mutation<unknown, { collectionId: string, authorId: string }>({
             query: ({collectionId, authorId}) => ({
                 url: `/collections/${collectionId}/authors/${authorId}`,
+                method: `DELETE`
+            }),
+            invalidatesTags: ['Collection']
+        }),
+        deleteViewerFromCollection: build.mutation<unknown, { collectionId: string, viewerId: string }>({
+            query: ({collectionId, viewerId}) => ({
+                url: `/collections/${collectionId}/viewers/${viewerId}`,
                 method: `DELETE`
             }),
             invalidatesTags: ['Collection']
@@ -283,5 +297,4 @@ export const extendedUsersApi = rootApi.injectEndpoints({
     overrideExisting: false
 })
 
-// добавити сюди оновлення юзера
 

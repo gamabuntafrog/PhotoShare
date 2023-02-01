@@ -2,7 +2,7 @@ import {
     Accordion, AccordionDetails, AccordionSummary, Avatar,
     Box, Button,
     Container, IconButton,
-    ImageList, ListItem, ListItemAvatar, ListItemText, Modal,
+    ImageList, ListItem, ListItemAvatar, ListItemText, Modal, Switch,
     Typography
 } from "@mui/material";
 import {NavLink, useNavigate, useParams} from "react-router-dom";
@@ -17,40 +17,37 @@ import {ICurrentUser} from "../../types/user";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import useSx from "../../hooks/useSx";
 import collectionStyles from "./collectionStyles";
-import AddAuthorToCollection from "./CollectionComponents/AddAuthorToCollection/AddAuthorToCollection";
-import DeleteAuthorFromCollectionModal from "./CollectionComponents/DeleteAuthorFromCollectionModal";
-import CollectionContextMenu from "./CollectionComponents/CollectionContextMenu";
+import AddUserToCollection from "./CollectionComponents/AddAuthorToCollection/AddUserToCollection";
 import CollectionInfo from "./CollectionComponents/CollectionInfo";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AuthorsInfo from "./CollectionComponents/AuthorsInfo";
 import CloseIcon from '@mui/icons-material/Close';
-
+import useAnchorEl from "../../hooks/useAnchorEl";
+import StyledCustomMenu from "../../library/CustomMenu/StyledCustomMenu";
+import StyledCustomMenuItem from "../../library/CustomMenu/StyledCustomMenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import CustomOpenMenuButton from "../../library/CustomMenu/CustomOpenMenuButton";
+import ViewersInfo from "./CollectionComponents/ViewersInfo";
 
 
 export default function Collection() {
     const {id = ''} = useParams<{ id: string }>()!
 
-    const {_id: currentUserId} = useAppSelector((state) => state.userReducer.user) as ICurrentUser
-
     const {
-        data: collection,
+        data,
         isLoading: isCollectionLoading,
         error: collectionError,
     } = extendedCollectionsApi.useGetOneWithPostsAndAuthorQuery({id})
 
-    const [posts, postsActions] = usePostsActions({initPosts: collection?.posts})
+    const [posts, postsActions] = usePostsActions({initPosts: data?.collection.posts})
 
-    console.log(collection)
+    console.log(data)
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
-
-    const [isAddAuthorModalOpen, setIsAddAuthorModalOpen] = useState(false);
-    const [isDeleteAuthorModalOpen, setIsDeleteAuthorModalOpen] = useState(false);
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-    const [deleteCurrentUserFromCollection] = extendedCollectionsApi.useDeleteCurrentUserFromCollectionMutation()
     const [changeIsPrivate] = extendedCollectionsApi.useChangeIsPrivateMutation()
 
     const styles = useSx(collectionStyles)
@@ -63,9 +60,13 @@ export default function Collection() {
         };
 
 
+    const openAddUserAccordion = () => setExpanded('panel1')
+    const openSettingsModal = () => setIsSettingsOpen(true)
+    const closeSettingsModal = () => setIsSettingsOpen(false)
+
     if (isCollectionLoading) return <FullScreenLoader/>
 
-    if (collectionError || !collection) {
+    if (collectionError || !data) {
         return (
             <Container sx={styles.errorContainer}>
                 <Typography variant='h1' sx={{textAlign: 'center'}}>Error</Typography>
@@ -73,15 +74,14 @@ export default function Collection() {
         )
     }
 
-    const {_id: collectionId, title, tags, authors, isAuthor, isAdmin, isPrivate} = collection
+
+    const {collection, currentUserStatus} = data
+    const {_id: collectionId, title, tags, authors, isPrivate, viewers} = collection
+
+    const {isAuthor, isAdmin} = currentUserStatus
+
     const formattedTags = tags.join(' ')
 
-    const closeAddAuthorModal = () => setIsAddAuthorModalOpen(false)
-    const openAddAuthorModal = () => setIsAddAuthorModalOpen(true)
-    const closeDeleteAuthorModal = () => setIsDeleteAuthorModalOpen(false)
-    const openDeleteAuthorModal = () => setIsDeleteAuthorModalOpen(true)
-    const openSettingsModal = () => setIsSettingsOpen(true)
-    const closeSettingsModal = () => setIsSettingsOpen(false)
 
     const collectionPostsListCols = isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5
 
@@ -95,105 +95,106 @@ export default function Collection() {
                 <Box
                     sx={styles.modalWrapper}
                 >
-                    <IconButton onClick={closeSettingsModal} sx={styles.closeIcon} color='error'>
-                        <CloseIcon/>
-                    </IconButton>
+                    <Box sx={styles.closeIconWrapper}>
+                        <Typography variant='body1' sx={styles.title}>Settings</Typography>
 
-                    <Typography variant='h2' sx={styles.title}>Settings</Typography>
+                        <IconButton onClick={closeSettingsModal} sx={styles.closeIcon} color='error'>
+                            <CloseIcon/>
+                        </IconButton>
+                    </Box>
 
-                    <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon/>}
-                            aria-controls="panel1bh-content"
-                            id="panel1bh-header"
+                    <Box sx={styles.modalContainer}>
+                        <Accordion
+                            sx={styles.accordionWrapper}
+                            expanded={expanded === 'panel1'}
+                            onChange={handleChange('panel1')}
                         >
-                            <Typography sx={{width: '33%', flexShrink: 0}}>
-                                Add authors
-                            </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <AddAuthorToCollection
-                                collectionId={collectionId}
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon color='primary'/>}
+                                aria-controls="panel1bh-content"
+                                id="panel1bh-header"
+                            >
+                                <Typography sx={{width: '33%', flexShrink: 0}}>
+                                    Add users
+                                </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <AddUserToCollection
+                                    collectionId={collectionId}
+                                />
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion
+                            sx={styles.accordionWrapper}
+                                   expanded={expanded === 'panel2'}
+                                   onChange={handleChange('panel2')}
+                        >
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon color='primary'/>}
+                                aria-controls="panel2bh-content"
+                                id="panel2bh-header"
+                            >
+                                <Typography sx={{width: '33%', flexShrink: 0}}>
+                                    Authors
+                                </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <AuthorsInfo
+                                    authors={authors}
+                                    collectionId={collectionId}
+                                    openAddUserAccordion={openAddUserAccordion}
+                                />
+                            </AccordionDetails>
+                        </Accordion>
+
+                        <Accordion
+                            sx={styles.accordionWrapper}
+                            expanded={expanded === 'panel3'}
+                            onChange={handleChange('panel3')}
+                        >
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon color='primary'/>}
+                                aria-controls="panel3bh-content"
+                                id="panel3bh-header"
+                            >
+                                <Typography sx={{width: '33%', flexShrink: 0}}>
+                                    Viewers
+                                </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ViewersInfo openAddUserAccordion={openAddUserAccordion} viewers={viewers} collectionId={collectionId}/>
+                            </AccordionDetails>
+                        </Accordion>
+                        <Box sx={styles.togglePrivateContainer}>
+                            <Box>
+                                <Typography>Private mode</Typography>
+                                <Typography variant='caption' sx={{color: 'text.secondary'}}>
+                                    Make your collection invisible for non-viewers and non-authors
+                                </Typography>
+                            </Box>
+                            <Switch
+                                checked={isPrivate}
+                                onClick={() => changeIsPrivate({collectionId})}
                             />
-                        </AccordionDetails>
-                    </Accordion>
-
-                    <Accordion expanded={expanded === 'panel2'} onChange={handleChange('panel2')}>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon/>}
-                            aria-controls="panel2bh-content"
-                            id="panel2bh-header"
-                        >
-                            <Typography sx={{width: '33%', flexShrink: 0}}>
-                                Authors
-                            </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <AuthorsInfo authors={authors} collectionId={collectionId}/>
-                        </AccordionDetails>
-                    </Accordion>
-
-                    <Accordion expanded={expanded === 'panel3'} onChange={handleChange('panel3')}>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon/>}
-                            aria-controls="panel3bh-content"
-                            id="panel3bh-header"
-                        >
-                            <Typography sx={{width: '33%', flexShrink: 0}}>
-                                Viewers
-                            </Typography>
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            {authors.map(({_id, avatar, username, isAdmin}) => {
-                                return (
-                                    <ListItem key={_id}>
-                                        <ListItemAvatar>
-                                            <NavLink to={`/users/${_id}`}>
-                                                <Avatar
-                                                    sx={styles.deleteAuthorModal.avatar}
-                                                    src={avatar || ''}
-                                                />
-                                            </NavLink>
-                                        </ListItemAvatar>
-                                        <ListItemText
-                                            sx={styles.deleteAuthorModal.authorUsernameWrapper}
-                                        >
-                                            <NavLink to={`/users/${_id}`}>
-                                                {username}
-                                            </NavLink>
-                                        </ListItemText>
-                                    </ListItem>
-                                )
-                            })}
-                        </AccordionDetails>
-                    </Accordion>
-                    <Box sx={{
-                        my: 2
-                    }}>
-                        <Button
-                            onClick={() => changeIsPrivate({collectionId})}>{isPrivate ? 'Make unprivate' : 'Make private'}</Button>
+                        </Box>
+                        <Box sx={{
+                            px: 1,
+                        }}>
+                            <Button
+                                // onClick={}
+                                color='error'
+                                variant='contained'
+                            >
+                                Delete collection
+                            </Button>
+                        </Box>
                     </Box>
                 </Box>
             </Modal>
-
-            <DeleteAuthorFromCollectionModal
-                isDeleteAuthorModalOpen={isDeleteAuthorModalOpen}
-                closeDeleteAuthorModal={closeDeleteAuthorModal}
-                authors={collection.authors}
-                currentUserId={currentUserId}
-                collectionId={collectionId}
-            />
             <Box sx={styles.collectionWrapper}>
                 {isAuthor &&
                     <>
-                        <CollectionContextMenu
-                            isAdmin={isAdmin}
-                            isAuthor={isAuthor}
-                            openAddAuthorModal={openAddAuthorModal}
-                            openDeleteAuthorModal={openDeleteAuthorModal}
-                            deleteCurrentUserFromCollectionCallback={() => deleteCurrentUserFromCollection({collectionId})}
-                            collectionId={collectionId}
-                        />
                         <Button onClick={openSettingsModal}>true settings</Button>
                     </>
                 }

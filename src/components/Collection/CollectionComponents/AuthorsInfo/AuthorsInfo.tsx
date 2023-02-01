@@ -1,4 +1,4 @@
-import {Avatar, ListItem, ListItemAvatar, ListItemText, TextField, Typography} from "@mui/material";
+import {Avatar, Button, ListItem, ListItemAvatar, ListItemText, TextField, Typography} from "@mui/material";
 import {NavLink, useNavigate} from "react-router-dom";
 import CustomOpenMenuButton from "../../../../library/CustomMenu/CustomOpenMenuButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -11,7 +11,7 @@ import useSx from "../../../../hooks/useSx";
 import collectionStyles from "../../collectionStyles";
 import {extendedCollectionsApi} from "../../../../redux/api/rootApi";
 
-
+import CallMadeIcon from '@mui/icons-material/CallMade';
 function AuthorInfo({author, collectionId}: { author: IAuthorOfCollection, collectionId: string }) {
 
     const {_id, avatar, username, isAdmin, isAuthor} = author
@@ -20,6 +20,7 @@ function AuthorInfo({author, collectionId}: { author: IAuthorOfCollection, colle
 
     const [deleteAuthorFromCollection] = extendedCollectionsApi.useDeleteAuthorFromCollectionMutation()
     const [changeAuthorRole] = extendedCollectionsApi.useChangeAuthorRoleInCollectionMutation()
+    const [makeViewer] = extendedCollectionsApi.useAddViewerToCollectionMutation()
 
     const navigate = useNavigate()
 
@@ -81,7 +82,7 @@ function AuthorInfo({author, collectionId}: { author: IAuthorOfCollection, colle
                 <StyledCustomMenuItem>
                     <Typography
                         onClick={() => {
-                            // addAuthorToCollection({collectionId, authorId: _id, role: 'AUTHOR'})
+                            makeViewer({collectionId, viewerId: _id})
                         }}
                     >
                         Make an viewer
@@ -102,7 +103,7 @@ function AuthorInfo({author, collectionId}: { author: IAuthorOfCollection, colle
     )
 }
 
-export default function AuthorsInfo({authors, collectionId}: { authors: IAuthorOfCollection[], collectionId: string }) {
+export default function AuthorsInfo({authors, collectionId, openAddUserAccordion}: { authors: IAuthorOfCollection[], collectionId: string, openAddUserAccordion: () => void}) {
 
     const [query, setQuery] = useState('');
 
@@ -110,10 +111,20 @@ export default function AuthorsInfo({authors, collectionId}: { authors: IAuthorO
 
     const filteredAuthors = authors.filter(({username}) => username.includes(query))
 
+    if (filteredAuthors.length === 0) {
+        return <>
+            <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder='Enter username'/>
+            <Typography variant='h4' textAlign='center'>Wrong username</Typography>
+        </>
+    }
+
     return (
         <>
             <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder='Enter username'/>
             {filteredAuthors.map((author) => <AuthorInfo key={author._id} author={author} collectionId={collectionId}/>)}
+            <ListItem onClick={openAddUserAccordion}>
+                <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>Add new</Button>
+            </ListItem>
         </>
     )
 }

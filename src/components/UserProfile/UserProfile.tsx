@@ -56,7 +56,8 @@ export default function UserProfile() {
         subscribesCount,
         subscribersCount,
         postsCount,
-        collections
+        collections,
+        allowedToViewCollections
     } = user
     const avatarURL = avatar || ''
     const [month, day, year] = new Date(createdAt).toLocaleDateString('en-US').split('/')
@@ -129,9 +130,17 @@ export default function UserProfile() {
                             Add author to your collection
                         </Button>
                     }
+
                 </Box>
             </Box>
+            <Typography sx={{mb: 2}} variant='h4' textAlign='center'>Collections</Typography>
             <Collections collections={collections}/>
+            {allowedToViewCollections && (
+                <Box sx={styles.allowedToViewCollectionsWrapper}>
+                    <Typography sx={{mb: 2}} variant='h4' textAlign='center'>Allowed to view</Typography>
+                    <Collections collections={allowedToViewCollections}/>
+                </Box>
+            )}
         </Box>
     )
 }

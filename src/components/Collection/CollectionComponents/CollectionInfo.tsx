@@ -61,9 +61,6 @@ export default function CollectionInfo(
                                 }
                                 <Typography sx={{ml: 1}} variant='h5'>{username}</Typography>
                             </Box>
-
-
-
                         </Box>
                     )
                 })}
