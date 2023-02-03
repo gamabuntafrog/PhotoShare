@@ -1,18 +1,25 @@
 import {Avatar, Button, ListItem, ListItemAvatar, ListItemText, TextField, Typography} from "@mui/material";
 import {NavLink, useNavigate} from "react-router-dom";
-import CustomOpenMenuButton from "../../../../library/CustomMenu/CustomOpenMenuButton";
+import CustomOpenMenuButton from "../../../../../../library/CustomMenu/CustomOpenMenuButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import StyledCustomMenu from "../../../../library/CustomMenu/StyledCustomMenu";
-import StyledCustomMenuItem from "../../../../library/CustomMenu/StyledCustomMenuItem";
+import StyledCustomMenu from "../../../../../../library/CustomMenu/StyledCustomMenu";
+import StyledCustomMenuItem from "../../../../../../library/CustomMenu/StyledCustomMenuItem";
 import React, {ChangeEvent, ChangeEventHandler, useState} from "react";
-import {IAuthorOfCollection} from "../../../../types/collection";
-import useAnchorEl from "../../../../hooks/useAnchorEl";
-import useSx from "../../../../hooks/useSx";
-import collectionStyles from "../../collectionStyles";
-import {extendedCollectionsApi} from "../../../../redux/api/rootApi";
+import {IAuthorOfCollection} from "../../../../../../types/collection";
+import useAnchorEl from "../../../../../../hooks/useAnchorEl";
+import useSx from "../../../../../../hooks/useSx";
+import collectionStyles from "../../../../collectionStyles";
+import {extendedCollectionsApi} from "../../../../../../redux/api/rootApi";
 
 import CallMadeIcon from '@mui/icons-material/CallMade';
-function AuthorInfo({author, collectionId}: { author: IAuthorOfCollection, collectionId: string }) {
+
+interface IAuthorInfo {
+    author: IAuthorOfCollection,
+    collectionId: string,
+    isCurrentUserAdmin: boolean
+}
+
+function AuthorInfo({author, collectionId, isCurrentUserAdmin}: IAuthorInfo) {
 
     const {_id, avatar, username, isAdmin, isAuthor} = author
     const {authorInfo: styles} = useSx(collectionStyles)
@@ -23,6 +30,33 @@ function AuthorInfo({author, collectionId}: { author: IAuthorOfCollection, colle
     const [makeViewer] = extendedCollectionsApi.useAddViewerToCollectionMutation()
 
     const navigate = useNavigate()
+
+    if (!isCurrentUserAdmin) {
+        return (
+            <ListItem sx={styles.listItem} key={_id}>
+                <ListItemAvatar>
+                    <NavLink to={`/users/${_id}`}>
+                        <Avatar
+                            sx={styles.avatar}
+                            src={avatar || ''}
+                        />
+                    </NavLink>
+                </ListItemAvatar>
+                <ListItemText
+                    sx={styles.authorUsernameWrapper}
+                    onClick={() => navigate(`/users/${_id}`)}
+                >
+                    <Typography variant='caption' color='primary'>
+                        {isAdmin && 'Admin'}
+                        {isAuthor && 'Author'}
+                    </Typography>
+                    <Typography>
+                        {username}
+                    </Typography>
+                </ListItemText>
+            </ListItem>
+        )
+    }
 
     return (
         <ListItem sx={styles.listItem} key={_id}>
@@ -103,7 +137,14 @@ function AuthorInfo({author, collectionId}: { author: IAuthorOfCollection, colle
     )
 }
 
-export default function AuthorsInfo({authors, collectionId, openAddUserAccordion}: { authors: IAuthorOfCollection[], collectionId: string, openAddUserAccordion: () => void}) {
+interface IAuthorsInfoProps {
+    authors: IAuthorOfCollection[],
+    collectionId: string,
+    openAddUserAccordion: () => void,
+    isAdmin: boolean
+}
+
+export default function AuthorsInfo({authors, collectionId, openAddUserAccordion, isAdmin}: IAuthorsInfoProps) {
 
     const [query, setQuery] = useState('');
 
@@ -115,16 +156,30 @@ export default function AuthorsInfo({authors, collectionId, openAddUserAccordion
         return <>
             <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder='Enter username'/>
             <Typography variant='h4' textAlign='center'>Wrong username</Typography>
+            {isAdmin && (
+                <ListItem onClick={openAddUserAccordion}>
+                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>Add new</Button>
+                </ListItem>
+            )}
         </>
     }
 
     return (
         <>
             <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder='Enter username'/>
-            {filteredAuthors.map((author) => <AuthorInfo key={author._id} author={author} collectionId={collectionId}/>)}
-            <ListItem onClick={openAddUserAccordion}>
-                <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>Add new</Button>
-            </ListItem>
+            {filteredAuthors.map((author) =>
+                <AuthorInfo
+                    isCurrentUserAdmin={isAdmin}
+                    key={author._id}
+                    author={author}
+                    collectionId={collectionId}
+                />
+            )}
+            {isAdmin && (
+                <ListItem onClick={openAddUserAccordion}>
+                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>Add new</Button>
+                </ListItem>
+            )}
         </>
     )
 }

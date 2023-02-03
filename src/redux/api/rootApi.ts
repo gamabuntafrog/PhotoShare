@@ -220,6 +220,17 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ['Collection']
         }),
+        changeCollectionInfo: build.mutation<unknown, { collectionId: string, title: string, tags: string[] }>({
+            query: ({collectionId, title, tags}) => ({
+                url: `/collections/${collectionId}`,
+                method: `PATCH`,
+                body: {
+                    title,
+                    tags
+                }
+            }),
+            invalidatesTags: ['Collection']
+        }),
         deleteAuthorFromCollection: build.mutation<unknown, { collectionId: string, authorId: string }>({
             query: ({collectionId, authorId}) => ({
                 url: `/collections/${collectionId}/authors/${authorId}`,

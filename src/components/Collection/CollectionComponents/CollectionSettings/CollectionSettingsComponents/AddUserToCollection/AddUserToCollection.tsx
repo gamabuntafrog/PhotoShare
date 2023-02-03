@@ -1,17 +1,15 @@
 import React, {useEffect, useState} from "react";
 import {useDebounce} from "use-debounce";
-import {extendedCollectionsApi, extendedUsersApi} from "../../../../redux/api/rootApi";
-import {NavLink, useNavigate} from "react-router-dom";
-import {useTheme} from "@mui/material/styles";
-import MiniLoader from "../../../Loaders/MiniLoader";
 import {
   TextField,
     Typography
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
-import useSx from "../../../../hooks/useSx";
-import collectionStyles from "../../collectionStyles";
 import UsersList from "./AddUserToCollectionComponents/UsersList";
+import MiniLoader from "../../../../../Loaders/MiniLoader";
+import collectionStyles from "../../../../collectionStyles";
+import useSx from "../../../../../../hooks/useSx";
+import {extendedUsersApi} from "../../../../../../redux/api/rootApi";
 
 
 

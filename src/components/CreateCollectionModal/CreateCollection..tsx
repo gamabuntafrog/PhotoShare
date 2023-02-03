@@ -27,16 +27,15 @@ interface ICreateCollectionModalProps {
 
 const isFunction = (any: any): any is Function => typeof any === 'function'
 
-export default function CreateCollectionModal({
-                                                  closeModal,
-                                                  isModalOpen,
-                                                  onCreate,
-                                                  refetch,
-                                                  postId
-                                              }: ICreateCollectionModalProps) {
-    const {id: collectionId = ''} = useParams<{ id: string }>()!
+export default function CreateCollectionModal(
+    {
+        closeModal,
+        isModalOpen,
+        onCreate,
+        refetch,
+        postId
+    }: ICreateCollectionModalProps) {
 
-    const {token, user: currentUser} = useAppSelector(state => state.userReducer) as IUserSliceAuthorized
     const [createCollection, {isLoading: isCollectionCreatingLoading}] = extendedCollectionsApi.useCreateCollectionMutation()
 
     const {

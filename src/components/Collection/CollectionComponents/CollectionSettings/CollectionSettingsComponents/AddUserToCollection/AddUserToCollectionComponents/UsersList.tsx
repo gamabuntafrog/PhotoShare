@@ -1,13 +1,13 @@
-import {IUserForAddInCollection} from "../../../../../types/user";
-import {extendedCollectionsApi} from "../../../../../redux/api/rootApi";
-import useSx from "../../../../../hooks/useSx";
-import collectionStyles from "../../../collectionStyles";
-import useAnchorEl from "../../../../../hooks/useAnchorEl";
 import {Avatar, Button, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
 import {NavLink} from "react-router-dom";
-import StyledCustomMenu from "../../../../../library/CustomMenu/StyledCustomMenu";
-import StyledCustomMenuItem from "../../../../../library/CustomMenu/StyledCustomMenuItem";
 import React from "react";
+import {extendedCollectionsApi} from "../../../../../../../redux/api/rootApi";
+import useSx from "../../../../../../../hooks/useSx";
+import collectionStyles from "../../../../../collectionStyles";
+import useAnchorEl from "../../../../../../../hooks/useAnchorEl";
+import StyledCustomMenuItem from "../../../../../../../library/CustomMenu/StyledCustomMenuItem";
+import StyledCustomMenu from "../../../../../../../library/CustomMenu/StyledCustomMenu";
+import {IUserForAddInCollection} from "../../../../../../../types/user";
 
 interface IUsersListProps {
     authors: IUserForAddInCollection[],

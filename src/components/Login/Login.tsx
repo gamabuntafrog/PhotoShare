@@ -16,10 +16,6 @@ import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import {useForm} from "react-hook-form";
 import {Image, Visibility, VisibilityOff} from "@mui/icons-material";
 import {yupResolver} from '@hookform/resolvers/yup';
-
-import * as yup from 'yup'
-import CloseIcon from '@mui/icons-material/Close';
-import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 import {loginValidationSchema} from "../../utils/validationSchemas";
 import useSx from "../../hooks/useSx";
 import loginStyles from "./loginStyles";
@@ -49,12 +45,9 @@ export default function Login() {
 
     const dispatch = useAppDispatch()
 
-    const tryLogin = async (email: string, password: string) => {
-        await dispatch(login({email, password}))
-    }
 
     const onSubmit = handleSubmit(({email, password}) => {
-        tryLogin(email, password)
+        dispatch(login({email, password}))
     });
 
 
