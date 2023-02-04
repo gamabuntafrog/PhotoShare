@@ -188,27 +188,10 @@ const collectionStyles = (theme: Theme) => {
             },
             errorTitle: {padding: 1, textAlign: 'center', wordBreak: 'break-word'}
         },
-        contextMenu: {
-            openButton: {
-                position: 'absolute',
-                right: 20,
-                top: 20
-            },
-            menuList: {
-                backgroundColor: 'rgba(0, 0, 0, 0.2)',
-                '& .MuiPaper-root': {
-                    bgcolor: 'background.paper',
-                    maxHeight: '300px',
-                },
-                '& .MuiMenu-list': {
-                    bgcolor: 'background.paper',
-                    py: 0
-                }
-            },
-            menuItem: {
-                bgcolor: 'background.paper',
-                position: 'relative'
-            }
+        openButton: {
+            position: 'absolute',
+            right: 20,
+            top: 20
         },
         collectionInfo: {
             wrapper: {mb: 2, mt: 6},
@@ -243,7 +226,7 @@ const collectionStyles = (theme: Theme) => {
                 color: 'primary.main'
             },
             avatar: {width: '80px', height: '80px'},
-            addNewPostButton: {mt: 3}
+            addNewPostButton: {mt: 3},
         },
         accordionWrapper: {
             borderRadius: '16px !important', mb: 1, '&:before': {
@@ -257,6 +240,31 @@ const collectionStyles = (theme: Theme) => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center'
+        },
+        dangerButtonsWrapper: {
+            display: 'flex',
+            px: 1,
+            mt: 3
+        },
+        collectionSettingsInfo: {
+            changeInfoForm: {
+                wrapper: {
+                    mb: 2,
+                    px: 1
+                },
+                inputLabel: {mb: 1},
+                input: {mb: 1},
+                buttonsWrapper: {display: 'flex', mt: 1}
+            },
+            wrapper: {
+                mb: 2,
+                px: 1,
+                display: 'flex',
+                justifyContent: 'space-between'
+            },
+            secondWrapper: {
+                mr: 2
+            }
         }
     }
 }

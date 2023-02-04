@@ -2,7 +2,7 @@ import {BaseQueryFn, createApi, FetchArgs, fetchBaseQuery} from "@reduxjs/toolki
 import {RootState} from "../store";
 import {createStandardCustomError, IResponse, IResponseWithMessage, logout} from "../slices/userSlice";
 import {IOnePost, IPost} from "../../types/post";
-import {IUser, IUserForAddInCollection, IUserWithCollections} from "../../types/user";
+import {ICollectionForIUser, IUser, IUserForAddInCollection, IUserWithCollections} from "../../types/user";
 import {IPostsApi} from "../../types/postsApi";
 import {ICollection, ICollectionWithPosts, IFullCollection} from "../../types/collection";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
@@ -102,6 +102,12 @@ export const extendedPostsApi = rootApi.injectEndpoints({
             query: () => '/posts',
             transformResponse: (response: IResponse<{ posts: IPost[] }>) => response.data.posts,
         }),
+        getPostsByUserId: build.query<IPost[], idType>({
+            query: ({id}) => ({
+                url: `/users/${id}/posts`
+            }),
+            transformResponse: (response: IResponse<{ posts: IPost[] }>) => response.data.posts,
+        }),
         getOneById: build.query<IOnePost, idType>({
             query: ({id}) => ({
                 url: `/posts/${id}`
@@ -151,6 +157,18 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
             transformResponse: (response: IResponse<IFullCollection>) => response.data,
             providesTags: ['Collection']
         }),
+        getCollectionsByUserId: build.query<ICollectionForIUser[], idType>({
+            query: ({id}) => ({
+                url: `/users/${id}/collections`
+            }),
+            transformResponse: (response: IResponse<{ collections: ICollectionForIUser[] }>) => response.data.collections,
+        }),
+        getAllowedToViewCollections: build.query<ICollectionForIUser[], idType>({
+            query: ({id}) => ({
+                url: `/users/${id}/allowedToViewCollections`
+            }),
+            transformResponse: (response: IResponse<{ allowedToViewCollections: ICollectionForIUser[] }>) => response.data.allowedToViewCollections,
+        }),
         getCurrentUserCollections: build.query<ICollection[], void>({
             query: () => ({
                 url: `/collections/current`,
@@ -190,8 +208,7 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
                 url: `/collections/${collectionId}/saves/${postId}`,
                 method: 'DELETE',
             }),
-            transformErrorResponse: returnTransformedError,
-            invalidatesTags: ['Collection']
+            transformErrorResponse: returnTransformedError
         }),
         addAuthorToCollection: build.mutation<unknown, { collectionId: string, authorId: string, role: 'ADMIN' | 'AUTHOR' }>({
             query: ({collectionId, authorId, role}) => ({
@@ -247,7 +264,7 @@ export const extendedCollectionsApi = rootApi.injectEndpoints({
         }),
         deleteCurrentUserFromCollection: build.mutation<unknown, { collectionId: string }>({
             query: ({collectionId}) => ({
-                url: `/collections/${collectionId}/authors`,
+                url: `/collections/${collectionId}/current`,
                 method: `DELETE`,
             }),
             invalidatesTags: ['Collection']

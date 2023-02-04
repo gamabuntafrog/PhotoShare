@@ -13,6 +13,8 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {createCollectionValidationSchema} from "../../../../../../utils/validationSchemas";
 import {extendedCollectionsApi} from "../../../../../../redux/api/rootApi";
+import useSx from "../../../../../../hooks/useSx";
+import collectionStyles from "../../../../collectionStyles";
 
 interface ICollectionInfoProps {
     title: string,
@@ -30,9 +32,6 @@ export default function CollectionInfo({title, tags, isAdmin, collectionId}: ICo
 
     const [isEditing, setIsEditing] = useState(false);
 
-    const handleClose = () => setIsEditing(false)
-    const handleOpen = () => setIsEditing(true)
-
     const [updateInfo] = extendedCollectionsApi.useChangeCollectionInfoMutation()
 
     const {
@@ -42,8 +41,18 @@ export default function CollectionInfo({title, tags, isAdmin, collectionId}: ICo
         formState: {errors: {title: titleError, tags: tagsError}}
     } = useForm<ICollectionFormData>({
         resolver: yupResolver(createCollectionValidationSchema),
-        mode: 'all'
+        mode: 'all',
+        defaultValues: {
+            title: title,
+            tags: tags
+        }
     });
+
+    const handleClose = () => {
+        setIsEditing(false)
+        resetForm()
+    }
+    const handleOpen = () => setIsEditing(true)
 
     const isErrors = !!(titleError || tagsError)
 
@@ -55,24 +64,23 @@ export default function CollectionInfo({title, tags, isAdmin, collectionId}: ICo
         handleClose()
     })
 
-    const theme = useTheme()
+
+    const {collectionSettingsInfo: styles} = useSx(collectionStyles)
+    const {changeInfoForm: formStyles} = styles
 
     if (isAdmin && isEditing) {
         return (
             <FormGroup
-                sx={{
-                    mb: 2,
-                    px: 1
-                }}
+                sx={formStyles.wrapper}
                 onSubmit={onSubmit}
             >
-                <InputLabel sx={{mb: 1, color: titleError ? theme.palette.error.main : 'inherit' }} htmlFor='title'>Title</InputLabel>
-                <OutlinedInput error={!!titleError} id='title' {...register('title')} sx={{mb: 1, color: titleError ? theme.palette.error.main : 'inherit' }} fullWidth defaultValue={title} />
+                <InputLabel error={!!titleError} sx={formStyles.inputLabel} htmlFor='title'>Title</InputLabel>
+                <OutlinedInput error={!!titleError} id='title' {...register('title')} sx={formStyles.input} fullWidth/>
 
-                <InputLabel sx={{mb: 1, color: tagsError ? theme.palette.error.main : 'inherit' }} htmlFor='tags'>Tags</InputLabel>
-                <TextField error={!!tagsError} id='tags' {...register('tags')} sx={{mb: 1}} multiline minRows={2} fullWidth defaultValue={tags}/>
+                <InputLabel sx={formStyles.inputLabel} htmlFor='tags'>Tags</InputLabel>
+                <TextField error={!!tagsError} id='tags' {...register('tags')} sx={formStyles.input} multiline minRows={2} fullWidth />
 
-                <Box sx={{display: 'flex', mt: 1}}>
+                <Box sx={formStyles.buttonsWrapper}>
                     <Button disabled={isErrors} sx={{mr: 2}}  variant='contained' type='submit' onClick={onSubmit} fullWidth >
                         Save changes
                     </Button>
@@ -85,15 +93,8 @@ export default function CollectionInfo({title, tags, isAdmin, collectionId}: ICo
     }
 
     return (
-        <Box sx={{
-            mb: 2,
-            px: 1,
-            display: 'flex',
-            justifyContent: 'space-between'
-        }}>
-            <Box sx={{
-                mr: 2
-            }}>
+        <Box sx={styles.wrapper}>
+            <Box sx={styles.secondWrapper}>
                 <Typography variant='h6' textAlign='center'>{title}</Typography>
                 <Typography color='text.secondary'>{tags}</Typography>
             </Box>

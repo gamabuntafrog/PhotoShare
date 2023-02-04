@@ -1,13 +1,9 @@
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {IUserSliceAuthorized} from "../../types/userSlice";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {Button, Container, InputLabel, Modal, OutlinedInput, Typography, useTheme} from "@mui/material";
 import React from "react";
-import * as Yup from "yup";
 import {useNavigate, useParams} from "react-router-dom";
 import {createCollectionValidationSchema} from "../../utils/validationSchemas";
-import {IResponseNotification, pushResponse} from "../../redux/slices/responseNotificationsSlice";
 import {updateSavesInfo} from "../../hooks/usePostsActions";
 import {extendedCollectionsApi} from "../../redux/api/rootApi";
 
@@ -49,7 +45,6 @@ export default function CreateCollectionModal(
     });
 
     const navigate = useNavigate()
-    const dispatch = useAppDispatch()
 
     const onSubmit = handleSubmit(({title, tags}) => {
         const formattedTags = tags.split(' ')
@@ -66,15 +61,13 @@ export default function CreateCollectionModal(
             closeModal()
 
             if (isFunction(onCreate)) {
-                console.log(body.title, response.data.collection._id, postId)
                 onCreate(body.title, response.data.collection._id, postId as string)
-
             }
 
             if (isFunction(refetch)) {
 
                 refetch()
-                navigate(response.data.collection._id)
+                navigate(`/post/create/${response.data.collection._id}`)
             }
 
         } catch (e) {

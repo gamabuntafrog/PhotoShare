@@ -55,7 +55,7 @@ export default function Collection() {
 
 
     const {collection, currentUserStatus} = data
-    const {_id: collectionId, title, tags, authors, isPrivate, viewers} = collection
+    const {_id: collectionId, title, tags, authors} = collection
 
     const {isAuthor, isAdmin} = currentUserStatus
 
@@ -75,9 +75,7 @@ export default function Collection() {
             )}
             <Box sx={styles.collectionWrapper}>
                 {(isAuthor || isAdmin) &&
-                    <>
-                        <Button onClick={openSettingsModal}>true settings</Button>
-                    </>
+                    <Button sx={styles.openButton} variant='contained' onClick={openSettingsModal}>Settings</Button>
                 }
                 <CollectionInfo
                     title={title}

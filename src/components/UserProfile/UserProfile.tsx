@@ -6,7 +6,7 @@ import {
     Modal,
     Typography, useTheme
 } from "@mui/material";
-import {NavLink, useParams} from "react-router-dom";
+import {NavLink, Outlet, useMatch, useOutlet, useParams} from "react-router-dom";
 import {useAppSelector} from "../../redux/hooks";
 import React, {useEffect, useState} from "react";
 import {extendedCollectionsApi, extendedUsersApi} from "../../redux/api/rootApi";
@@ -18,6 +18,7 @@ import userProfileStyles from "./userProfileStyles";
 import Collections from "./UserProfileComponents/Collections";
 import ChangeUserProfile from "./UserProfileComponents/ChangeUserProfile";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
+import {StyledHeaderNavLink} from "../Header/headerStyles";
 
 
 export default function UserProfile() {
@@ -35,6 +36,9 @@ export default function UserProfile() {
     const {isSubscribed, toggleSubscribe} = useToggleSubscribe(id)
 
     const styles = useSx(userProfileStyles)
+
+    const match = useMatch('/posts')
+    console.log(match)
 
     if (isLoading || isUserUpdating) return <FullScreenLoader/>
 
@@ -56,9 +60,10 @@ export default function UserProfile() {
         subscribesCount,
         subscribersCount,
         postsCount,
-        collections,
-        allowedToViewCollections
+        canViewAllowedToViewCollections
     } = user
+
+
     const avatarURL = avatar || ''
     const [month, day, year] = new Date(createdAt).toLocaleDateString('en-US').split('/')
     const formattedCreatedAt = [day, month, year].join('.')
@@ -133,14 +138,14 @@ export default function UserProfile() {
 
                 </Box>
             </Box>
-            <Typography sx={{mb: 2}} variant='h4' textAlign='center'>Collections</Typography>
-            <Collections collections={collections}/>
-            {allowedToViewCollections && (
-                <Box sx={styles.allowedToViewCollectionsWrapper}>
-                    <Typography sx={{mb: 2}} variant='h4' textAlign='center'>Allowed to view</Typography>
-                    <Collections collections={allowedToViewCollections}/>
-                </Box>
-            )}
+            <Box sx={{padding: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '24px'}}>
+                <StyledHeaderNavLink className='first' to={`posts`}>POSTS</StyledHeaderNavLink>
+                <StyledHeaderNavLink sx={{ml: 3}} to={`collections`}>COLLECTIONS</StyledHeaderNavLink>
+                {canViewAllowedToViewCollections && (
+                    <StyledHeaderNavLink sx={{ml: 3}} to={`allowedToView`}>ALLOWED TO VIEW</StyledHeaderNavLink>
+                )}
+            </Box>
+            <Outlet/>
         </Box>
     )
 }

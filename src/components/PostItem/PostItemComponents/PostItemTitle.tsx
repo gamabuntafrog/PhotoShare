@@ -11,10 +11,11 @@ interface IPostItemTitleProps {
     formattedTags: string,
     authorId: string,
     avatarURL: string | null,
-    username: string
+    username: string,
+    showAuthor: boolean
 }
 
-export default function PostItemTitle({postId, title, formattedTags, authorId, avatarURL, username}: IPostItemTitleProps) {
+export default function PostItemTitle({postId, title, formattedTags, authorId, avatarURL, username, showAuthor}: IPostItemTitleProps) {
 
     const styles = useSx(postItemStyles)
 
@@ -28,10 +29,12 @@ export default function PostItemTitle({postId, title, formattedTags, authorId, a
                     <Typography variant='caption'>{formattedTags}</Typography>
                 </NavLink>
             </Box>
-            <StyledNavLink to={`/users/${authorId}`}>
-                <Avatar sx={styles.authorAvatar} src={avatarURL || ''}/>
-                <Typography className='username' sx={styles.authorUsername}>{username}</Typography>
-            </StyledNavLink>
+            {showAuthor && (
+                <StyledNavLink to={`/users/${authorId}`}>
+                    <Avatar sx={styles.authorAvatar} src={avatarURL || ''}/>
+                    <Typography className='username' sx={styles.authorUsername}>{username}</Typography>
+                </StyledNavLink>
+            )}
         </>
     )
 }

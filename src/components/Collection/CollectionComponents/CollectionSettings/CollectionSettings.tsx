@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-// import AddUserToCollection from "../AddAuthorToCollection";
 import AuthorsInfo from "./CollectionSettingsComponents/AuthorsInfo";
 import ViewersInfo from "./CollectionSettingsComponents/ViewersInfo";
 import React, {useState} from "react";
@@ -21,6 +20,7 @@ import collectionStyles from "../../collectionStyles";
 import {extendedCollectionsApi} from "../../../../redux/api/rootApi";
 import AddUserToCollection from "./CollectionSettingsComponents/AddUserToCollection";
 import CollectionInfo from "./CollectionSettingsComponents/CollectionInfo";
+import {useNavigate} from "react-router-dom";
 
 interface ICollectionSettingsProps {
     data: IFullCollection,
@@ -34,7 +34,11 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
     const {_id: collectionId, title, tags, authors, isPrivate, viewers} = collection
     const styles = useSx(collectionStyles)
 
+    const navigate = useNavigate()
+
     const [changeIsPrivate] = extendedCollectionsApi.useChangeIsPrivateMutation()
+    const [deleteCurrentUserFromCollection] = extendedCollectionsApi.useDeleteCurrentUserFromCollectionMutation()
+    const [deleteCollection] = extendedCollectionsApi.useDeleteCollectionMutation()
 
     const [expanded, setExpanded] = React.useState<string | false>(false);
 
@@ -48,6 +52,17 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
 
     const formattedTags = tags.join(' ')
 
+    const onLeaveCollection = async () => {
+        if (window.confirm('Are you sure want to leave?')) {
+            await deleteCurrentUserFromCollection({collectionId}).then(() => navigate('/'))
+        }
+    }
+
+    const onDeleteCollection = async () => {
+        if (isAdmin && window.confirm('Are you sure want to delete collection?')) {
+            await deleteCollection({id: collectionId}).then(() => navigate('/'))
+        }
+    }
 
     return (
         <Modal
@@ -156,33 +171,24 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                             />
                         </Box>
                     )}
-                    <Box sx={{
-                        display: 'flex',
-                        px: 1,
-                        mt: 3
-                    }}>
-                        {isAdmin && (
-                            <Box sx={{
-                                mr: 2
-                            }}>
-                                <Button
-                                    // onClick={}
+                    <Box sx={styles.dangerButtonsWrapper}>
+                        {isAdmin &&
+                            (<Button
+                                    onClick={onDeleteCollection}
                                     color='error'
                                     variant='contained'
+                                    sx={{mr: 2}}
                                 >
                                     Delete collection
                                 </Button>
-                            </Box>
-                        )}
-                        <Box>
-                            <Button
-                                // onClick={}
-                                color='error'
-                                variant='contained'
-                            >
-                                Leave collection
-                            </Button>
-                        </Box>
+                            )}
+                        <Button
+                            onClick={onLeaveCollection}
+                            color='error'
+                            variant='contained'
+                        >
+                            Leave collection
+                        </Button>
                     </Box>
                 </Box>
             </Box>

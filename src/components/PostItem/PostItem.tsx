@@ -16,11 +16,12 @@ import PostItemTitle from "./PostItemComponents/PostItemTitle";
 
 interface IPostItemProps {
     post: IPost,
-    postsActions: IPostsActions
+    postsActions: IPostsActions,
+    showAuthor?: boolean
 }
 
 
-export default function PostItem({post, postsActions}: IPostItemProps) {
+export default function PostItem({post, postsActions, showAuthor = true}: IPostItemProps) {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -98,6 +99,7 @@ export default function PostItem({post, postsActions}: IPostItemProps) {
                     }}
                     title={
                         <PostItemTitle
+                            showAuthor={showAuthor}
                             postId={postId}
                             title={title}
                             formattedTags={formattedTags}

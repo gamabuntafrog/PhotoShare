@@ -1,4 +1,4 @@
-import {createBrowserRouter, Navigate, Outlet} from "react-router-dom";
+import {createBrowserRouter, Navigate, Outlet, useParams} from "react-router-dom";
 import Header from "./Header";
 import Posts from "./Posts";
 import Settings from "./Settings";
@@ -9,6 +9,11 @@ import Register from "./Register";
 import CreatePost from "./CreatePost";
 import Post from "./Post";
 import Collection from "./Collection";
+import UsersPosts from "./UserProfile/UserProfileComponents/UsersPosts";
+import UserCollections from "./UserProfile/UserProfileComponents/UserCollections";
+import UserAllowedToViewCollections from "./UserProfile/UserProfileComponents/UserAllowedToViewCollections";
+
+
 
 const privateRouter = createBrowserRouter([
     {
@@ -25,23 +30,36 @@ const privateRouter = createBrowserRouter([
                 element: <Posts/>
             },
             {
-                path: "/settings",
+                path: "settings",
                 element: <Settings/>
             },
             {
-                path: "/users/:id",
-                element: <UserProfile/>
+                path: "users/:id",
+                element: <UserProfile/>,
+                children: [
+                    {
+                        path: "posts",
+                        element: <UsersPosts/>
+                    },
+                    {
+                        path: "collections",
+                        element: <UserCollections/>
+                    },                    {
+                        path: "allowedToView",
+                        element: <UserAllowedToViewCollections/>
+                    },
+                ]
             },
             {
-                path: "/post/create",
+                path: "post/create",
                 element: <CreatePost/>
             },
             {
-                path: "/post/create/:id",
+                path: "post/create/:id",
                 element: <CreatePost/>
             },
             {
-                path: "/posts/:id",
+                path: "posts/:id",
                 element: <Post/>
             },
             {
@@ -63,7 +81,6 @@ const publicRouter = createBrowserRouter([
             <>
                 <Header/>
                 <Outlet/>
-                {/*<Navigate to='/login'/>*/}
             </>
         ),
         children: [
