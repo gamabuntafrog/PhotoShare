@@ -16,12 +16,14 @@ export function AddAuthorModal({isAddUserModalOpen, closeAddAuthorModal, authorI
         isLoading: isCurrentUserCollectionsLoading
     } = extendedCollectionsApi.useGetCurrentUserCollectionsQuery()
 
+
     const [addAuthor] = extendedCollectionsApi.useAddAuthorToCollectionMutation()
     const [deleteAuthor] = extendedCollectionsApi.useDeleteAuthorFromCollectionMutation()
 
     const collectionsWithoutAuthor = currentUserCollections.filter((col) => col.authors.every((_id) => _id !== authorId))
     const collectionsWithAuthor = currentUserCollections.filter((col) => col.authors.some((_id) => _id === authorId))
-
+    console.log(currentUserCollections)
+    console.log(collectionsWithAuthor, collectionsWithoutAuthor)
     return (
         <Modal
             open={isAddUserModalOpen}

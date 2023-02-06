@@ -78,7 +78,24 @@ const userProfileStyles = (theme: Theme) => {
                 height: 'auto'
             },
         },
-        allowedToViewCollectionsWrapper: {mt: 3, mb: 6, pt: 3, borderTop: `8px solid ${theme.palette.primary.main}`}
+        allowedToViewCollectionsWrapper: {mt: 3, mb: 6, pt: 3, borderTop: `8px solid ${theme.palette.primary.main}`},
+        navLinksWrapper: {
+            padding: 3,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '24px',
+            '& > a': {
+                marginLeft: 3
+            },
+            [theme.breakpoints.down('tablet')]: {
+                flexDirection: 'column',
+                '& > a': {
+                    marginTop: 1,
+                    marginLeft: 0,
+                }
+            }
+        }
 
     }
 }

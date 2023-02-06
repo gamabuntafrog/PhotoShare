@@ -18,77 +18,122 @@ import {PaletteColorOptions} from "@mui/material";
 
 export const colorsArray = [
     {
-        string: 'blue',
+        title: {
+            en: 'blue',
+            ua: 'синій'
+        },
         enum: colorTypes.blue,
         ref: blue[500]
     },
     {
-        string: 'red',
+        title: {
+            en: 'red',
+            ua: 'червоний'
+        },
         enum: colorTypes.red,
         ref: red[500]
     },
     {
-        string: 'green',
+        title: {
+            en: 'green',
+            ua: 'зелений'
+        },
         enum: colorTypes.green,
         ref: green[500]
     },
     {
-        string: 'amber',
+        title: {
+            en: 'amber',
+            ua: 'амбер'
+        },
         enum: colorTypes.amber,
         ref: amber[500]
     },
     {
-        string: 'blueGrey',
+        title: {
+            en: 'blueGrey',
+            ua: 'синьо-сірий'
+        },
         enum: colorTypes.blueGrey,
         ref: blueGrey[500]
     },
     {
-        string: 'orange',
+        title: {
+            en: 'orange',
+            ua: 'оранжевий'
+        },
         enum: colorTypes.orange,
         ref: orange[500]
     },
     {
-        string: 'cyan',
+        title: {
+            en: 'cyan',
+            ua: 'голубий'
+        },
         enum: colorTypes.cyan,
         ref: cyan[500]
     },
     {
-        string: 'brown',
+        title: {
+            en: 'brown',
+            ua: 'коричневий'
+        },
         enum: colorTypes.brown,
         ref: brown[500]
     },
     {
-        string: 'deepPurple',
+        title: {
+            en: 'deepPurple',
+            ua: 'глубокий фіолетовий'
+        },
         enum: colorTypes.deepPurple,
         ref: deepPurple[500]
     },
     {
-        string: 'pink',
+        title: {
+            en: 'pink',
+            ua: 'розовий'
+        },
         enum: colorTypes.pink,
         ref: pink[500]
     },
     {
-        string: 'teal',
+        title: {
+            en: 'teal',
+            ua: 'блакитний'
+        },
         enum: colorTypes.teal,
         ref: teal[500]
     },
     {
-        string: 'indigo',
+        title: {
+            en: 'indigo',
+            ua: 'індиго'
+        },
         enum: colorTypes.indigo,
         ref: indigo[500]
     },
     {
-        string: 'lightBlue',
+        title: {
+            en: 'lightBlue',
+            ua: 'світло-синій'
+        },
         enum: colorTypes.lightBlue,
         ref: lightBlue[500]
     },
     {
-        string: 'yellow',
+        title: {
+            en: 'yellow',
+            ua: 'жовтий'
+        },
         enum: colorTypes.yellow,
         ref: yellow[500]
     },
     {
-        string: 'lightGreen',
+        title: {
+            en: 'lightGreen',
+            ua: 'салатовий'
+        },
         enum: colorTypes.lightGreen,
         ref: lightGreen[500]
     },

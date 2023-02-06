@@ -7,6 +7,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 interface IDesktopHeaderNavigationProps {
     user: ICurrentUser | null,
@@ -19,6 +20,8 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
     const styles = useSx(headerStyles)
 
     const {username, _id: currentUserId} = user || {}
+
+    const {t} = useTranslation();
 
     return (
         <Box
@@ -76,7 +79,7 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
                             color='error'
                             onClick={exitFromAccount}
                         >
-                            Exit
+                            {t('Header.exitButton')}
                         </Button>
                     </>
                     :

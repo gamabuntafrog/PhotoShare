@@ -21,6 +21,7 @@ import useSx from "../../hooks/useSx";
 import loginStyles from "./loginStyles";
 import {NavLink} from "react-router-dom";
 import { StyledHeaderNavLink } from "../Header/headerStyles";
+import {useTranslation} from "react-i18next";
 
 
 interface IFormData {
@@ -61,12 +62,17 @@ export default function Login() {
 
     const styles = useSx(loginStyles)
 
+    const {t} = useTranslation()
+
+    const emailLabel = emailError?.message ? t(emailError.message) : t('Login.emailLabel')
+    const passwordLabel = passwordError?.message ? t(passwordError.message) : t('Login.passwordLabel')
+
     return (
         <Box
             sx={styles.backdrop}
         >
             <Box sx={styles.loginContainer}>
-                <Typography sx={styles.title} variant='h1'>Login</Typography>
+                <Typography sx={styles.title} variant='h1'>{t('Login.title')}</Typography>
                 <FormGroup
                     onSubmit={onSubmit}
                     sx={styles.form}
@@ -76,7 +82,7 @@ export default function Login() {
                         error={!!emailError}
                         htmlFor={`${htmlInputId.email}`}
                     >
-                        Email
+                        {emailLabel}
                     </InputLabel>
                     <OutlinedInput
                         id={`${htmlInputId.email}`}
@@ -90,7 +96,7 @@ export default function Login() {
                         error={!!passwordError}
                         htmlFor={`${htmlInputId.password}`}
                     >
-                        {passwordError?.message || 'Password'}
+                        {passwordLabel}
                     </InputLabel>
                     <OutlinedInput
                         id={`${htmlInputId.password}`}
@@ -99,7 +105,7 @@ export default function Login() {
                         {...register('password')}
                         type={showPassword ? 'text' : 'password'}
                         endAdornment={
-                            <InputAdornment  position="end">
+                            <InputAdornment position="end">
                                 <IconButton
                                     aria-label="toggle password visibility"
                                     onClick={handleClickShowPassword}
@@ -119,10 +125,10 @@ export default function Login() {
                         disabled={isNotValidated}
                         sx={styles.signInButton}
                     >
-                        {isNotValidated ? 'Fill in the fields' : 'Let\'s go!'}
+                        {isNotValidated ? t('Login.loginButtonDisabled') : t('Login.loginButton')}
                     </Button>
                     <StyledHeaderNavLink style={styles.signUpLink} to='/register'>
-                        Don't have an account?
+                        {t('Login.hasNotUserAccount')}
                     </StyledHeaderNavLink>
                 </FormGroup>
             </Box>

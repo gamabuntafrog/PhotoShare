@@ -15,6 +15,7 @@ import headerStyles, {StyledMenuNavLink} from "../headerStyles";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
+import {useTranslation} from "react-i18next";
 
 interface IMobileNavbarProps {
     isOpen: boolean,
@@ -32,6 +33,8 @@ export default function MobileNavbar({isOpen, openModal, closeModal, user, isLog
     const theme = useTheme()
     const styles = useSx(headerStyles)
     const isSmallerMobile = useMediaQuery(theme.breakpoints.down('mobile'));
+
+    const {t} = useTranslation()
 
     return (
         <SwipeableDrawer
@@ -56,9 +59,6 @@ export default function MobileNavbar({isOpen, openModal, closeModal, user, isLog
                                     <Avatar sx={{width: 50, height: 50}} src={user.avatar.url || ''}/>
                                     <Typography variant='h6' sx={{ml: 1}}>{username}</Typography>
                                 </StyledMenuNavLink>
-                                <StyledMenuNavLink onClick={closeModal} to='/settings'>
-                                    <SettingsIcon/>
-                                </StyledMenuNavLink>
                             </Box>
                             <Button
                                 sx={styles.mobileNavbarButton}
@@ -66,14 +66,9 @@ export default function MobileNavbar({isOpen, openModal, closeModal, user, isLog
                                 variant='outlined'
                                 onClick={exitFromAccount}
                             >
-                                Exit
+                                {t('Header.exitButton')}
                             </Button>
-                            <IconButton
-                                sx={styles.mobileNavbarButton}
-                                onClick={closeModal}
-                            >
-                                <CloseIcon/>
-                            </IconButton>
+
                         </>
                         :
                         <>
@@ -85,6 +80,15 @@ export default function MobileNavbar({isOpen, openModal, closeModal, user, isLog
                             </StyledMenuNavLink>
                         </>
                 }
+                <StyledMenuNavLink onClick={closeModal} to='/settings'>
+                    <SettingsIcon/>
+                </StyledMenuNavLink>
+                <IconButton
+                    sx={styles.mobileNavbarButton}
+                    onClick={closeModal}
+                >
+                    <CloseIcon/>
+                </IconButton>
             </Container>
         </SwipeableDrawer>
     )

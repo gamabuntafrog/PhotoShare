@@ -1,0 +1,36 @@
+{
+  "translation": {
+    "Settings": {
+      "title": "Settings",
+      "chooseLanguageTitle": "Language",
+      "chooseEnglish": "English",
+      "chooseUkrainian": "Українська",
+      "chooseColorTitle": "Color palette",
+      "chooseDarkTheme": "Change theme to dark",
+      "chooseLightTheme": "Change theme to light"
+    },
+    "Header": {
+      "exitButton": "Exit"
+    },
+    "Login": {
+      "title": "Login",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "loginButton": "Let's go!",
+      "loginButtonDisabled": "Fill in the fields",
+      "hasNotUserAccount": "Don't have an account?",
+      "requiredEmail": "Email is a required",
+      "wrongEmail": "Wrong email",
+      "passwordIsRequired": "Password is required",
+      "passwordMinLengthError": "Min password length is {{MIN_PASSWORD_LENGTH}} symbols",
+      "passwordMaxLengthError": "Max password length is {{MAX_PASSWORD_LENGTH}}"
+    },
+    "Register": {
+      "title": "Register",
+      "emailLabel": "Email",
+      "passwordLabel": "Password",
+      "loginButton": "Let's go!",
+      "hasUserAccount": "Don't have an account?"
+    }
+  }
+}

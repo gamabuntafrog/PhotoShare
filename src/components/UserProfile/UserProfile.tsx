@@ -15,7 +15,6 @@ import {ICurrentUser} from "../../types/user";
 import {AddAuthorModal} from "./UserProfileComponents/AddAuthorModal";
 import useSx from "../../hooks/useSx";
 import userProfileStyles from "./userProfileStyles";
-import Collections from "./UserProfileComponents/Collections";
 import ChangeUserProfile from "./UserProfileComponents/ChangeUserProfile";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import {StyledHeaderNavLink} from "../Header/headerStyles";
@@ -36,9 +35,6 @@ export default function UserProfile() {
     const {isSubscribed, toggleSubscribe} = useToggleSubscribe(id)
 
     const styles = useSx(userProfileStyles)
-
-    const match = useMatch('/posts')
-    console.log(match)
 
     if (isLoading || isUserUpdating) return <FullScreenLoader/>
 
@@ -84,11 +80,11 @@ export default function UserProfile() {
 
     return (
         <Box>
-            <AddAuthorModal
-                isAddUserModalOpen={isAddUserModalOpen}
-                closeAddAuthorModal={closeAddAuthorModal}
-                authorId={id}
-            />
+            {/*<AddAuthorModal*/}
+            {/*    isAddUserModalOpen={isAddUserModalOpen}*/}
+            {/*    closeAddAuthorModal={closeAddAuthorModal}*/}
+            {/*    authorId={id}*/}
+            {/*/>*/}
             <Box
                 sx={styles.wrapper}
             >
@@ -127,22 +123,22 @@ export default function UserProfile() {
                             {!isSubscribed ? 'Subscribe' : 'Unsubscribe'}
                         </Button>
                     }
-                    {(!isProfileOfCurrentUser && !isAddUserModalOpen) &&
-                        <Button
-                            variant='outlined'
-                            sx={{mt: 1}}
-                            onClick={openAddAuthorModal}>
-                            Add author to your collection
-                        </Button>
-                    }
+                    {/*{(!isProfileOfCurrentUser && !isAddUserModalOpen) &&*/}
+                    {/*    <Button*/}
+                    {/*        variant='outlined'*/}
+                    {/*        sx={{mt: 1}}*/}
+                    {/*        onClick={openAddAuthorModal}>*/}
+                    {/*        Add author to your collection*/}
+                    {/*    </Button>*/}
+                    {/*}*/}
 
                 </Box>
             </Box>
-            <Box sx={{padding: 3, display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '24px'}}>
-                <StyledHeaderNavLink className='first' to={`posts`}>POSTS</StyledHeaderNavLink>
-                <StyledHeaderNavLink sx={{ml: 3}} to={`collections`}>COLLECTIONS</StyledHeaderNavLink>
+            <Box sx={styles.navLinksWrapper}>
+                <StyledHeaderNavLink className='first' to={``} end>POSTS</StyledHeaderNavLink>
+                <StyledHeaderNavLink to={`collections`}>COLLECTIONS</StyledHeaderNavLink>
                 {canViewAllowedToViewCollections && (
-                    <StyledHeaderNavLink sx={{ml: 3}} to={`allowedToView`}>ALLOWED TO VIEW</StyledHeaderNavLink>
+                    <StyledHeaderNavLink to={`allowedToView`}>ALLOWED TO VIEW</StyledHeaderNavLink>
                 )}
             </Box>
             <Outlet/>

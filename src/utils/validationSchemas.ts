@@ -42,8 +42,8 @@ export const createPostValidationSchema = Yup.object({
     collectionIdIndex: Yup.number().min(0).required()
 }).required()
 
-const MIN_COLLECTION_TITLE_LENGTH = 3
-const MAX_COLLECTION_TITLE_LENGTH = 48
+export const MIN_COLLECTION_TITLE_LENGTH = 3
+export const MAX_COLLECTION_TITLE_LENGTH = 48
 
 export const createCollectionValidationSchema = Yup.object({
     title: Yup.string().min(MIN_COLLECTION_TITLE_LENGTH).max(MAX_COLLECTION_TITLE_LENGTH, `Max title length is ${MAX_COLLECTION_TITLE_LENGTH} symbols`).required(),
@@ -52,16 +52,17 @@ export const createCollectionValidationSchema = Yup.object({
 
 export const MIN_USERNAME_LENGTH = 4
 export const MAX_USERNAME_LENGTH = 20
-const MIN_PASSWORD_LENGTH = 6
-const MAX_PASSWORD_LENGTH = 50
+export const MIN_PASSWORD_LENGTH = 6
+export const MAX_PASSWORD_LENGTH = 50
 
-const passwordValidationSchema = yup.string().required('Password is required').min(MIN_PASSWORD_LENGTH, `Min password length is ${MIN_PASSWORD_LENGTH} symbols`)
-    .max(MAX_PASSWORD_LENGTH, `Max password length is ${MAX_PASSWORD_LENGTH} symbols`)
+const passwordValidationSchema = yup.string().required('Login.passwordIsRequired').min(MIN_PASSWORD_LENGTH, `Login.passwordMinLengthError`)
+    .max(MAX_PASSWORD_LENGTH, `Login.passwordMaxLengthError`)
 
 export const loginValidationSchema = yup.object({
-    email: yup.string().required('Email is a required').email('Wrong email'),
+    email: yup.string().required('Login.requiredEmail').email('Login.wrongEmail'),
     password: passwordValidationSchema,
 }).required()
+
 
 const usernameValidationSchema = Yup.string().min(MIN_USERNAME_LENGTH, `Minimal length is ${MIN_USERNAME_LENGTH} symbols`)
     .max(MAX_USERNAME_LENGTH, `Max length is ${MAX_USERNAME_LENGTH} symbols`).required('Username is required')

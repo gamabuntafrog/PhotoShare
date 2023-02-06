@@ -21,7 +21,8 @@ import {IResponseNotification, pullResponse, pushResponse} from "./redux/slices/
 import {extendedPostsApi, extendedUsersApi} from "./redux/api/rootApi";
 import FullScreenLoader from "./components/Loaders/FullScreenLoader";
 import Header from "./components/Header";
-
+import { useTranslation, initReactI18next } from "react-i18next";
+import i18n from "./utils/language/i18n";
 
 const tryAuth = async (dispatch: AppDispatch) => {
     try {
@@ -48,6 +49,8 @@ const responsedNotificationsCleaner = (dispatch: AppDispatch, notificationsLengt
         if (id) clearInterval(id)
     }
 }
+
+
 
 
 export default function App() {
@@ -116,6 +119,7 @@ export default function App() {
                 })}
             </Stack>
             <RouterProvider router={router}/>
+
         </Box>
     );
 

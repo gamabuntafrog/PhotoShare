@@ -1,0 +1,36 @@
+{
+  "translation": {
+    "Settings": {
+      "title": "Налаштуванння",
+      "chooseLanguageTitle": "Мова",
+      "chooseEnglish": "English",
+      "chooseUkrainian": "Українська",
+      "chooseColorTitle": "Кольорова палітра",
+      "chooseDarkTheme": "Змінити тему на темну",
+      "chooseLightTheme": "Змінити тему на світлу"
+    },
+    "Header": {
+      "exitButton": "Вийти"
+    },
+    "Login": {
+      "title": "Вхід",
+      "emailLabel": "Електронна пошта",
+      "passwordLabel": "Пароль",
+      "loginButton": "Вперед !",
+      "loginButtonDisabled": "Заповніть поля",
+      "hasNotUserAccount": "Немає облікового запису?",
+      "requiredEmail": "Електронна пошта обовязкова",
+      "wrongEmail": "Невірна електронна пошта",
+      "passwordIsRequired": "Пароль обов'язковий",
+      "passwordMinLengthError": "Мінімальна довжина паролю {{MIN_PASSWORD_LENGTH}} символа",
+      "passwordMaxLengthError": "Максимальна довжина паролю {{MAX_PASSWORD_LENGTH}} символа"
+    },
+    "Register": {
+      "title": "Реєстрація",
+      "emailLabel": "Електронна пошта",
+      "passwordLabel": "Пароль",
+      "loginButton": "Вперед !",
+      "hasUserAccount": "Немає облікового запису?"
+    }
+  }
+}

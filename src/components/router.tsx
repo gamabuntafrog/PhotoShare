@@ -26,7 +26,7 @@ const privateRouter = createBrowserRouter([
         ),
         children: [
             {
-                path: "",
+                index: true,
                 element: <Posts/>
             },
             {
@@ -38,8 +38,8 @@ const privateRouter = createBrowserRouter([
                 element: <UserProfile/>,
                 children: [
                     {
-                        path: "posts",
-                        element: <UsersPosts/>
+                        index: true,
+                        element: <UsersPosts/>,
                     },
                     {
                         path: "collections",

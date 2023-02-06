@@ -14,6 +14,9 @@ import {setPrimaryColor, toggleColorMode} from "../../redux/slices/themeSlice";
 import {colorsArray} from "../../utils/colors";
 import useSx from "../../hooks/useSx";
 import settingsStyles from "./settingsStyles";
+import i18n from "../../utils/language/i18n";
+import React from "react";
+import {useTranslation} from "react-i18next";
 
 
 export default function Settings() {
@@ -27,8 +30,9 @@ export default function Settings() {
     const changeColorMode = () => {
         dispatch(toggleColorMode())
     }
+    const {t} = useTranslation();
 
-    const nextColorMode = theme.palette.mode === 'dark' ? 'light' : 'dark'
+    const nextThemeMode = theme.palette.mode === 'dark' ? t('Settings.chooseLightTheme') : t('Settings.chooseDarkTheme')
 
     const styles = useSx(settingsStyles)
 
@@ -36,24 +40,40 @@ export default function Settings() {
         <Container
             sx={styles.container}
         >
-            <Typography variant='h1' sx={styles.title}>Settings</Typography>
+            <Typography variant='h1' sx={styles.title}>{t('Settings.title')}</Typography>
             <Box sx={styles.wrapper}>
-                <Typography variant='h2'>Color</Typography>
+                <Typography variant='h2'>{t('Settings.chooseLanguageTitle')}</Typography>
+                <Box sx={{display: 'flex', mt: 2, mb: 4}}>
+                    <Button
+                        variant='outlined'
+                        onClick={() => i18n.changeLanguage('en')}
+                    >
+                        {t('Settings.chooseEnglish')}
+                    </Button>
+                    <Button
+                        variant='outlined'
+                        sx={{ml: 2}}
+                        onClick={() => i18n.changeLanguage('ua')}
+                    >
+                        {t('Settings.chooseUkrainian')}
+                    </Button>
+                </Box>
+                <Typography textAlign='center' variant='h2'>{t('Settings.chooseColorTitle')}</Typography>
                 <Button
                     variant='outlined'
-                        sx={styles.colorModeButton}
+                    sx={styles.colorModeButton}
                     onClick={changeColorMode}
-                        color="inherit"
+                    color="inherit"
                 >
-                    Change mode to {nextColorMode}
+                    {nextThemeMode}
                 </Button>
                 <List
                     sx={styles.colorsList}
                 >
-                    {colorsArray.map((color) => {
+                    {colorsArray.map((color, index) => {
                         return (
                             <ListItem
-                                key={color.string}
+                                key={index}
                                 sx={styles.colorItem}
                             >
                                 <Button
@@ -61,7 +81,7 @@ export default function Settings() {
                                     sx={styles.colorButton(color.ref)}
                                     onClick={() => changePrimaryColor(color.enum)}
                                 >
-                                    {color.string}
+                                    {color.title[i18n.resolvedLanguage as 'en' | 'ua']}
                                 </Button>
                             </ListItem>
                         )
