@@ -10,7 +10,9 @@
       "chooseLightTheme": "Змінити тему на світлу"
     },
     "Header": {
-      "exitButton": "Вийти"
+      "exitButton": "Вийти",
+      "loginLink": "Увійти",
+      "registerLink": "Реєстрація"
     },
     "Login": {
       "title": "Вхід",

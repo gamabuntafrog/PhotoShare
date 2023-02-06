@@ -22,6 +22,7 @@ import loginStyles from "./loginStyles";
 import {NavLink} from "react-router-dom";
 import { StyledHeaderNavLink } from "../Header/headerStyles";
 import {useTranslation} from "react-i18next";
+import useShortTranslation from "../../hooks/useShortTranslation";
 
 
 interface IFormData {
@@ -62,17 +63,18 @@ export default function Login() {
 
     const styles = useSx(loginStyles)
 
-    const {t} = useTranslation()
+    // const {t} = useTranslation()
+    const t = useShortTranslation('Login')
 
-    const emailLabel = emailError?.message ? t(emailError.message) : t('Login.emailLabel')
-    const passwordLabel = passwordError?.message ? t(passwordError.message) : t('Login.passwordLabel')
+    const emailLabel = emailError?.message ? t(emailError.message) : t('emailLabel')
+    const passwordLabel = passwordError?.message ? t(passwordError.message) : t('passwordLabel')
 
     return (
         <Box
             sx={styles.backdrop}
         >
             <Box sx={styles.loginContainer}>
-                <Typography sx={styles.title} variant='h1'>{t('Login.title')}</Typography>
+                <Typography sx={styles.title} variant='h1'>{t('title')}</Typography>
                 <FormGroup
                     onSubmit={onSubmit}
                     sx={styles.form}
@@ -125,10 +127,10 @@ export default function Login() {
                         disabled={isNotValidated}
                         sx={styles.signInButton}
                     >
-                        {isNotValidated ? t('Login.loginButtonDisabled') : t('Login.loginButton')}
+                        {isNotValidated ? t('loginButtonDisabled') : t('loginButton')}
                     </Button>
                     <StyledHeaderNavLink style={styles.signUpLink} to='/register'>
-                        {t('Login.hasNotUserAccount')}
+                        {t('hasNotUserAccount')}
                     </StyledHeaderNavLink>
                 </FormGroup>
             </Box>

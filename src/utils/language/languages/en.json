@@ -10,7 +10,9 @@
       "chooseLightTheme": "Change theme to light"
     },
     "Header": {
-      "exitButton": "Exit"
+      "exitButton": "Exit",
+      "loginLink": "Login",
+      "registerLink": "Register"
     },
     "Login": {
       "title": "Login",

@@ -16,6 +16,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
 import {useTranslation} from "react-i18next";
+import useShortTranslation from "../../../hooks/useShortTranslation";
 
 interface IMobileNavbarProps {
     isOpen: boolean,
@@ -34,7 +35,7 @@ export default function MobileNavbar({isOpen, openModal, closeModal, user, isLog
     const styles = useSx(headerStyles)
     const isSmallerMobile = useMediaQuery(theme.breakpoints.down('mobile'));
 
-    const {t} = useTranslation()
+    const t = useShortTranslation('Header')
 
     return (
         <SwipeableDrawer
@@ -66,17 +67,17 @@ export default function MobileNavbar({isOpen, openModal, closeModal, user, isLog
                                 variant='outlined'
                                 onClick={exitFromAccount}
                             >
-                                {t('Header.exitButton')}
+                                {t('exitButton')}
                             </Button>
 
                         </>
                         :
                         <>
                             <StyledMenuNavLink onClick={closeModal} to='/'>
-                                <Typography variant='h6'>Login</Typography>
+                                <Typography variant='h6'>{t('loginLink')}</Typography>
                             </StyledMenuNavLink>
                             <StyledMenuNavLink onClick={closeModal} to='/register'>
-                                <Typography variant='h6'>Register</Typography>
+                                <Typography variant='h6'>{t('registerLink')}</Typography>
                             </StyledMenuNavLink>
                         </>
                 }
