@@ -60,7 +60,7 @@ export const colorsArray = [
     {
         title: {
             en: 'orange',
-            ua: 'оранжевий'
+            ua: 'помаранчевий'
         },
         enum: colorTypes.orange,
         ref: orange[500]
@@ -92,7 +92,7 @@ export const colorsArray = [
     {
         title: {
             en: 'pink',
-            ua: 'розовий'
+            ua: 'рожевий'
         },
         enum: colorTypes.pink,
         ref: pink[500]

@@ -46,6 +46,43 @@
       "passwordMaxLengthError": "Максимальна довжина паролю {{MAX_PASSWORD_LENGTH}} символів",
       "repeatPassword": "Повторити пароль",
       "passwordsDoNotMatch": "Паролі не співпадають"
+    },
+    "UserProfile": {
+      "postsCount": "{{postsCount}} постів",
+      "subscribesCount": "{{subscribesCount}} підписок",
+      "subscribersCount": "{{subscribersCount}} підписників",
+      "changeProfileButton": "Змінити профіль",
+      "subscribeButton": "Підписатися",
+      "unsubscribeButton": "Відписатися",
+      "linkToPosts": "ПОСТИ",
+      "linkToCollections": "КОЛЕКЦІЇ",
+      "linkToAllowedToView": "ДОЗВОЛЕНИЙ ПЕРЕГЛЯД",
+      "userCreatedAt": "Дата реєстрації {{date}}",
+      "ChangeUserProfile": {
+        "changeAvatarButtonAsLabel": "Змінити аватар",
+        "usernameLabel": "Ім'я користувача",
+        "usernameRequired": "Ім'я користувача обовя'зкове",
+        "usernameMinLengthError": "Мінімальна довжина імені користувача {{MIN_USERNAME_LENGTH}} символа",
+        "usernameMaxLengthError": "Максимальна довжина імені користувача {{MAX_USERNAME_LENGTH}} символів",
+        "cancelChangesButton": "Скасувати зміни",
+        "saveChangesButton": "Зберегти зміни"
+      },
+      "Collections": {
+        "Error": "Помилка",
+        "noCollectionsMessage": "Колекцій ще немає"
+      },
+      "UserAllowedToViewCollections": {
+        "Error": "Помилка",
+        "noCollectionsMessage": "Колекцій ще немає"
+      },
+      "UserCollections": {
+        "Error": "Помилка",
+        "noCollectionsMessage": "Колекцій ще немає"
+      },
+      "UserPosts": {
+        "Error": "Помилка",
+        "noPostsMessage": "Постів ще немає"
+      }
     }
   }
 }

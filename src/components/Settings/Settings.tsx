@@ -17,6 +17,7 @@ import settingsStyles from "./settingsStyles";
 import i18n from "../../utils/language/i18n";
 import React from "react";
 import {useTranslation} from "react-i18next";
+import useShortTranslation from "../../hooks/useShortTranslation";
 
 
 export default function Settings() {
@@ -30,7 +31,7 @@ export default function Settings() {
     const changeColorMode = () => {
         dispatch(toggleColorMode())
     }
-    const {t} = useTranslation();
+    const t = useShortTranslation({componentNameKey: 'Settings'});
 
     const nextThemeMode = theme.palette.mode === 'dark' ? t('Settings.chooseLightTheme') : t('Settings.chooseDarkTheme')
 
@@ -40,25 +41,25 @@ export default function Settings() {
         <Container
             sx={styles.container}
         >
-            <Typography variant='h1' sx={styles.title}>{t('Settings.title')}</Typography>
+            <Typography variant='h1' sx={styles.title}>{t('title')}</Typography>
             <Box sx={styles.wrapper}>
-                <Typography variant='h2'>{t('Settings.chooseLanguageTitle')}</Typography>
+                <Typography variant='h2'>{t('chooseLanguageTitle')}</Typography>
                 <Box sx={{display: 'flex', mt: 2, mb: 4}}>
                     <Button
                         variant='outlined'
                         onClick={() => i18n.changeLanguage('en')}
                     >
-                        {t('Settings.chooseEnglish')}
+                        {t('chooseEnglish')}
                     </Button>
                     <Button
                         variant='outlined'
                         sx={{ml: 2}}
                         onClick={() => i18n.changeLanguage('ua')}
                     >
-                        {t('Settings.chooseUkrainian')}
+                        {t('chooseUkrainian')}
                     </Button>
                 </Box>
-                <Typography textAlign='center' variant='h2'>{t('Settings.chooseColorTitle')}</Typography>
+                <Typography textAlign='center' variant='h2'>{t('chooseColorTitle')}</Typography>
                 <Button
                     variant='outlined'
                     sx={styles.colorModeButton}

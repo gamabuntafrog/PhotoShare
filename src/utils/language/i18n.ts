@@ -22,7 +22,6 @@ i18n
                 MAX_PASSWORD_LENGTH,
                 MIN_USERNAME_LENGTH,
                 MAX_USERNAME_LENGTH,
-
             }
         },
         detection: {

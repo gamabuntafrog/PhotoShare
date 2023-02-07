@@ -1,12 +1,8 @@
 import {Box, ImageList, ImageListItem, styled, Typography} from "@mui/material";
-import {NavLink} from "react-router-dom";
-import {ICollectionWithPosts} from "../../../types/collection";
-import {useTheme} from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import {ICollectionForIUser} from "../../../types/user";
 import useSx from "../../../hooks/useSx";
 import userProfileStyles, {StyledCollectionItem} from "../userProfileStyles";
-import useMediaQueries from "../../../hooks/useMediaQueries";
+import useShortTranslation from "../../../hooks/useShortTranslation";
 
 interface ICollectionItemProps {
     collections: ICollectionForIUser[]
@@ -16,6 +12,7 @@ interface ICollectionItemProps {
 export default function Collections({collections}: ICollectionItemProps) {
 
     const {collections: styles} = useSx(userProfileStyles)
+    const t = useShortTranslation({componentNameKey: 'UserProfile.Collections'})
 
     if (collections.length === 0) {
         return (
@@ -23,7 +20,7 @@ export default function Collections({collections}: ICollectionItemProps) {
                 sx={styles.container}
             >
                 <Typography variant='h5' sx={{mt: 8}} textAlign='center'>
-                    There already no collections yet
+                    {t('noCollectionsMessage')}
                 </Typography>
             </Box>
         )

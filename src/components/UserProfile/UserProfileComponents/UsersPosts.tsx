@@ -2,13 +2,14 @@ import {useParams} from "react-router-dom";
 import React from "react";
 import {extendedCollectionsApi, extendedPostsApi} from "../../../redux/api/rootApi";
 import MiniLoader from "../../Loaders/MiniLoader";
-import {Box, ImageList} from "@mui/material";
+import {Box, ImageList, Typography} from "@mui/material";
 import Collections from "./Collections";
 import usePostsActions from "../../../hooks/usePostsActions";
 import useSx from "../../../hooks/useSx";
 import postsStyles from "../../Posts/postsStyles";
 import useMediaQueries from "../../../hooks/useMediaQueries";
 import PostItem from "../../PostItem";
+import useShortTranslation from "../../../hooks/useShortTranslation";
 
 
 export default function UsersPosts() {
@@ -25,12 +26,18 @@ export default function UsersPosts() {
 
     const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
 
+    const t = useShortTranslation({componentNameKey: 'UserProfile.UsersPosts'})
+
     if (isLoading) {
         return <MiniLoader/>
     }
 
-    if (isError || !posts) {
-        return <h1>Error</h1>
+    if (isError) {
+        return <Typography variant='h1'>{t('error')}</Typography>
+    }
+
+    if (!posts) {
+        return <Typography variant='h1'>{t('noPostsMessage')}</Typography>
     }
 
     return (

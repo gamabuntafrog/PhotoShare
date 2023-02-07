@@ -46,6 +46,43 @@
       "passwordMaxLengthError": "Max password length is {{MAX_PASSWORD_LENGTH}}",
       "repeatPassword": "Repeat password",
       "passwordsDoNotMatch": "Passwords don't match"
+    },
+    "UserProfile": {
+      "postsCount": "{{postsCount}} posts",
+      "subscribesCount": "{{subscribesCount}} subscribes",
+      "subscribersCount": "{{subscribersCount}} subscribers",
+      "changeProfileButton": "Change profile",
+      "subscribeButton": "Subscribe",
+      "unsubscribeButton": "Unsubscribe",
+      "linkToPosts": "POSTS",
+      "linkToCollections": "COLLECTIONS",
+      "linkToAllowedToView": "ALLOWED TO VIEW",
+      "userCreatedAt": "Created at {{date}}",
+      "ChangeUserProfile": {
+        "changeAvatarButtonAsLabel": "Change avatar",
+        "usernameLabel": "Username",
+        "usernameRequired": "Username is required",
+        "usernameMinLengthError": "Min username length is {{MIN_USERNAME_LENGTH}} symbols",
+        "usernameMaxLengthError": "Max username length is {{MAX_USERNAME_LENGTH}} symbols",
+        "cancelChangingButton": "Cancel changing",
+        "saveChangesButton": "Save changes"
+      },
+      "Collections": {
+        "Error": "Error",
+        "noCollectionsMessage": "There already no collections yet"
+      },
+      "UserAllowedToViewCollections": {
+        "Error": "Error",
+        "noCollectionsMessage": "There already no collections yet"
+      },
+      "UserCollections": {
+        "Error": "Error",
+        "noCollectionsMessage": "There already no collections yet"
+      },
+      "UserPosts": {
+        "Error": "Error",
+        "noPostsMessage": "There already no posts yet"
+      }
     }
   }
 }

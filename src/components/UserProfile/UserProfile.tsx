@@ -18,6 +18,8 @@ import userProfileStyles from "./userProfileStyles";
 import ChangeUserProfile from "./UserProfileComponents/ChangeUserProfile";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import {StyledHeaderNavLink} from "../Header/headerStyles";
+import useShortTranslation from "../../hooks/useShortTranslation";
+import {useTranslation} from "react-i18next";
 
 
 export default function UserProfile() {
@@ -35,6 +37,9 @@ export default function UserProfile() {
     const {isSubscribed, toggleSubscribe} = useToggleSubscribe(id)
 
     const styles = useSx(userProfileStyles)
+
+    const t = useShortTranslation({componentNameKey: 'UserProfile'})
+
 
     if (isLoading || isUserUpdating) return <FullScreenLoader/>
 
@@ -103,16 +108,16 @@ export default function UserProfile() {
                             <Typography variant='h4'>{username}</Typography>
                             <Typography variant='body1'>{email}</Typography>
                             <Box sx={styles.userInfoSecondWrapper}>
-                                <Typography sx={styles.infoItem}>{postsCount} posts</Typography>
-                                <Typography sx={styles.infoItem}>{subscribesCount} subscribes</Typography>
-                                <Typography sx={styles.infoItem}>{subscribersCount} subscribers</Typography>
+                                <Typography sx={styles.infoItem}>{t('postsCount', {postsCount})}</Typography>
+                                <Typography sx={styles.infoItem}> {t('subscribesCount', {subscribesCount})}</Typography>
+                                <Typography sx={styles.infoItem}>{t('subscribersCount', {subscribersCount})}</Typography>
                             </Box>
-                            <Typography>Created at {formattedCreatedAt}</Typography>
+                            <Typography>{t('userCreatedAt', {date: formattedCreatedAt})}</Typography>
                         </>
                     }
                     {isProfileOfCurrentUser && !isChangingMode &&
                         <Button onClick={turnOnChangingMode}>
-                            Change profile
+                            {t('changeProfileButton')}
                         </Button>
                     }
                     {!isProfileOfCurrentUser &&
@@ -120,7 +125,7 @@ export default function UserProfile() {
                             variant='outlined'
                             sx={{mt: 1}}
                             onClick={onToggleSubscribe}>
-                            {!isSubscribed ? 'Subscribe' : 'Unsubscribe'}
+                            {!isSubscribed ? t('subscribeButton') : t('unsubscribeButton')}
                         </Button>
                     }
                     {/*{(!isProfileOfCurrentUser && !isAddUserModalOpen) &&*/}
@@ -135,10 +140,10 @@ export default function UserProfile() {
                 </Box>
             </Box>
             <Box sx={styles.navLinksWrapper}>
-                <StyledHeaderNavLink className='first' to={``} end>POSTS</StyledHeaderNavLink>
-                <StyledHeaderNavLink to={`collections`}>COLLECTIONS</StyledHeaderNavLink>
+                <StyledHeaderNavLink className='first' to={``} end>{t('linkToPosts')}</StyledHeaderNavLink>
+                <StyledHeaderNavLink to={`collections`}>{t('linkToCollections')}</StyledHeaderNavLink>
                 {canViewAllowedToViewCollections && (
-                    <StyledHeaderNavLink to={`allowedToView`}>ALLOWED TO VIEW</StyledHeaderNavLink>
+                    <StyledHeaderNavLink to={`allowedToView`}>{t('linkToAllowedToView')}</StyledHeaderNavLink>
                 )}
             </Box>
             <Outlet/>

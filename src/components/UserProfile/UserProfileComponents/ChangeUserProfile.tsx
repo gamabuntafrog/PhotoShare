@@ -9,6 +9,7 @@ import {changeProfileValidationSchema} from "../../../utils/validationSchemas";
 import {ICurrentUser} from "../../../types/user";
 import {Dispatch, SetStateAction, useEffect} from "react";
 import setPreviewImage from "../../../utils/setPreviewImage";
+import useShortTranslation from "../../../hooks/useShortTranslation";
 
 interface ChangeUserProfile {
     turnOffChangingMode: () => void,
@@ -26,7 +27,6 @@ export default function ChangeUserProfile({turnOffChangingMode, setAvatarFile, s
 
     const {
         register,
-        setValue,
         handleSubmit,
         watch,
         formState: {errors}
@@ -60,7 +60,9 @@ export default function ChangeUserProfile({turnOffChangingMode, setAvatarFile, s
 
     const onSubmit = handleSubmit(({username, imageList}) => saveChanges({username, imageList}));
 
+    const t = useShortTranslation({componentNameKey: 'UserProfile.ChangeUserProfile'})
 
+    const usernameLabel = usernameError?.message ? t(usernameError.message) : t('usernameLabel')
 
     return (
         <FormGroup
@@ -73,7 +75,7 @@ export default function ChangeUserProfile({turnOffChangingMode, setAvatarFile, s
                 sx={{my: 1}}
             >
                 <InputLabel sx={{cursor: 'pointer', color: 'inherit', width: '100%'}} htmlFor='avatar'>
-                    Change avatar
+                    {t('changeAvatarButtonAsLabel')}
                 </InputLabel>
                 <input
                     {...register('imageList')}
@@ -84,25 +86,31 @@ export default function ChangeUserProfile({turnOffChangingMode, setAvatarFile, s
                 />
             </Button>
 
-            <InputLabel error={!!usernameError}
-                        htmlFor='username'>{usernameError?.message || 'Username'}</InputLabel>
-            <OutlinedInput defaultValue={currentUser.username} error={!!usernameError} {...register('username')}
-                           id='username' sx={{
-                my: 1
-            }}/>
+            <InputLabel
+                error={!!usernameError}
+                htmlFor='username'>
+                {usernameLabel}
+            </InputLabel>
+            <OutlinedInput
+                defaultValue={currentUser.username}
+                error={!!usernameError}
+                {...register('username')}
+                id='username'
+                sx={{my: 1}}
+            />
             <Button
                 type='button'
                 color='error'
                 sx={{mb: 1}}
                 onClick={turnOffChangingMode}
             >
-                Cancel Changing
+                {t('cancelChangesButton')}
             </Button>
             <Button
                 disabled={isErrors}
                 type='submit'
                 onClick={onSubmit}>
-                Save changes
+                {t('saveChangesButton')}
             </Button>
         </FormGroup>
     )

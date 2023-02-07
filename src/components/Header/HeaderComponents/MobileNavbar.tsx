@@ -35,7 +35,7 @@ export default function MobileNavbar({isOpen, openModal, closeModal, user, isLog
     const styles = useSx(headerStyles)
     const isSmallerMobile = useMediaQuery(theme.breakpoints.down('mobile'));
 
-    const t = useShortTranslation('Header')
+    const t = useShortTranslation({componentNameKey: 'Header'});
 
     return (
         <SwipeableDrawer

@@ -69,7 +69,7 @@ export default function Register() {
 
     const styles = useSx(registerStyles)
 
-    const t = useShortTranslation('Register')
+    const t = useShortTranslation({componentNameKey: 'Register'})
 
     const emailLabel = emailError?.message ? t(emailError.message) : t('emailLabel')
     const usernameLabel = usernameError?.message ? t(usernameError.message) : t('usernameLabel')

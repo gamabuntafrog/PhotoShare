@@ -22,7 +22,7 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
 
     const {username, _id: currentUserId} = user || {}
 
-    const t = useShortTranslation('Header');
+    const t = useShortTranslation({componentNameKey: 'Header'});
 
     return (
         <Box

@@ -107,7 +107,7 @@ export default function ThemeAppWrapper() {
     );
 
     const {palette} = theme
-    console.log(palette.primary.standard)
+
     const setColorsInCss = () => {
         Object.keys(palette.primary).forEach((key) => {
             const color = palette.primary[key as keyof PaletteColor]

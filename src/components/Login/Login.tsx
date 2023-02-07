@@ -64,7 +64,7 @@ export default function Login() {
     const styles = useSx(loginStyles)
 
     // const {t} = useTranslation()
-    const t = useShortTranslation('Login')
+    const t = useShortTranslation({componentNameKey: 'Login'})
 
     const emailLabel = emailError?.message ? t(emailError.message) : t('emailLabel')
     const passwordLabel = passwordError?.message ? t(passwordError.message) : t('passwordLabel')
