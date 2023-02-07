@@ -98,6 +98,18 @@
       "subscribeButton": "Subscribe",
       "unsubscribeButton": "Unsubscribe",
       "subscribersCount": "{{subscribersCount}} subscribers"
+    },
+    "CreateCollectionModal": {
+      "loading": "Loading...",
+      "title": "Create collection",
+      "requiredTags": "Tags are required",
+      "requiredTitle": "Title is required",
+      "submitButton": "Create",
+      "titleLabel": "Title",
+      "titleMaxLengthError": "Max title length is {{MAX_COLLECTION_TITLE_LENGTH}} symbols",
+      "titleMinLengthError": "Min title length is {{MIN_COLLECTION_TITLE_LENGTH}} symbols",
+      "tagValidationError": "Every tag must have \"#\" ang min length 3 symbols",
+      "tagsLabel": "Tags"
     }
   }
 }

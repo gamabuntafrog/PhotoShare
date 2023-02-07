@@ -3,7 +3,13 @@ import {initReactI18next} from "react-i18next";
 import ua from "./languages/ua.json";
 import LanguageDetector from 'i18next-browser-languagedetector';
 import en from './languages/en.json'
-import {MAX_PASSWORD_LENGTH, MAX_USERNAME_LENGTH, MIN_PASSWORD_LENGTH, MIN_USERNAME_LENGTH} from "../validationSchemas";
+import {
+    MAX_COLLECTION_TITLE_LENGTH,
+    MAX_PASSWORD_LENGTH,
+    MAX_USERNAME_LENGTH, MIN_COLLECTION_TITLE_LENGTH,
+    MIN_PASSWORD_LENGTH,
+    MIN_USERNAME_LENGTH
+} from "../validationSchemas";
 
 i18n
     .use(LanguageDetector)
@@ -22,6 +28,8 @@ i18n
                 MAX_PASSWORD_LENGTH,
                 MIN_USERNAME_LENGTH,
                 MAX_USERNAME_LENGTH,
+                MAX_COLLECTION_TITLE_LENGTH,
+                MIN_COLLECTION_TITLE_LENGTH
             }
         },
         detection: {
