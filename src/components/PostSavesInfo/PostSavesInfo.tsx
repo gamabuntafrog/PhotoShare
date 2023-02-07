@@ -7,6 +7,7 @@ import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import React from "react";
 import useSx from "../../hooks/useSx";
 import postSavesInfoStyles from "./postSavesInfoStyles";
+import useShortTranslation from "../../hooks/useShortTranslation";
 
 interface ISavesInfoProps {
     collections: ISavesInfo[],
@@ -25,7 +26,10 @@ export default function PostSavesInfo({collections, toggleSave, postId, isSaved,
         toggleSave(postId, collectionId, isSaved)
     }
 
+    const t = useShortTranslation({componentNameKey: 'PostSavesInfo'})
+
     const styles = useSx(postSavesInfoStyles)
+
 
     return (
         <Box sx={styles.wrapper}>
@@ -50,6 +54,8 @@ export default function PostSavesInfo({collections, toggleSave, postId, isSaved,
                 sx={styles.menuList}
             >
                 {collections.map(({title, isSaved, collectionId}) => {
+                    const postActionLabel = isSaved ? t('deletePostButton') : t('savePostButton')
+
                     return (
                         <MenuItem sx={styles.menuItem} key={collectionId} onClick={() => onToggleSave(postId, collectionId, isSaved)}>
                             <ListItemText sx={{mr: 1}}>
@@ -61,7 +67,7 @@ export default function PostSavesInfo({collections, toggleSave, postId, isSaved,
                                 sx={styles.menuItemButton}
                                 variant='contained'
                             >
-                                {isSaved ? 'delete' : 'save'}
+                                {postActionLabel}
                             </Button>
                         </MenuItem>
                     )
@@ -76,7 +82,7 @@ export default function PostSavesInfo({collections, toggleSave, postId, isSaved,
                             openModal()
                         }}
                     >
-                        Create new collection
+                        {t('createNewCollectionButton')}
                     </Button>
                 </Box>
             </Menu>

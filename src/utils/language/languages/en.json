@@ -68,21 +68,36 @@
         "saveChangesButton": "Save changes"
       },
       "Collections": {
-        "Error": "Error",
+        "error": "Error",
         "noCollectionsMessage": "There already no collections yet"
       },
       "UserAllowedToViewCollections": {
-        "Error": "Error",
+        "error": "Error",
         "noCollectionsMessage": "There already no collections yet"
       },
       "UserCollections": {
-        "Error": "Error",
+        "error": "Error",
         "noCollectionsMessage": "There already no collections yet"
       },
       "UserPosts": {
-        "Error": "Error",
+        "error": "Error",
         "noPostsMessage": "There already no posts yet"
       }
+    },
+    "Posts": {
+      "error": "Error",
+      "noPostsMessage": "There already no posts yet"
+    },
+    "PostSavesInfo": {
+      "savePostButton": "Save",
+      "deletePostButton": "Delete",
+      "createNewCollectionButton": "Create new collection"
+    },
+    "Post": {
+      "doesNotExists": "Post does not exist",
+      "subscribeButton": "Subscribe",
+      "unsubscribeButton": "Unsubscribe",
+      "subscribersCount": "{{subscribersCount}} subscribers"
     }
   }
 }

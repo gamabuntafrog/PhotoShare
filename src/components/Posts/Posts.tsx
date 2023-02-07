@@ -7,6 +7,7 @@ import FullScreenLoader from "../Loaders/FullScreenLoader";
 import useSx from "../../hooks/useSx";
 import postsStyles from "./postsStyles";
 import useMediaQueries from "../../hooks/useMediaQueries";
+import useShortTranslation from "../../hooks/useShortTranslation";
 
 
 
@@ -26,12 +27,22 @@ export default function Posts() {
 
     const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
 
+    const t = useShortTranslation({componentNameKey: 'Posts'})
+
     if (isPostsLoading) return <FullScreenLoader/>
 
     if (postsError) {
         return (
             <Container sx={styles.errorContainer}>
-                <Typography variant='h1' sx={{textAlign: 'center'}}>Error</Typography>
+                <Typography variant='h1' sx={{textAlign: 'center'}}>{t('error')}</Typography>
+            </Container>
+        )
+    }
+
+    if (posts.length === 0) {
+        return (
+            <Container sx={styles.errorContainer}>
+                <Typography variant='h1' sx={{textAlign: 'center'}}>{t('noPostsMessage')}</Typography>
             </Container>
         )
     }
@@ -52,7 +63,6 @@ export default function Posts() {
                     key={post._id}
                 />)}
             </ImageList>
-
         </Box>
     )
 }

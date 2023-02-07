@@ -83,6 +83,21 @@
         "Error": "Помилка",
         "noPostsMessage": "Постів ще немає"
       }
+    },
+    "Posts": {
+      "error": "Помилка",
+      "noPostsMessage": "Постів ще немає"
+    },
+    "PostSavesInfo": {
+      "savePostButton": "Зберегти",
+      "deletePostButton": "Видалити",
+      "createNewCollectionButton": "Створити нову колекцію"
+    },
+    "Post": {
+      "doesNotExists": "Такого поста не існує",
+      "subscribeButton": "Підписатися",
+      "unsubscribeButton": "Відписатися",
+      "subscribersCount": "{{subscribersCount}} підписників"
     }
   }
 }

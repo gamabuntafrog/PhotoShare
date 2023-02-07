@@ -33,7 +33,7 @@ export default function Settings() {
     }
     const t = useShortTranslation({componentNameKey: 'Settings'});
 
-    const nextThemeMode = theme.palette.mode === 'dark' ? t('Settings.chooseLightTheme') : t('Settings.chooseDarkTheme')
+    const nextThemeMode = theme.palette.mode === 'dark' ? t('chooseLightTheme') : t('chooseDarkTheme')
 
     const styles = useSx(settingsStyles)
 

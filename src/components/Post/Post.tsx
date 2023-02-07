@@ -1,9 +1,6 @@
 import {Avatar, Box, Button, Container, IconButton, Menu, MenuItem, OutlinedInput, Typography} from "@mui/material";
 import {NavLink, useParams} from "react-router-dom";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import CommentIcon from "@mui/icons-material/Comment";
-import {useTheme} from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import React, {useEffect, useState} from "react";
@@ -14,9 +11,11 @@ import usePostActions from "../../hooks/usePostActions";
 import {ICurrentUser} from "../../types/user";
 import useToggleSubscribe from "../../hooks/useToggleSubscribe";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
-import useMediaQueries from "../../hooks/useMediaQueries";
 import useSx from "../../hooks/useSx";
 import postStyles, {StyledPostImage} from "./postStyles";
+import DeleteIcon from '@mui/icons-material/Delete';
+import useShortTranslation from "../../hooks/useShortTranslation";
+
 
 interface IAuthorOfPostInfoProps {
     authorId: string,
@@ -39,6 +38,10 @@ function AuthorOfPostInfo(
         onToggleSubscribe
     }: IAuthorOfPostInfoProps) {
 
+    const t = useShortTranslation({componentNameKey: 'Post'})
+
+    const userActionsButton = isSubscribed ? t('subscribeButton') : t('unsubscribeButton')
+
     return (
         <Box
             sx={{display: 'flex'}}
@@ -58,7 +61,7 @@ function AuthorOfPostInfo(
                     }}
                 >
                     <Typography variant='h6'>{username}</Typography>
-                    <Typography variant='caption'>{subscribersCount} subscribers</Typography>
+                    <Typography variant='caption'>{t('subscribersCount', {subscribersCount})}</Typography>
                 </Box>
             </NavLink>
             {!isUserAuthorOfPost && <Button
@@ -69,7 +72,7 @@ function AuthorOfPostInfo(
                 variant='contained'
                 onClick={onToggleSubscribe}
             >
-                {!isSubscribed ? 'Subscribe' : 'Unsubscribe'}
+                {userActionsButton}
             </Button>}
         </Box>
     )
@@ -89,6 +92,7 @@ export default function Post() {
     const [post, {toggleLike, toggleSave, updateSavesInfo, deletePost}] = usePostActions({initPost: data})
     const {toggleSubscribe, isSubscribed} = useToggleSubscribe(post?.author._id || '')
 
+    const t = useShortTranslation({componentNameKey: 'Post'})
 
     const styles = useSx(postStyles)
 
@@ -96,9 +100,9 @@ export default function Post() {
 
     if (!post || !post.author) {
         return (
-            <Box>
-                <Typography variant='h1'>404 Not Found</Typography>
-            </Box>
+            <Container sx={{height: '92vh', ...styles.postContainer}}>
+                <Typography variant='h1' textAlign='center'>{t('doesNotExists')}</Typography>
+            </Container>
         )
     }
 
@@ -150,12 +154,17 @@ export default function Post() {
                         <Typography sx={{ml: 0.5}}>
                             {likesCount}
                         </Typography>
-                        <PostSavesInfo collections={savesInfo} toggleSave={toggleSave} postId={postId} isSaved={isSaved}
-                                       openModal={openModal}/>
+                        <PostSavesInfo
+                            collections={savesInfo}
+                            toggleSave={toggleSave}
+                            postId={postId}
+                            isSaved={isSaved}
+                            openModal={openModal}
+                        />
                         {isUserAuthorOfPost &&
-                            <Button color='error' onClick={onDeletePost}>
-                                Delete
-                            </Button>
+                            <IconButton color='error' onClick={onDeletePost}>
+                                <DeleteIcon/>
+                            </IconButton>
                         }
                     </Box>
                     <Typography variant='h3'>{title}</Typography>
