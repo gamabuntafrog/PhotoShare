@@ -30,9 +30,22 @@
     "Register": {
       "title": "Register",
       "emailLabel": "Email",
+      "usernameLabel": "Username",
+      "usernameRequired": "Username is required",
+      "usernameMinLengthError": "Min username length is {{MIN_USERNAME_LENGTH}} symbols",
+      "usernameMaxLengthError": "Max username length is {{MAX_USERNAME_LENGTH}} symbols",
       "passwordLabel": "Password",
+      "repeatPasswordLabel": "Repeat password",
+      "loginButtonDisabled": "Fill in the fields",
       "loginButton": "Let's go!",
-      "hasUserAccount": "Don't have an account?"
+      "hasUserAccount": "Don't have an account?",
+      "requiredEmail": "Email is a required",
+      "wrongEmail": "Wrong email",
+      "passwordIsRequired": "Password is required",
+      "passwordMinLengthError": "Min password length is {{MIN_PASSWORD_LENGTH}} symbols",
+      "passwordMaxLengthError": "Max password length is {{MAX_PASSWORD_LENGTH}}",
+      "repeatPassword": "Repeat password",
+      "passwordsDoNotMatch": "Passwords don't match"
     }
   }
 }

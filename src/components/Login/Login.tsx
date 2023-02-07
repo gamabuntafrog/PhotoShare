@@ -68,6 +68,7 @@ export default function Login() {
 
     const emailLabel = emailError?.message ? t(emailError.message) : t('emailLabel')
     const passwordLabel = passwordError?.message ? t(passwordError.message) : t('passwordLabel')
+    const submitButtonText = isNotValidated ? t('loginButtonDisabled') : t('loginButton')
 
     return (
         <Box
@@ -127,7 +128,7 @@ export default function Login() {
                         disabled={isNotValidated}
                         sx={styles.signInButton}
                     >
-                        {isNotValidated ? t('loginButtonDisabled') : t('loginButton')}
+                        {submitButtonText}
                     </Button>
                     <StyledHeaderNavLink style={styles.signUpLink} to='/register'>
                         {t('hasNotUserAccount')}

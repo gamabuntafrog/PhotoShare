@@ -1,6 +1,6 @@
 import {ICurrentUser} from "../../../types/user";
 import useSx from "../../../hooks/useSx";
-import headerStyles, {StyledHeaderNavLink} from "../headerStyles";
+import headerStyles, {StyledHeaderNavLink, StyledMenuNavLink} from "../headerStyles";
 import {Box, Button, IconButton} from "@mui/material";
 import {NavLink} from "react-router-dom";
 import AddBoxIcon from "@mui/icons-material/AddBox";
@@ -8,6 +8,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
 import React from "react";
 import {useTranslation} from "react-i18next";
+import useShortTranslation from "../../../hooks/useShortTranslation";
 
 interface IDesktopHeaderNavigationProps {
     user: ICurrentUser | null,
@@ -21,7 +22,7 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
 
     const {username, _id: currentUserId} = user || {}
 
-    const {t} = useTranslation();
+    const t = useShortTranslation('Header');
 
     return (
         <Box
@@ -79,13 +80,18 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
                             color='error'
                             onClick={exitFromAccount}
                         >
-                            {t('Header.exitButton')}
+                            {t('exitButton')}
                         </Button>
                     </>
                     :
                     <>
-                        <StyledHeaderNavLink to='/'>Login</StyledHeaderNavLink>
-                        <StyledHeaderNavLink to='/register'>Register</StyledHeaderNavLink>
+                        <StyledHeaderNavLink to='/'>{t('loginLink')}</StyledHeaderNavLink>
+                        <StyledHeaderNavLink to='/register'>{t('registerLink')}</StyledHeaderNavLink>
+                        <StyledHeaderNavLink to='/settings'>
+                            <IconButton sx={{color: 'currentColor'}}>
+                                <SettingsIcon/>
+                            </IconButton>
+                        </StyledHeaderNavLink>
                     </>
             }
         </Box>

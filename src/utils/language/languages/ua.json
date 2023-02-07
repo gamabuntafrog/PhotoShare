@@ -30,9 +30,22 @@
     "Register": {
       "title": "Реєстрація",
       "emailLabel": "Електронна пошта",
+      "usernameLabel": "Ім'я користувача",
+      "usernameRequired": "Ім'я користувача обовя'зкове",
+      "usernameMinLengthError": "Мінімальна довжина імені користувача {{MIN_USERNAME_LENGTH}} символів",
+      "usernameMaxLengthError": "Максимальна довжина імені користувача {{MAX_USERNAME_LENGTH}} символів",
       "passwordLabel": "Пароль",
       "loginButton": "Вперед !",
-      "hasUserAccount": "Немає облікового запису?"
+      "hasUserAccount": "Вже маєте обліковий запис?",
+      "repeatPasswordLabel": "Повторіть пароль",
+      "loginButtonDisabled": "Заповніть поля",
+      "requiredEmail": "Електронна пошта обовязкова",
+      "wrongEmail": "Невірна електронна пошта",
+      "passwordIsRequired": "Пароль обов'язковий",
+      "passwordMinLengthError": "Мінімальна довжина паролю {{MIN_PASSWORD_LENGTH}} символа",
+      "passwordMaxLengthError": "Максимальна довжина паролю {{MAX_PASSWORD_LENGTH}} символів",
+      "repeatPassword": "Повторити пароль",
+      "passwordsDoNotMatch": "Паролі не співпадають"
     }
   }
 }

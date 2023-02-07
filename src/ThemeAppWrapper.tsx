@@ -81,13 +81,13 @@ export default function ThemeAppWrapper() {
                 palette: {
                     mode,
                     primary: {
-                        ...getPrimaryTheme(primaryColor, isLoggedIn),
+                        ...getPrimaryTheme(primaryColor),
                         standard: mode === 'dark' ? 'white' : 'black',
                         standardReversed: mode === 'dark' ? 'black' : 'white',
                     },
                     background: {
-                        default: mode === 'dark' ? '#161616' : '#ededed',
-                        paper: mode === 'dark' ? '#242424' : 'whitesmoke'
+                        default: mode === 'dark' ? '#161616' : '#D3D3D3',
+                        paper: mode === 'dark' ? '#242424' : '#D3D3D3'
                     },
                     text: {
                         standard: mode === 'dark' ? 'white' : 'black',

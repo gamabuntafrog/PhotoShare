@@ -55,23 +55,23 @@ export const MAX_USERNAME_LENGTH = 20
 export const MIN_PASSWORD_LENGTH = 6
 export const MAX_PASSWORD_LENGTH = 50
 
-const passwordValidationSchema = yup.string().required('Login.passwordIsRequired').min(MIN_PASSWORD_LENGTH, `Login.passwordMinLengthError`)
-    .max(MAX_PASSWORD_LENGTH, `Login.passwordMaxLengthError`)
+const passwordValidationSchema = yup.string().required('passwordIsRequired').min(MIN_PASSWORD_LENGTH, `passwordMinLengthError`)
+    .max(MAX_PASSWORD_LENGTH, `passwordMaxLengthError`)
 
 export const loginValidationSchema = yup.object({
-    email: yup.string().required('Login.requiredEmail').email('Login.wrongEmail'),
+    email: yup.string().required('requiredEmail').email('wrongEmail'),
     password: passwordValidationSchema,
 }).required()
 
 
-const usernameValidationSchema = Yup.string().min(MIN_USERNAME_LENGTH, `Minimal length is ${MIN_USERNAME_LENGTH} symbols`)
-    .max(MAX_USERNAME_LENGTH, `Max length is ${MAX_USERNAME_LENGTH} symbols`).required('Username is required')
+const usernameValidationSchema = Yup.string().min(MIN_USERNAME_LENGTH, `usernameMinLengthError`)
+    .max(MAX_USERNAME_LENGTH, `usernameMaxLengthError`).required('usernameRequired')
 
 export const registerValidationSchema = Yup.object({
     username: usernameValidationSchema,
-    email: Yup.string().required('Email is required').email('Wrong email'),
+    email: Yup.string().required('requiredEmail').email('wrongEmail'),
     password: passwordValidationSchema,
-    repeatPassword: Yup.string().required('You need to repeat password').oneOf([Yup.ref("password")], "Passwords do not match")
+    repeatPassword: Yup.string().required('repeatPassword').oneOf([Yup.ref("password")], "passwordsDoNotMatch")
 }).required()
 
 export const changeProfileValidationSchema = Yup.object({

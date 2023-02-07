@@ -1,9 +1,15 @@
 import {useTranslation} from "react-i18next";
 
 
-export default function useShortTranslation (main: string) {
+export default function useShortTranslation (componentNameKey: string | void = '') {
 
-    const {t: translate} = useTranslation()
+    const {t} = useTranslation()
 
-    return (key: string) => translate(`${main}.${key}`)
+    if (!componentNameKey) {
+        return (key: string) => t(key)
+    }
+
+    return (key: string) => t(`${componentNameKey}.${key}`)
+
+    // Example: Login.title
 }

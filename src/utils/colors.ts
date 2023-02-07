@@ -140,10 +140,7 @@ export const colorsArray = [
 ]
 
 
-export const getPrimaryTheme = (color: colorTypes, isLoggedIn: boolean) => {
-    if (!isLoggedIn) {
-        return indigo
-    }
+export const getPrimaryTheme = (color: colorTypes) => {
 
     switch (color) {
         case colorTypes.blue:

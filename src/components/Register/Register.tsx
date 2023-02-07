@@ -21,6 +21,7 @@ import {useState} from "react";
 import useSx from "../../hooks/useSx";
 import registerStyles from "./registerStyles";
 import {StyledHeaderNavLink} from "../Header/headerStyles";
+import useShortTranslation from "../../hooks/useShortTranslation";
 
 interface IFormData {
     username: string,
@@ -38,18 +39,18 @@ enum htmlInputId {
 
 
 export default function Register() {
-    const {authError} = useAppSelector(state => state.userReducer.errors)
     const {register, setValue, handleSubmit, formState: {errors}} = useForm<IFormData>({
         resolver: yupResolver(registerValidationSchema),
         mode: 'all'
     });
+
     const {
         username: usernameError,
         email: emailError,
         password: passwordError,
         repeatPassword: repeatPasswordError
     } = errors
-    console.log(errors)
+    // console.log(errors)
     const dispatch = useAppDispatch()
 
 
@@ -68,11 +69,19 @@ export default function Register() {
 
     const styles = useSx(registerStyles)
 
+    const t = useShortTranslation('Register')
+
+    const emailLabel = emailError?.message ? t(emailError.message) : t('emailLabel')
+    const usernameLabel = usernameError?.message ? t(usernameError.message) : t('usernameLabel')
+    const passwordLabel = passwordError?.message ? t(passwordError.message) : t('passwordLabel')
+    const repeatPasswordLabel = repeatPasswordError?.message ? t(repeatPasswordError.message) : t('repeatPasswordLabel')
+    const submitButtonText = isNotValidated ? t('loginButtonDisabled') : t('loginButton')
+
     return (
         <Container
             sx={styles.container}
         >
-            <Typography sx={styles.title} variant='h1'>Register</Typography>
+            <Typography sx={styles.title} variant='h1'>{t('title')}</Typography>
             <FormGroup
                 onSubmit={onSubmit}
                 sx={styles.form}
@@ -81,7 +90,7 @@ export default function Register() {
                     sx={styles.label}
                     error={!!usernameError}
                     htmlFor={`${htmlInputId.username}`}>
-                    {usernameError?.message || 'Username'}
+                    {usernameLabel}
                 </InputLabel>
                 <OutlinedInput
                     id={`${htmlInputId.username}`}
@@ -95,7 +104,7 @@ export default function Register() {
                     error={!!emailError}
                     htmlFor={`${htmlInputId.email}`}
                 >
-                    {emailError?.message || 'Email'}
+                    {emailLabel}
                 </InputLabel>
                 <OutlinedInput
                     id={`${htmlInputId.email}`}
@@ -108,7 +117,7 @@ export default function Register() {
                     sx={styles.label}
                     error={!!passwordError}
                     htmlFor={`${htmlInputId.password}`}>
-                    {passwordError?.message || 'Password'}
+                    {passwordLabel}
                 </InputLabel>
                 <OutlinedInput
                     id={`${htmlInputId.password}`}
@@ -135,7 +144,7 @@ export default function Register() {
                     error={!!repeatPasswordError}
                     htmlFor={`${htmlInputId.repeatPassword}`}
                 >
-                    {repeatPasswordError?.message || 'Repeat password'}
+                    {repeatPasswordLabel}
                 </InputLabel>
                 <OutlinedInput
                     id={`${htmlInputId.repeatPassword}`}
@@ -150,10 +159,10 @@ export default function Register() {
                     onClick={onSubmit}
                     disabled={isNotValidated}
                 >
-                    {isNotValidated ? 'Fill in the fields' : 'Let\'s go!'}
+                    {submitButtonText}
                 </Button>
-                <StyledHeaderNavLink style={styles.signInLink} to='/login'>
-                    Already have an account?
+                <StyledHeaderNavLink style={styles.signInLink} to='/'>
+                    {t('hasUserAccount')}
                 </StyledHeaderNavLink>
             </FormGroup>
         </Container>

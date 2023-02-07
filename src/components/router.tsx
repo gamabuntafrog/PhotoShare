@@ -85,7 +85,7 @@ const publicRouter = createBrowserRouter([
         ),
         children: [
             {
-                path: "",
+                index: true,
                 element: <Login/>
             },
             {
