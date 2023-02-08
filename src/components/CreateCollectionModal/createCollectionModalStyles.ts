@@ -1,6 +1,6 @@
 import {Theme} from "@mui/material";
 
-const createPostStyles = (theme: Theme) => {
+const createCollectionModalStyles = (theme: Theme) => {
 
 
     return {
@@ -38,4 +38,4 @@ const createPostStyles = (theme: Theme) => {
     }
 }
 
-export default createPostStyles
+export default createCollectionModalStyles

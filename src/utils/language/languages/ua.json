@@ -110,6 +110,12 @@
       "titleMinLengthError": "Мінімальна довжина заголовку {{MIN_COLLECTION_TITLE_LENGTH}} символа",
       "tagValidationError": "Кожен тег мусить починатися з \"#\" з мінімальною довжиною в 3 символа",
       "tagsLabel": "Теги"
+    },
+    "CreatePost": {
+      "CollectionsInfo": {
+        "saveIn": "Зберегти в: ",
+        "createNewCollection": "Створити нову колекцію"
+      }
     }
   }
 }

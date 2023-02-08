@@ -31,7 +31,7 @@ export default function MobileHeaderNavigation(
             {user && isLoggedIn &&
                 <>
                     <NavLink to='/post/create'>
-                        <IconButton color='primary'>
+                        <IconButton color='inherit'>
                             <AddBoxIcon/>
                         </IconButton>
                     </NavLink>
@@ -44,7 +44,7 @@ export default function MobileHeaderNavigation(
                             // console.log(e)
                             // setIsNotificationsOpen(!isNotificationsOpen)
                         }}
-                        color='primary'
+                        sx={{color: 'text.primary'}}
                     >
                         <NotificationsIcon/>
                         {/*{unCheckedNotificationsLength > 0 &&*/}
@@ -58,7 +58,7 @@ export default function MobileHeaderNavigation(
                     </StyledHeaderNavLink>
                 </>
             }
-            <IconButton onClick={openModal} color='primary' sx={styles.openMenuButton}>
+            <IconButton onClick={openModal} color='inherit' sx={styles.openMenuButton}>
                 <MenuIcon/>
             </IconButton>
         </Box>

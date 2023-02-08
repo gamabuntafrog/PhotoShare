@@ -48,8 +48,24 @@ const createPostStyles = (theme: Theme) => {
                 width: '100%'
             }
         },
-        imageButtonInputLabel: {cursor: 'pointer', color: 'inherit', width: '100%', pointerEvents: 'none'}
-
+        imageButtonInputLabel: {cursor: 'pointer', color: 'inherit', width: '100%', pointerEvents: 'none'},
+        collectionsInfo: {
+            buttonWrapper: {display: 'flex', alignItems: 'baseline'},
+            openMenuButton: (isError: boolean) => ({
+                color: isError ? 'red' : 'primary.main',
+                ml: 1
+            }),
+            lastItemWrapper: {
+                bgcolor: 'background.paper',
+                px: 1,
+                py: 1,
+                position: 'sticky',
+                bottom: '-1px',
+                '&:hover': {
+                    bgcolor: 'background.paper',
+                }
+            }
+        }
     }
 }
 

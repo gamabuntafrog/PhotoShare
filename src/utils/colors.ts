@@ -13,6 +13,7 @@ import {
     red,
     teal,
     yellow,
+
 } from "@mui/material/colors";
 import {PaletteColorOptions} from "@mui/material";
 
@@ -23,7 +24,7 @@ export const colorsArray = [
             ua: 'синій'
         },
         enum: colorTypes.blue,
-        ref: blue[500]
+        ref: blue
     },
     {
         title: {
@@ -31,7 +32,7 @@ export const colorsArray = [
             ua: 'червоний'
         },
         enum: colorTypes.red,
-        ref: red[500]
+        ref: red
     },
     {
         title: {
@@ -39,7 +40,7 @@ export const colorsArray = [
             ua: 'зелений'
         },
         enum: colorTypes.green,
-        ref: green[500]
+        ref: green
     },
     {
         title: {
@@ -47,7 +48,7 @@ export const colorsArray = [
             ua: 'амбер'
         },
         enum: colorTypes.amber,
-        ref: amber[500]
+        ref: amber
     },
     {
         title: {
@@ -55,7 +56,7 @@ export const colorsArray = [
             ua: 'синьо-сірий'
         },
         enum: colorTypes.blueGrey,
-        ref: blueGrey[500]
+        ref: blueGrey
     },
     {
         title: {
@@ -63,7 +64,7 @@ export const colorsArray = [
             ua: 'помаранчевий'
         },
         enum: colorTypes.orange,
-        ref: orange[500]
+        ref: orange
     },
     {
         title: {
@@ -71,7 +72,7 @@ export const colorsArray = [
             ua: 'голубий'
         },
         enum: colorTypes.cyan,
-        ref: cyan[500]
+        ref: cyan
     },
     {
         title: {
@@ -79,7 +80,7 @@ export const colorsArray = [
             ua: 'коричневий'
         },
         enum: colorTypes.brown,
-        ref: brown[500]
+        ref: brown
     },
     {
         title: {
@@ -87,7 +88,7 @@ export const colorsArray = [
             ua: 'глубокий фіолетовий'
         },
         enum: colorTypes.deepPurple,
-        ref: deepPurple[500]
+        ref: deepPurple
     },
     {
         title: {
@@ -95,7 +96,7 @@ export const colorsArray = [
             ua: 'рожевий'
         },
         enum: colorTypes.pink,
-        ref: pink[500]
+        ref: pink
     },
     {
         title: {
@@ -103,7 +104,7 @@ export const colorsArray = [
             ua: 'блакитний'
         },
         enum: colorTypes.teal,
-        ref: teal[500]
+        ref: teal
     },
     {
         title: {
@@ -111,7 +112,7 @@ export const colorsArray = [
             ua: 'індиго'
         },
         enum: colorTypes.indigo,
-        ref: indigo[500]
+        ref: indigo
     },
     {
         title: {
@@ -119,7 +120,7 @@ export const colorsArray = [
             ua: 'світло-синій'
         },
         enum: colorTypes.lightBlue,
-        ref: lightBlue[500]
+        ref: lightBlue
     },
     {
         title: {
@@ -127,7 +128,7 @@ export const colorsArray = [
             ua: 'жовтий'
         },
         enum: colorTypes.yellow,
-        ref: yellow[500]
+        ref: yellow
     },
     {
         title: {
@@ -135,7 +136,7 @@ export const colorsArray = [
             ua: 'салатовий'
         },
         enum: colorTypes.lightGreen,
-        ref: lightGreen[500]
+        ref: lightGreen
     },
 ]
 

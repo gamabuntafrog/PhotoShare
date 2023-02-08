@@ -30,13 +30,13 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
             sx={styles.navContainer}
         >
             {
-                user && isLoggedIn ?
+                (user && isLoggedIn) ?
                     <>
-                        <NavLink to='/post/create'>
-                            <IconButton color='primary'>
+                        <StyledHeaderNavLink className='first' to='/post/create'>
+                            <IconButton color='inherit'>
                                 <AddBoxIcon/>
                             </IconButton>
-                        </NavLink>
+                        </StyledHeaderNavLink>
                         <Box
                             sx={{ml: 1, position: 'relative'}}
                         >
@@ -50,7 +50,7 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
                                     // console.log(e)
                                     // setIsNotificationsOpen(!isNotificationsOpen)
                                 }}
-                                color='primary'
+                                sx={{color: 'text.primary'}}
                             >
                                 <NotificationsIcon/>
                                 {/*{unCheckedNotificationsLength > 0 &&*/}
@@ -70,7 +70,7 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
                             {username}
                         </StyledHeaderNavLink>
                         <StyledHeaderNavLink to='/settings'>
-                            <IconButton sx={{color: 'currentColor'}}>
+                            <IconButton color='inherit'>
                                 <SettingsIcon/>
                             </IconButton>
                         </StyledHeaderNavLink>
@@ -88,7 +88,7 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
                         <StyledHeaderNavLink to='/'>{t('loginLink')}</StyledHeaderNavLink>
                         <StyledHeaderNavLink to='/register'>{t('registerLink')}</StyledHeaderNavLink>
                         <StyledHeaderNavLink to='/settings'>
-                            <IconButton sx={{color: 'currentColor'}}>
+                            <IconButton  color='inherit'>
                                 <SettingsIcon/>
                             </IconButton>
                         </StyledHeaderNavLink>

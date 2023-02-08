@@ -110,6 +110,12 @@
       "titleMinLengthError": "Min title length is {{MIN_COLLECTION_TITLE_LENGTH}} symbols",
       "tagValidationError": "Every tag must have \"#\" ang min length 3 symbols",
       "tagsLabel": "Tags"
+    },
+    "CreatePost": {
+      "CollectionsInfo": {
+        "saveIn": "Save in: ",
+        "createNewCollection": "Create new collection"
+      }
     }
   }
 }

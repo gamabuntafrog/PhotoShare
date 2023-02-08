@@ -2,15 +2,12 @@ import {
     Box,
     Button,
     Container,
-    FormControl,
-    FormGroup,
     Grid,
     Input,
-    InputLabel, Menu, MenuItem, Modal,
+    InputLabel,
     OutlinedInput, TextField,
     Typography, useTheme
 } from "@mui/material";
-import * as Yup from "yup";
 import {useForm, useFormState} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import React, {useEffect, useRef, useState} from "react";
@@ -21,10 +18,11 @@ import convertImageToString from "../../utils/convertImageToString";
 import CreateCollectionModal from "../CreateCollectionModal";
 import {createPostValidationSchema} from "../../utils/validationSchemas";
 import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
-import CollectionsInfo from "../CollectionsInfo";
+import CollectionsInfo from "./CreatePostComponents/CollectionsInfo";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import useSx from "../../hooks/useSx";
 import createPostStyles, {StyledImage} from "./createPostStyles";
+import useShortTranslation from "../../hooks/useShortTranslation";
 
 
 export const breakableText = {wordBreak: 'break-all', whiteSpace: 'break-spaces'}
@@ -132,13 +130,16 @@ export default function CreatePost() {
         navigate(`/post/create/${collectionId}`)
     }
 
-    const theme = useTheme()
+    // const a = (navigate) => {
+    //     navigate()
+    // }
 
     const styles = useSx(createPostStyles)
 
     const willSavedInCollectionTitle = userCollections[watch("collectionIdIndex")]?.title || 'Select collection'
     const onImageInputLabelClick = () => imageInputLabelRef.current?.click()
 
+    const t = useShortTranslation({componentNameKey: 'CreatePost'})
 
     if (isPostCreating || isUserCollectionsLoading) return <FullScreenLoader/>
 
@@ -182,7 +183,16 @@ export default function CreatePost() {
                             <InputLabel htmlFor='body' error={!!bodyError} sx={styles.formInputLabel}>
                                 {bodyError?.message || 'Description'}
                             </InputLabel>
-                            <TextField placeholder='Enter description' multiline maxRows={6} minRows={3} error={!!bodyError} fullWidth id='body' {...register('body')}/>
+                            <TextField
+                                placeholder='Enter description'
+                                multiline
+                                maxRows={6}
+                                minRows={3}
+                                error={!!bodyError}
+                                fullWidth
+                                id='body'
+                                {...register('body')}
+                            />
                         </Grid>
                         <Grid item>
                             <Button
@@ -219,7 +229,8 @@ export default function CreatePost() {
                             <InputLabel htmlFor='tags' error={!!tagsError} sx={styles.formInputLabel}>
                                 {tagsError?.message || 'Tags'}
                             </InputLabel>
-                            <OutlinedInput placeholder='Enter tags' error={!!tagsError} fullWidth id='tags' {...register('tags')}/>
+                            <OutlinedInput placeholder='Enter tags' error={!!tagsError} fullWidth
+                                           id='tags' {...register('tags')}/>
                         </Grid>
                         <Button
                             variant='contained'

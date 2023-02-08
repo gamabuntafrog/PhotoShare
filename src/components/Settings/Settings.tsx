@@ -79,7 +79,7 @@ export default function Settings() {
                             >
                                 <Button
                                     variant='contained'
-                                    sx={styles.colorButton(color.ref)}
+                                    sx={styles.colorButton(color.ref[700])}
                                     onClick={() => changePrimaryColor(color.enum)}
                                 >
                                     {color.title[i18n.resolvedLanguage as 'en' | 'ua']}

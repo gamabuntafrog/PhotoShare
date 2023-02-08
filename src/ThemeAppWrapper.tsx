@@ -32,7 +32,8 @@ declare module '@mui/material/styles' {
 
     interface PaletteColorOptions {
         standard: string,
-        standardReversed: string
+        standardReversed: string,
+        main: string
     }
 
     interface PaletteColor {
@@ -82,6 +83,7 @@ export default function ThemeAppWrapper() {
                     mode,
                     primary: {
                         ...getPrimaryTheme(primaryColor),
+                        main: mode === 'dark' ? getPrimaryTheme(primaryColor)[500] : getPrimaryTheme(primaryColor)[700],
                         standard: mode === 'dark' ? 'white' : 'black',
                         standardReversed: mode === 'dark' ? 'black' : 'white',
                     },
@@ -92,7 +94,7 @@ export default function ThemeAppWrapper() {
                     text: {
                         standard: mode === 'dark' ? 'white' : 'black',
                         light: 'white'
-                    }
+                    },
                 },
                 breakpoints: {
                     values: {

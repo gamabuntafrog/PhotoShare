@@ -62,7 +62,7 @@ export default function MobileNavbar({isOpen, openModal, closeModal, user, isLog
                                 </StyledMenuNavLink>
                             </Box>
                             <Button
-                                sx={styles.mobileNavbarButton}
+                                sx={{...styles.mobileNavbarButton, mb: 2}}
                                 color='error'
                                 variant='outlined'
                                 onClick={exitFromAccount}
@@ -87,6 +87,7 @@ export default function MobileNavbar({isOpen, openModal, closeModal, user, isLog
                 <IconButton
                     sx={styles.mobileNavbarButton}
                     onClick={closeModal}
+                    color='error'
                 >
                     <CloseIcon/>
                 </IconButton>

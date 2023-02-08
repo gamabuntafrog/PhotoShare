@@ -1,3 +1,3 @@
-import CreateCollectionModal from './CreateCollection.';
+import CreateCollectionModal from './CreateCollectionModal';
 
 export default CreateCollectionModal

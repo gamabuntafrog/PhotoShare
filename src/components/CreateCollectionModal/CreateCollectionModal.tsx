@@ -8,7 +8,7 @@ import {updateSavesInfo} from "../../hooks/usePostsActions";
 import {extendedCollectionsApi} from "../../redux/api/rootApi";
 import CloseIcon from '@mui/icons-material/Close';
 import useSx from "../../hooks/useSx";
-import createCollectionStyles from "./createCollectionStyles";
+import createCollectionStyles from "./createCollectionModalStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 
 interface ICollectionFormData {
