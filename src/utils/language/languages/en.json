@@ -135,6 +135,38 @@
         "saveIn": "Save in: ",
         "createNewCollection": "Create new collection"
       }
+    },
+    "Collection": {
+      "openSettingsButton": "Settings",
+      "errorMessage": "Error",
+      "CollectionInfo": {
+        "admin": "Admin",
+        "author": "Author",
+        "by": "by",
+        "addNewPostButton": "Add new post"
+      },
+      "CollectionSettings": {
+        "title": "Settings",
+        "addUsersTitle": "Add users",
+        "authorsListTitle": "Authors",
+        "viewersListTitle": "Viewers",
+        "privateModeTitle": "Private mode",
+        "privateModeDescription": "Make your collection invisible for non-viewers and non-authors",
+        "deleteCollectionButton": "Delete collection",
+        "leaveCollectionButton": "Leave collection",
+        "CollectionInfo": {
+          "form": {
+            "titleLabel": "Title",
+            "tagsLabel": "Tags",
+            "saveChangesButton": "Save changes",
+            "cancelChangesButton": "Cancel changes",
+            "titleMaxLengthError": "Max title length is {{MAX_COLLECTION_TITLE_LENGTH}} symbols",
+            "titleMinLengthError": "Min title length is {{MIN_COLLECTION_TITLE_LENGTH}} symbols",
+            "tagValidationError": "Every tag must have \"#\" ang min length 3 symbols"
+          },
+          "editButton": "Edit"
+        }
+      }
     }
   }
 }

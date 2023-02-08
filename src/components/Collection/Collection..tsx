@@ -18,6 +18,7 @@ import useSx from "../../hooks/useSx";
 import collectionStyles from "./collectionStyles";
 import CollectionInfo from "./CollectionComponents/CollectionInfo";
 import CollectionSettings from "./CollectionComponents/CollectionSettings";
+import useShortTranslation from "../../hooks/useShortTranslation";
 
 
 export default function Collection() {
@@ -43,12 +44,15 @@ export default function Collection() {
     const openSettingsModal = () => setIsSettingsOpen(true)
     const closeSettingsModal = () => setIsSettingsOpen(false)
 
+
+    const t = useShortTranslation({componentNameKey: "Collection"})
+
     if (isCollectionLoading) return <FullScreenLoader/>
 
     if (collectionError || !data) {
         return (
             <Container sx={styles.errorContainer}>
-                <Typography variant='h1' sx={{textAlign: 'center'}}>Error</Typography>
+                <Typography variant='h1' sx={{textAlign: 'center'}}>{t('errorMessage')}</Typography>
             </Container>
         )
     }
@@ -75,7 +79,9 @@ export default function Collection() {
             )}
             <Box sx={styles.collectionWrapper}>
                 {(isAuthor || isAdmin) &&
-                    <Button sx={styles.openButton} variant='contained' onClick={openSettingsModal}>Settings</Button>
+                    <Button sx={styles.openButton} variant='contained' onClick={openSettingsModal}>
+                        {t('openSettingsButton')}
+                    </Button>
                 }
                 <CollectionInfo
                     title={title}
@@ -97,7 +103,6 @@ export default function Collection() {
                     key={post._id}
                 />)}
             </ImageList>
-
         </Box>
     )
 }

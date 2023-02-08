@@ -34,9 +34,6 @@ const oneImageValidationSchema = Yup.mixed().test('size', '', imageSizeValidatio
 
 // .test('size', 'Max image size is 20mb', imageSizeValidation).required('Image is required')
 
-const a = {
-
-}
 
 export const createPostValidationSchema = Yup.object({
     title: Yup.string().min(MIN_POST_TITLE_LENGTH, `titleMinLengthError`).max(MAX_POST_TITLE_LENGTH, `titleMaxLengthError`),
@@ -49,7 +46,7 @@ export const createPostValidationSchema = Yup.object({
 export const MIN_COLLECTION_TITLE_LENGTH = 3
 export const MAX_COLLECTION_TITLE_LENGTH = 48
 
-export const createCollectionValidationSchema = Yup.object({
+export const collectionValidationSchema = Yup.object({
     title: Yup.string().min(MIN_COLLECTION_TITLE_LENGTH, 'titleMinLengthError').max(MAX_COLLECTION_TITLE_LENGTH, `titleMaxLengthError`).required('requiredTitle'),
     tags: Yup.string().required('requiredTags').test('validation', 'tagValidationError', validateTags)
 }).required()

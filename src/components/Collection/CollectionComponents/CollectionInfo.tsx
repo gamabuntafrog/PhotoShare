@@ -5,6 +5,7 @@ import {NavLink, useNavigate} from "react-router-dom";
 import React from "react";
 import useSx from "../../../hooks/useSx";
 import collectionStyles from "../collectionStyles";
+import useShortTranslation from "../../../hooks/useShortTranslation";
 
 interface ICollectionInfoProps {
     title: string,
@@ -27,6 +28,8 @@ export default function CollectionInfo(
 
     const navigate = useNavigate()
 
+    const t = useShortTranslation({componentNameKey: "Collection.CollectionInfo"})
+
     return (
         <>
             <Box sx={styles.wrapper}>
@@ -44,7 +47,7 @@ export default function CollectionInfo(
             <Box
                 sx={styles.secondWrapper}
             >
-                <Typography variant='body2'>by</Typography>
+                <Typography variant='body2'>{t('by')}</Typography>
                 {authors.map(({_id: authorId, username, avatar, isAdmin}) => {
                     return (
                         <Box
@@ -55,9 +58,9 @@ export default function CollectionInfo(
                             <Avatar sx={styles.avatar} src={avatar || ''} alt={username}/>
                             <Box sx={styles.authorContainerWrapper}>
                                 {isAdmin ?
-                                    <Typography sx={styles.userRole} variant='caption'>Admin</Typography>
+                                    <Typography sx={styles.userRole} variant='caption'>{t('admin')}</Typography>
                                     :
-                                    <Typography sx={styles.userRole} variant='caption'>Author</Typography>
+                                    <Typography sx={styles.userRole} variant='caption'>{t('author')}</Typography>
                                 }
                                 <Typography sx={{ml: 1}} variant='h5'>{username}</Typography>
                             </Box>
@@ -70,7 +73,7 @@ export default function CollectionInfo(
                         sx={styles.addNewPostButton}
                     >
                         <NavLink to={`/post/create/${collectionId}`}>
-                            Add new post
+                            {t('addNewPostButton')}
                         </NavLink>
                     </Button>
                 }

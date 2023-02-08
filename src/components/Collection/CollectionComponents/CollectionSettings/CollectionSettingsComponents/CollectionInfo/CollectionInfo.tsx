@@ -11,10 +11,11 @@ import {
 import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
-import {createCollectionValidationSchema} from "../../../../../../utils/validationSchemas";
+import {collectionValidationSchema} from "../../../../../../utils/validationSchemas";
 import {extendedCollectionsApi} from "../../../../../../redux/api/rootApi";
 import useSx from "../../../../../../hooks/useSx";
 import collectionStyles from "../../../../collectionStyles";
+import useShortTranslation from "../../../../../../hooks/useShortTranslation";
 
 interface ICollectionInfoProps {
     title: string,
@@ -40,7 +41,7 @@ export default function CollectionInfo({title, tags, isAdmin, collectionId}: ICo
         handleSubmit,
         formState: {errors: {title: titleError, tags: tagsError}}
     } = useForm<ICollectionFormData>({
-        resolver: yupResolver(createCollectionValidationSchema),
+        resolver: yupResolver(collectionValidationSchema),
         mode: 'all',
         defaultValues: {
             title: title,
@@ -68,24 +69,30 @@ export default function CollectionInfo({title, tags, isAdmin, collectionId}: ICo
     const {collectionSettingsInfo: styles} = useSx(collectionStyles)
     const {changeInfoForm: formStyles} = styles
 
+    const t = useShortTranslation({componentNameKey: "Collection.CollectionSettings.CollectionInfo"})
+    const tForm = useShortTranslation({componentNameKey: "Collection.CollectionSettings.CollectionInfo.form"})
+
+    const titleLabel = titleError?.message ? tForm(titleError.message) : tForm('titleLabel')
+    const tagsLabel = tagsError?.message ? tForm(tagsError.message) : tForm('tagsLabel')
+
     if (isAdmin && isEditing) {
         return (
             <FormGroup
                 sx={formStyles.wrapper}
                 onSubmit={onSubmit}
             >
-                <InputLabel error={!!titleError} sx={formStyles.inputLabel} htmlFor='title'>Title</InputLabel>
+                <InputLabel error={!!titleError} sx={formStyles.inputLabel} htmlFor='title'>{titleLabel}</InputLabel>
                 <OutlinedInput error={!!titleError} id='title' {...register('title')} sx={formStyles.input} fullWidth/>
 
-                <InputLabel sx={formStyles.inputLabel} htmlFor='tags'>Tags</InputLabel>
+                <InputLabel sx={formStyles.inputLabel} htmlFor='tags'>{tagsLabel}</InputLabel>
                 <TextField error={!!tagsError} id='tags' {...register('tags')} sx={formStyles.input} multiline minRows={2} fullWidth />
 
                 <Box sx={formStyles.buttonsWrapper}>
                     <Button disabled={isErrors} sx={{mr: 2}}  variant='contained' type='submit' onClick={onSubmit} fullWidth >
-                        Save changes
+                        {tForm('saveChangesButton')}
                     </Button>
                     <Button sx={{ width: '25%'}} color='error' variant='text' onClick={handleClose} >
-                        Cancel
+                        {tForm('cancelChangesButton')}
                     </Button>
                 </Box>
             </FormGroup>
@@ -100,7 +107,7 @@ export default function CollectionInfo({title, tags, isAdmin, collectionId}: ICo
             </Box>
             {isAdmin && (
                 <Button onClick={handleOpen} variant='contained'>
-                    Edit
+                    {t('editButton')}
                 </Button>
             )}
         </Box>

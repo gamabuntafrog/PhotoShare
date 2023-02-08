@@ -3,7 +3,7 @@ import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {Button, Container, IconButton, InputLabel, Modal, OutlinedInput, Typography, useTheme} from "@mui/material";
 import React from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {createCollectionValidationSchema} from "../../utils/validationSchemas";
+import {collectionValidationSchema} from "../../utils/validationSchemas";
 import {updateSavesInfo} from "../../hooks/usePostsActions";
 import {extendedCollectionsApi} from "../../redux/api/rootApi";
 import CloseIcon from '@mui/icons-material/Close';
@@ -43,7 +43,7 @@ export default function CreateCollectionModal(
         handleSubmit,
         formState: {errors: {title: titleError, tags: tagsError}}
     } = useForm<ICollectionFormData>({
-        resolver: yupResolver(createCollectionValidationSchema),
+        resolver: yupResolver(collectionValidationSchema),
         mode: 'all'
     });
 

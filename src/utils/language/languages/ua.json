@@ -135,6 +135,38 @@
         "saveIn": "Зберегти в: ",
         "createNewCollection": "Створити нову колекцію"
       }
+    },
+    "Collection": {
+      "openSettingsButton": "Налаштування",
+      "errorMessage": "Помилка",
+      "CollectionInfo": {
+        "admin": "Адмін",
+        "author": "Автор",
+        "by": "від",
+        "addNewPostButton": "Додати новий пост"
+      },
+      "CollectionSettings": {
+        "title": "Налаштування",
+        "addUsersTitle": "Додати користувачів",
+        "authorsListTitle": "Автори",
+        "viewersListTitle": "Глядачі",
+        "privateModeTitle": "Приватний режим",
+        "privateModeDescription": "Зробіть вашу колекцію невидимою для всіх окрім глядачів та авторів",
+        "deleteCollectionButton": "Видалити колекцію",
+        "leaveCollectionButton": "Залишити колекцію",
+        "CollectionInfo": {
+          "form": {
+            "titleLabel": "Заголовок",
+            "tagsLabel": "Теги",
+            "saveChangesButton": "Зберегти зміни",
+            "cancelChangesButton": "Скасувати зміни",
+            "titleMaxLengthError": "Максимальна довжина заголовку {{MAX_COLLECTION_TITLE_LENGTH}} символів",
+            "titleMinLengthError": "Мінімальна довжина заголовку {{MIN_COLLECTION_TITLE_LENGTH}} символа",
+            "tagValidationError": "Кожен тег мусить починатися з \"#\" з мінімальною довжиною в 3 символа"
+          },
+          "editButton": "Редагувати"
+        }
+      }
     }
   }
 }

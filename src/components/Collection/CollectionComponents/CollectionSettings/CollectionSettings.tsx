@@ -21,6 +21,7 @@ import {extendedCollectionsApi} from "../../../../redux/api/rootApi";
 import AddUserToCollection from "./CollectionSettingsComponents/AddUserToCollection";
 import CollectionInfo from "./CollectionSettingsComponents/CollectionInfo";
 import {useNavigate} from "react-router-dom";
+import useShortTranslation from "../../../../hooks/useShortTranslation";
 
 interface ICollectionSettingsProps {
     data: IFullCollection,
@@ -64,6 +65,9 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
         }
     }
 
+    const t = useShortTranslation({componentNameKey: "Collection.CollectionSettings"})
+
+
     return (
         <Modal
             open={isSettingsOpen}
@@ -74,7 +78,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                 sx={styles.modalWrapper}
             >
                 <Box sx={styles.closeIconWrapper}>
-                    <Typography variant='body1' sx={styles.title}>Settings</Typography>
+                    <Typography variant='body1' sx={styles.title}>{t('title')}</Typography>
 
                     <IconButton onClick={closeSettingsModal} sx={styles.closeIcon} color='error'>
                         <CloseIcon/>
@@ -99,7 +103,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                                 id="panel1bh-header"
                             >
                                 <Typography sx={{width: '33%', flexShrink: 0}}>
-                                    Add users
+                                    {t('addUsersTitle')}
                                 </Typography>
                             </AccordionSummary>
                             <AccordionDetails>
@@ -121,7 +125,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                             id="panel2bh-header"
                         >
                             <Typography sx={{width: '33%', flexShrink: 0}}>
-                                Authors
+                                {t('authorsListTitle')}
                             </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -145,7 +149,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                             id="panel3bh-header"
                         >
                             <Typography sx={{width: '33%', flexShrink: 0}}>
-                                Viewers
+                                {t('viewersListTitle')}
                             </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
@@ -160,9 +164,9 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                     {isAdmin && (
                         <Box sx={styles.togglePrivateContainer}>
                             <Box>
-                                <Typography>Private mode</Typography>
+                                <Typography>{t('privateModeTitle')}</Typography>
                                 <Typography variant='caption' sx={{color: 'text.secondary'}}>
-                                    Make your collection invisible for non-viewers and non-authors
+                                    {t('privateModeDescription')}
                                 </Typography>
                             </Box>
                             <Switch
@@ -179,7 +183,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                                     variant='contained'
                                     sx={{mr: 2}}
                                 >
-                                    Delete collection
+                                    {t('deleteCollectionButton')}
                                 </Button>
                             )}
                         <Button
@@ -187,7 +191,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                             color='error'
                             variant='contained'
                         >
-                            Leave collection
+                            {t('leaveCollectionButton')}
                         </Button>
                     </Box>
                 </Box>

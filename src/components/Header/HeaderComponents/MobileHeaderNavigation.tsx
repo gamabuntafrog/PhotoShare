@@ -30,11 +30,11 @@ export default function MobileHeaderNavigation(
         >
             {user && isLoggedIn &&
                 <>
-                    <NavLink to='/post/create'>
+                    <StyledHeaderNavLink className='first' to='/post/create'>
                         <IconButton color='inherit'>
                             <AddBoxIcon/>
                         </IconButton>
-                    </NavLink>
+                    </StyledHeaderNavLink>
                     <IconButton
                         onClick={(e) => {
                             // setIsNotificationsOpen(isOpen => !isOpen)
