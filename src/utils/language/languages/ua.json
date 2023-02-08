@@ -112,6 +112,25 @@
       "tagsLabel": "Теги"
     },
     "CreatePost": {
+      "selectCollectionButton": "Оберіть колекцію",
+      "titleLabel": "Заголовок",
+      "titleMinLengthError": "Мінімальна довжина {{MIN_POST_TITLE_LENGTH}} символів",
+      "titleMaxLengthError": "Максимальна довжина {{MAX_POST_TITLE_LENGTH}} символів",
+      "bodyLabel": "Опис",
+      "bodyMinLengthError": "Мінімальна довжина {{MIN_BODY_LENGTH}} символа",
+      "bodyMaxLengthError": "Максимальна довжина {{MAX_BODY_LENGTH}} символів",
+      "imageLabel": "Оберіть фото",
+      "selectedImageLabel": "Фото обрано",
+      "imageSizeError": "Максимальна вага 20мб",
+      "imageIsRequired": "Фото обов'язкове",
+      "tagsLabel": "Теги",
+      "tagValidationError": "Кожен тег мусить мати \"#\" і мінімальну довжину 3 символа",
+      "tagIsRequired": "Потрібен мінімум один тег",
+      "submitButton": "Завантажити",
+      "submitButtonDisabled": "Заповніть поля вірно",
+      "titlePlaceholder": "Назва",
+      "bodyPlaceholder": "Введіть опис",
+      "tagsPlaceholder": "Введіть теги",
       "CollectionsInfo": {
         "saveIn": "Зберегти в: ",
         "createNewCollection": "Створити нову колекцію"

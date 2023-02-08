@@ -112,6 +112,25 @@
       "tagsLabel": "Tags"
     },
     "CreatePost": {
+      "selectCollectionButton": "Select collection",
+      "titleLabel": "Title",
+      "titleMinLengthError": "Min length is {{MIN_POST_TITLE_LENGTH}} symbols",
+      "titleMaxLengthError": "Max length is {{MAX_POST_TITLE_LENGTH}} symbols",
+      "bodyLabel": "Body",
+      "bodyMinLengthError": "Min length is {{MIN_BODY_LENGTH}} symbols",
+      "bodyMaxLengthError": "Max length is {{MAX_BODY_LENGTH}} symbols",
+      "imageLabel": "Select a photo",
+      "selectedImageLabel": "Selected",
+      "imageSizeError": "Max image size is 20mb",
+      "imageIsRequired": "Image is required",
+      "tagsLabel": "tags",
+      "tagValidationError": "Every tag must have \"#\" ang min length 3 symbols",
+      "tagIsRequired": "Min 1 tag",
+      "submitButton": "Upload",
+      "submitButtonDisabled": "Fill in the fields",
+      "titlePlaceholder": "Title",
+      "bodyPlaceholder": "Enter description",
+      "tagsPlaceholder": "Enter tags",
       "CollectionsInfo": {
         "saveIn": "Save in: ",
         "createNewCollection": "Create new collection"

@@ -1,12 +1,12 @@
 import * as Yup from "yup";
 import * as yup from "yup";
 
-const MIN_POST_TITLE_LENGTH = 0
-const MAX_POST_TITLE_LENGTH = 48
-const MIN_BODY_LENGTH = 0
-const MAX_BODY_LENGTH = 200
-const MIN_TAG_LENGTH = 3
-const MAX_TAG_LENGTH = 30
+export const MIN_POST_TITLE_LENGTH = 0
+export const MAX_POST_TITLE_LENGTH = 48
+export const MIN_BODY_LENGTH = 0
+export const MAX_BODY_LENGTH = 200
+export const MIN_TAG_LENGTH = 3
+export const MAX_TAG_LENGTH = 30
 
 export const validateTags = (string: string | undefined) => {
     const check = string?.split(' ').find((str) => {
@@ -30,15 +30,19 @@ export const imageSizeValidation = (value: FileList) => {
     return value[0].size < twentyMB
 }
 
-const oneImageValidationSchema = Yup.mixed().test('size', 'Max image size is 20mb', imageSizeValidation).required('Image is required').test('required', 'Image is required', imagePresenceValidation)
+const oneImageValidationSchema = Yup.mixed().test('size', '', imageSizeValidation).required('').test('required', '', imagePresenceValidation)
 
 // .test('size', 'Max image size is 20mb', imageSizeValidation).required('Image is required')
 
+const a = {
+
+}
+
 export const createPostValidationSchema = Yup.object({
-    title: Yup.string().min(MIN_POST_TITLE_LENGTH, `Min length is ${MIN_POST_TITLE_LENGTH} symbols`).max(MAX_POST_TITLE_LENGTH, `Max length is ${MAX_POST_TITLE_LENGTH} symbols`),
-    body: Yup.string().min(MIN_BODY_LENGTH, `Min length is ${MIN_BODY_LENGTH} symbols`).max(MAX_BODY_LENGTH, `Max length is ${MAX_BODY_LENGTH} symbols`),
+    title: Yup.string().min(MIN_POST_TITLE_LENGTH, `titleMinLengthError`).max(MAX_POST_TITLE_LENGTH, `titleMaxLengthError`),
+    body: Yup.string().min(MIN_BODY_LENGTH, `bodyMinLengthError`).max(MAX_BODY_LENGTH, `bodyMaxLengthError`),
     imageList: oneImageValidationSchema,
-    tags: Yup.string().test('validation', `Every tag must have "#", min length is ${MIN_TAG_LENGTH} and max is ${MAX_TAG_LENGTH}`, validateTags).required('Min 1 tag'),
+    tags: Yup.string().test('validation', `tagValidationError`, validateTags).required('tagIsRequired'),
     collectionIdIndex: Yup.number().min(0).required()
 }).required()
 

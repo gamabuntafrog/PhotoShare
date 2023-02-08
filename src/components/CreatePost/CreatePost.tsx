@@ -135,11 +135,15 @@ export default function CreatePost() {
     // }
 
     const styles = useSx(createPostStyles)
+    const t = useShortTranslation({componentNameKey: 'CreatePost'})
 
-    const willSavedInCollectionTitle = userCollections[watch("collectionIdIndex")]?.title || 'Select collection'
+    const willSavedInCollectionTitle = userCollections[watch("collectionIdIndex")]?.title || t('selectCollectionButton')
     const onImageInputLabelClick = () => imageInputLabelRef.current?.click()
 
-    const t = useShortTranslation({componentNameKey: 'CreatePost'})
+    const titleLabel = titleError?.message ? t(titleError.message) : t('titleLabel')
+    const bodyLabel = bodyError?.message ? t(bodyError.message) : t('bodyLabel')
+    const imageLabel = imageError?.message ? t(imageError.message) : Boolean(imageFile) ? t('selectedImageLabel') : t('imageLabel')
+    const tagsLabel = tagsError?.message ? t(tagsError.message) : t('tagsLabel')
 
     if (isPostCreating || isUserCollectionsLoading) return <FullScreenLoader/>
 
@@ -173,18 +177,22 @@ export default function CreatePost() {
                         <Grid sx={{...styles.breakableText, my: 2}} item>
                             {titleError &&
                                 <InputLabel htmlFor='title' error={!!titleError} sx={styles.formInputLabel}>
-                                    {titleError.message}
+                                    {titleLabel}
                                 </InputLabel>
                             }
-                            <Input placeholder={titleError?.message || 'Title'} error={!!titleError}
-                                   fullWidth id='title' {...register('title')}/>
+                            <Input
+                                placeholder={t('titlePlaceholder')}
+                                error={!!titleError}
+                                fullWidth id='title'
+                                {...register('title')}
+                            />
                         </Grid>
                         <Grid item>
                             <InputLabel htmlFor='body' error={!!bodyError} sx={styles.formInputLabel}>
-                                {bodyError?.message || 'Description'}
+                                {bodyLabel}
                             </InputLabel>
                             <TextField
-                                placeholder='Enter description'
+                                placeholder={t('bodyPlaceholder')}
                                 multiline
                                 maxRows={6}
                                 minRows={3}
@@ -208,7 +216,7 @@ export default function CreatePost() {
                                     htmlFor='imageList'
                                     ref={imageInputLabelRef}
                                 >
-                                    {imageFile ? 'Selected' : 'Select a photo'}
+                                    {imageLabel}
                                 </InputLabel>
                                 <input
                                     {...registeredImageList}
@@ -226,11 +234,19 @@ export default function CreatePost() {
                             </Button>
                         </Grid>
                         <Grid item>
-                            <InputLabel htmlFor='tags' error={!!tagsError} sx={styles.formInputLabel}>
-                                {tagsError?.message || 'Tags'}
+                            <InputLabel
+                                htmlFor='tags'
+                                error={!!tagsError}
+                                sx={styles.formInputLabel}>
+                                {tagsLabel}
                             </InputLabel>
-                            <OutlinedInput placeholder='Enter tags' error={!!tagsError} fullWidth
-                                           id='tags' {...register('tags')}/>
+                            <OutlinedInput
+                                placeholder={t('tagsPlaceholder')}
+                                error={!!tagsError}
+                                fullWidth
+                                id='tags'
+                                {...register('tags')}
+                            />
                         </Grid>
                         <Button
                             variant='contained'
@@ -238,7 +254,7 @@ export default function CreatePost() {
                             type='submit'
                             sx={styles.uploadButton}
                         >
-                            Upload
+                            {isErrors ? t('submitButtonDisabled') : t('submitButton')}
                         </Button>
                     </Grid>
                 </form>
