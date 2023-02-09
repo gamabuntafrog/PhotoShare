@@ -12,6 +12,7 @@ import collectionStyles from "../../../../collectionStyles";
 import {extendedCollectionsApi} from "../../../../../../redux/api/rootApi";
 
 import CallMadeIcon from '@mui/icons-material/CallMade';
+import useShortTranslation from "../../../../../../hooks/useShortTranslation";
 
 interface IAuthorInfo {
     author: IAuthorOfCollection,
@@ -31,6 +32,9 @@ function AuthorInfo({author, collectionId, isCurrentUserAdmin}: IAuthorInfo) {
 
     const navigate = useNavigate()
 
+    const t = useShortTranslation({componentNameKey: "Collection.CollectionSettings.AuthorsInfo"})
+
+
     if (!isCurrentUserAdmin) {
         return (
             <ListItem sx={styles.listItem} key={_id}>
@@ -47,8 +51,8 @@ function AuthorInfo({author, collectionId, isCurrentUserAdmin}: IAuthorInfo) {
                     onClick={() => navigate(`/users/${_id}`)}
                 >
                     <Typography variant='caption' color='primary'>
-                        {isAdmin && 'Admin'}
-                        {isAuthor && 'Author'}
+                        {isAdmin && t('admin')}
+                        {isAuthor && t('author')}
                     </Typography>
                     <Typography>
                         {username}
@@ -73,8 +77,8 @@ function AuthorInfo({author, collectionId, isCurrentUserAdmin}: IAuthorInfo) {
                 onClick={() => navigate(`/users/${_id}`)}
             >
                 <Typography variant='caption' color='primary'>
-                    {isAdmin && 'Admin'}
-                    {isAuthor && 'Author'}
+                    {isAdmin && t('admin')}
+                    {isAuthor && t('author')}
                 </Typography>
                 <Typography>
                     {username}
@@ -99,7 +103,7 @@ function AuthorInfo({author, collectionId, isCurrentUserAdmin}: IAuthorInfo) {
                     }}
                 >
                     <Typography>
-                        Make an admin
+                        {t('makeAnAdmin')}
                     </Typography>
                 </StyledCustomMenuItem>)}
                 {isAdmin && (<StyledCustomMenuItem
@@ -108,9 +112,8 @@ function AuthorInfo({author, collectionId, isCurrentUserAdmin}: IAuthorInfo) {
                         changeAuthorRole({collectionId, authorId: _id, role: 'AUTHOR'})
                     }}
                 >
-                    <Typography
-                    >
-                        Make an author
+                    <Typography>
+                        {t('makeAnAuthor')}
                     </Typography>
                 </StyledCustomMenuItem>)}
                 <StyledCustomMenuItem>
@@ -119,7 +122,7 @@ function AuthorInfo({author, collectionId, isCurrentUserAdmin}: IAuthorInfo) {
                             makeViewer({collectionId, viewerId: _id})
                         }}
                     >
-                        Make an viewer
+                        {t('makeAViewer')}
                     </Typography>
                 </StyledCustomMenuItem>
                 <StyledCustomMenuItem>
@@ -129,7 +132,7 @@ function AuthorInfo({author, collectionId, isCurrentUserAdmin}: IAuthorInfo) {
                             deleteAuthorFromCollection({collectionId, authorId: _id})
                         }}
                     >
-                        Delete from collection
+                        {t('deleteFromCollection')}
                     </Typography>
                 </StyledCustomMenuItem>
             </StyledCustomMenu>
@@ -152,13 +155,16 @@ export default function AuthorsInfo({authors, collectionId, openAddUserAccordion
 
     const filteredAuthors = authors.filter(({username}) => username.includes(query))
 
+    const t = useShortTranslation({componentNameKey: "Collection.CollectionSettings.AuthorsInfo"})
+
+
     if (filteredAuthors.length === 0) {
         return <>
-            <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder='Enter username'/>
-            <Typography variant='h4' textAlign='center'>Wrong username</Typography>
+            <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder={t('inputPlaceholder')}/>
+            <Typography variant='h4' textAlign='center'>{t('wrongUsernameMessage')}</Typography>
             {isAdmin && (
                 <ListItem onClick={openAddUserAccordion}>
-                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>Add new</Button>
+                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>{t('addNewButton')}</Button>
                 </ListItem>
             )}
         </>
@@ -166,7 +172,7 @@ export default function AuthorsInfo({authors, collectionId, openAddUserAccordion
 
     return (
         <>
-            <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder='Enter username'/>
+            <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder={t('inputPlaceholder')}/>
             {filteredAuthors.map((author) =>
                 <AuthorInfo
                     isCurrentUserAdmin={isAdmin}
@@ -177,7 +183,7 @@ export default function AuthorsInfo({authors, collectionId, openAddUserAccordion
             )}
             {isAdmin && (
                 <ListItem onClick={openAddUserAccordion}>
-                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>Add new</Button>
+                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>{t('addNewButton')}</Button>
                 </ListItem>
             )}
         </>

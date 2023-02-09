@@ -165,6 +165,33 @@
             "tagValidationError": "Кожен тег мусить починатися з \"#\" з мінімальною довжиною в 3 символа"
           },
           "editButton": "Редагувати"
+        },
+        "AddUserToCollection": {
+          "notFoundMessage": "Не знайдено",
+          "addButton": "Додати",
+          "asAdmin": "Як адміна",
+          "asAuthor": "Як автора",
+          "asViewer": "Як глядача",
+          "inputPlaceholder": "Введіть ім'я користувача"
+        },
+        "AuthorsInfo": {
+          "wrongUsernameMessage": "Невірне ім'я користувача",
+          "addNewButton": "Додати нового користувача",
+          "inputPlaceholder": "Введіть ім'я користувача",
+          "admin": "Адмін",
+          "author": "Автор",
+          "makeAnAdmin": "Зробити адміном",
+          "makeAnAuthor": "Зробити автором",
+          "makeAViewer": "Зробити глядачем",
+          "deleteFromCollection": "Видалити з колекції"
+        },
+        "ViewersInfo": {
+          "wrongUsernameMessage": "Невірне ім'я користувача",
+          "addNewButton": "Додати нового користувача",
+          "inputPlaceholder": "Введіть ім'я користувача",
+          "makeAnAdmin": "Зробити адміном",
+          "makeAnAuthor": "Зробити автором",
+          "deleteFromCollection": "Видалити з колекції"
         }
       }
     }

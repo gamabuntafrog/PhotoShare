@@ -11,6 +11,7 @@ import collectionStyles from "../../../../collectionStyles";
 import useAnchorEl from "../../../../../../hooks/useAnchorEl";
 import {extendedCollectionsApi} from "../../../../../../redux/api/rootApi";
 import CallMadeIcon from "@mui/icons-material/CallMade";
+import useShortTranslation from "../../../../../../hooks/useShortTranslation";
 
 
 interface IViewerInfoProps {
@@ -19,7 +20,7 @@ interface IViewerInfoProps {
     isCurrentUserAdmin: boolean
 }
 
-function Viewer({viewer, collectionId, isCurrentUserAdmin}: IViewerInfoProps) {
+function ViewerInfo({viewer, collectionId, isCurrentUserAdmin}: IViewerInfoProps) {
 
     const {_id, avatar, username} = viewer
 
@@ -29,6 +30,9 @@ function Viewer({viewer, collectionId, isCurrentUserAdmin}: IViewerInfoProps) {
 
     const styles = useSx(collectionStyles)
     const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
+
+    const t = useShortTranslation({componentNameKey: "Collection.CollectionSettings.ViewersInfo"})
+
 
     if (!isCurrentUserAdmin) {
         return (
@@ -88,7 +92,7 @@ function Viewer({viewer, collectionId, isCurrentUserAdmin}: IViewerInfoProps) {
                     }}
                 >
                     <ListItemText>
-                        Make an author
+                        {t('makeAnAuthor')}
                     </ListItemText>
                 </StyledCustomMenuItem>
                 <StyledCustomMenuItem
@@ -98,7 +102,7 @@ function Viewer({viewer, collectionId, isCurrentUserAdmin}: IViewerInfoProps) {
                     }}
                 >
                     <ListItemText>
-                        Make an admin
+                        {t('makeAnAdmin')}
                     </ListItemText>
                 </StyledCustomMenuItem>
                 <StyledCustomMenuItem
@@ -108,7 +112,7 @@ function Viewer({viewer, collectionId, isCurrentUserAdmin}: IViewerInfoProps) {
                     }}
                 >
                     <Typography color='error'>
-                        Delete from collection
+                        {t('deleteFromCollection')}
                     </Typography>
                 </StyledCustomMenuItem>
             </StyledCustomMenu>
@@ -130,13 +134,16 @@ export default function ViewersInfo({viewers, collectionId, openAddUserAccordion
 
     const filteredViewers = viewers.filter(({username}) => username.includes(query))
 
+    const t = useShortTranslation({componentNameKey: "Collection.CollectionSettings.ViewersInfo"})
+
+
     if (filteredViewers.length === 0 && viewers.length !== 0) {
         return <>
-            <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder='Enter username'/>
-            <Typography variant='h4' textAlign='center'>Wrong username</Typography>
+            <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth  placeholder={t('inputPlaceholder')}/>
+            <Typography variant='h4' textAlign='center'>{t('wrongUsernameMessage')}</Typography>
             {isAdmin && (
                 <ListItem onClick={openAddUserAccordion}>
-                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>Add new</Button>
+                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>{t('addNewButton')}</Button>
                 </ListItem>
             )}
         </>
@@ -144,9 +151,9 @@ export default function ViewersInfo({viewers, collectionId, openAddUserAccordion
 
     return (
         <>
-            <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder='Enter username'/>
+            <TextField sx={{mb: 2}} onChange={handleQuery} fullWidth placeholder={t('inputPlaceholder')}/>
             {filteredViewers.map((viewer) =>
-                <Viewer
+                <ViewerInfo
                     key={viewer._id}
                     isCurrentUserAdmin={isAdmin}
                     viewer={viewer}
@@ -155,7 +162,7 @@ export default function ViewersInfo({viewers, collectionId, openAddUserAccordion
             )}
             {isAdmin && (
                 <ListItem onClick={openAddUserAccordion}>
-                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>Add new</Button>
+                    <Button endIcon={<CallMadeIcon/>} fullWidth variant='contained'>{t('addNewButton')}</Button>
                 </ListItem>
             )}
         </>

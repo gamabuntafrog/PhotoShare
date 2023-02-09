@@ -10,6 +10,7 @@ import MiniLoader from "../../../../../Loaders/MiniLoader";
 import collectionStyles from "../../../../collectionStyles";
 import useSx from "../../../../../../hooks/useSx";
 import {extendedUsersApi} from "../../../../../../redux/api/rootApi";
+import useShortTranslation from "../../../../../../hooks/useShortTranslation";
 
 
 
@@ -40,12 +41,14 @@ export default function AddUserToCollection(
 
     const onChangeUsernameQuery = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setQuery(e.target.value)
 
+    const t = useShortTranslation({componentNameKey: 'Collection.CollectionSettings.AddUserToCollection'})
+
     return (
         <>
             <TextField
                 sx={{my: 1}}
                 fullWidth
-                placeholder='Enter username'
+                placeholder={t('inputPlaceholder')}
                 value={query}
                 name='users'
                 type='text'
@@ -60,7 +63,7 @@ export default function AddUserToCollection(
                     variant='h5'
                     sx={styles.notFound}
                 >
-                    Not Found
+                    {t('notFoundMessage')}
                 </Typography>
             }
         </>

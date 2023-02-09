@@ -8,6 +8,7 @@ import useAnchorEl from "../../../../../../../hooks/useAnchorEl";
 import StyledCustomMenuItem from "../../../../../../../library/CustomMenu/StyledCustomMenuItem";
 import StyledCustomMenu from "../../../../../../../library/CustomMenu/StyledCustomMenu";
 import {IUserForAddInCollection} from "../../../../../../../types/user";
+import useShortTranslation from "../../../../../../../hooks/useShortTranslation";
 
 interface IUsersListProps {
     authors: IUserForAddInCollection[],
@@ -27,6 +28,8 @@ function UserItem({author, collectionId}: IUserItemProps) {
 
     const {addAuthorModal: styles} = useSx(collectionStyles)
     const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
+
+    const t = useShortTranslation({componentNameKey: 'Collection.CollectionSettings.AddUserToCollection'})
 
     return (
         <ListItem
@@ -57,7 +60,7 @@ function UserItem({author, collectionId}: IUserItemProps) {
                 aria-expanded={isAnchorEl ? 'true' : undefined}
                 onClick={handleClick}
             >
-                Add
+                {t('addButton')}
             </Button>
             <StyledCustomMenu
                 anchorEl={anchorEl}
@@ -71,7 +74,7 @@ function UserItem({author, collectionId}: IUserItemProps) {
                     }}
                 >
                     <ListItemText sx={{mr: 1}}>
-                        As author
+                        {t('asAuthor')}
                     </ListItemText>
                 </StyledCustomMenuItem>
                 <StyledCustomMenuItem
@@ -81,7 +84,7 @@ function UserItem({author, collectionId}: IUserItemProps) {
                     }}
                 >
                     <ListItemText sx={{mr: 1}}>
-                        As admin
+                        {t('asAuthor')}
                     </ListItemText>
                 </StyledCustomMenuItem>
                 <StyledCustomMenuItem
@@ -91,7 +94,7 @@ function UserItem({author, collectionId}: IUserItemProps) {
                     }}
                 >
                     <ListItemText sx={{mr: 1}}>
-                        As viewer
+                        {t('asViewer')}
                     </ListItemText>
                 </StyledCustomMenuItem>
             </StyledCustomMenu>

@@ -165,6 +165,33 @@
             "tagValidationError": "Every tag must have \"#\" ang min length 3 symbols"
           },
           "editButton": "Edit"
+        },
+        "AddUserToCollection": {
+          "notFoundMessage": "Not found",
+          "addButton": "Add",
+          "asAdmin": "As admin",
+          "asAuthor": "As author",
+          "asViewer": "As viewer",
+          "inputPlaceholder": "Enter username"
+        },
+        "AuthorsInfo": {
+          "wrongUsernameMessage": "Wrong username",
+          "addNewButton": "Add new",
+          "inputPlaceholder": "Enter username",
+          "admin": "Admin",
+          "author": "Author",
+          "makeAnAdmin": "Make an admin",
+          "makeAnAuthor": "Make an author",
+          "makeAViewer": "Make a viewer",
+          "deleteFromCollection": "Delete from collection"
+        },
+        "ViewersInfo": {
+          "wrongUsernameMessage": "Wrong username",
+          "addNewButton": "Add new",
+          "inputPlaceholder": "Enter username",
+          "makeAnAdmin": "Make an admin",
+          "makeAnAuthor": "Make an author",
+          "deleteFromCollection": "Delete from collection"
         }
       }
     }

@@ -88,8 +88,8 @@ export default function ThemeAppWrapper() {
                         standardReversed: mode === 'dark' ? 'black' : 'white',
                     },
                     background: {
-                        default: mode === 'dark' ? '#161616' : '#D3D3D3',
-                        paper: mode === 'dark' ? '#242424' : '#D3D3D3'
+                        default: mode === 'dark' ? '#161616' : '#ffffff',
+                        paper: mode === 'dark' ? '#242424' : '#ffffff'
                     },
                     text: {
                         standard: mode === 'dark' ? 'white' : 'black',
