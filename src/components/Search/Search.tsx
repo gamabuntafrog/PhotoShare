@@ -1,10 +1,9 @@
 import {Box, Container, TextField, Typography, useTheme} from "@mui/material";
-import {Outlet, useLocation, useParams, useSearchParams} from "react-router-dom";
+import {Outlet, useSearchParams} from "react-router-dom";
 import React, {useState} from "react";
-import {extendedUsersApi} from "../../redux/api/rootApi";
-import {useDebounce} from "use-debounce";
 import {StyledHeaderNavLink} from "../Header/headerStyles";
-
+import useSx from "../../hooks/useSx";
+import searchStyles from "./searchStyles";
 
 export default function Search() {
 
@@ -12,66 +11,36 @@ export default function Search() {
 
     const query = searchParams.get('query') || ''
 
-    const theme = useTheme()
+    const styles = useSx(searchStyles)
 
     return (
         <Container
             maxWidth={'laptop'}
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flexDirection: 'column'
-            }}
+            sx={styles.container}
         >
-            <Typography
-                sx={{
-                    mt: 3
-                }}
-                variant='h2'
-                textAlign='center'
-            >
-                Search
-            </Typography>
             <TextField
                 onChange={(e) => setSearchParams(`query=${e.target.value}`, {replace: true})}
-                sx={{
-                    my: 2,
-                    width: theme.breakpoints.values.mobile
-                }}
+                sx={styles.input}
                 value={query}
                 placeholder='Enter query'
+                variant='standard'
             />
+            <Typography
+                sx={styles.caption}
+                variant='body1'
+                textAlign='center'
+            >
+                Search posts, collections and users by title, tags or username
+            </Typography>
             <Box
-                sx={{
-                    padding: 3,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '24px',
-                    '& > a': {
-                        marginLeft: 3
-                    },
-                    [theme.breakpoints.down('tablet')]: {
-                        flexDirection: 'column',
-                        '& > a': {
-                            marginTop: 1,
-                            marginLeft: 0,
-                        }
-                    }
-                }}
+                sx={styles.linksWrapper}
             >
                 <StyledHeaderNavLink className='first' to={`users?query=${query}`} end>USERS</StyledHeaderNavLink>
                 <StyledHeaderNavLink to={`posts?query=${query}`}>POSTS</StyledHeaderNavLink>
                 <StyledHeaderNavLink to={`collections?query=${query}`}>COLLECTIONS</StyledHeaderNavLink>
             </Box>
             <Box
-                sx={{
-                    mt: 2,
-                    padding: 1,
-                    width: '100%'
-
-                }}
+                sx={styles.outletWrapper}
             >
                 <Outlet/>
             </Box>

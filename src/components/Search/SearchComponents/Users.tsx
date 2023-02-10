@@ -4,7 +4,7 @@ import {useDebounce} from "use-debounce";
 import {extendedUsersApi} from "../../../redux/api/rootApi";
 import MiniLoader from "../../Loaders/MiniLoader";
 
-export default function Users() {
+export default function SearchUsers() {
 
     const [searchParams] = useSearchParams();
 
@@ -16,8 +16,6 @@ export default function Users() {
     }, {
         skip: debouncedQuery.length < 2
     })
-
-    console.log(users)
 
     const navigate = useNavigate()
 

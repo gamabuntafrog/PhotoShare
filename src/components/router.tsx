@@ -12,7 +12,7 @@ import Collection from "./Collection";
 import UsersPosts from "./UserProfile/UserProfileComponents/UsersPosts";
 import UserCollections from "./UserProfile/UserProfileComponents/UserCollections";
 import UserAllowedToViewCollections from "./UserProfile/UserProfileComponents/UserAllowedToViewCollections";
-import Users from "./Search/SearchComponents/Users";
+import SearchUsers from "./Search/SearchComponents/Users";
 import Search from "./Search";
 import SearchPosts from './Search/SearchComponents/Posts'
 import SearchCollections from './Search/SearchComponents/Collections'
@@ -74,7 +74,7 @@ const privateRouter = createBrowserRouter([
                 children: [
                     {
                         path: "users",
-                        element: <Users/>
+                        element: <SearchUsers/>
                     },
                     {
                         path: "posts",
