@@ -3,7 +3,6 @@ import React from "react";
 import {extendedCollectionsApi, extendedPostsApi} from "../../../redux/api/rootApi";
 import MiniLoader from "../../Loaders/MiniLoader";
 import {Box, ImageList, Typography} from "@mui/material";
-import Collections from "./Collections";
 import usePostsActions from "../../../hooks/usePostsActions";
 import useSx from "../../../hooks/useSx";
 import postsStyles from "../../Posts/postsStyles";

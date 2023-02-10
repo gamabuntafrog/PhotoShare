@@ -73,9 +73,6 @@ export function Notifications({notifications, setIsNotificationsOpen}: {
 
 
 
-
-
-
 export default function Header() {
 
     const {user, isLoading, isLoggedIn, notifications} = useAppSelector((state) => state.userReducer)

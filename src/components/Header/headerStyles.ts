@@ -66,6 +66,7 @@ const headerStyles = (theme: Theme) => {
         },
         navContainer: {
             marginLeft: 'auto',
+            // width: '100%',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-around',
@@ -109,7 +110,35 @@ const headerStyles = (theme: Theme) => {
             }
         },
         mobileAccountContainer: {display: 'flex', alignItems: 'center'},
-        mobileNavbarButton: {mt: 2}
+        mobileNavbarButton: {mt: 2},
+        searchBar: {
+            inputWrapper: {
+                display: 'flex',
+                alignItems: 'center',
+                [theme.breakpoints.down(800)]: {
+                    width: '100%',
+                    justifyContent: 'center',
+                    position: 'fixed',
+                    top: '10%',
+                    left: '50%',
+                    padding: 4,
+                    borderRadius: 4,
+                    zIndex: '1000',
+                    background: theme.palette.background.paper,
+                    transform: 'translateX(-50%)',
+                },
+                [theme.breakpoints.down('mobile')]: {
+                    bottom: '12.5%',
+                    top: 'unset'
+                }
+            },
+            input: {
+                width: '200px',
+                mx: 1,
+                display: 'flex',
+                alignItems: 'center',
+            }
+        }
     }
 }
 
@@ -179,3 +208,4 @@ export const StyledMobileHeaderLogo = styled(StyledHeaderLogo)(({theme}) => ({
 }))
 
 export default headerStyles
+

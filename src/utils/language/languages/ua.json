@@ -12,7 +12,13 @@
     "Header": {
       "exitButton": "Вийти",
       "loginLink": "Увійти",
-      "registerLink": "Реєстрація"
+      "registerLink": "Реєстрація",
+      "SearchBar": {
+        "users": "Користувачі",
+        "posts": "Пости",
+        "collections": "Колекції",
+        "inputPlaceholder": "Пошук"
+      }
     },
     "Login": {
       "title": "Вхід",
@@ -47,6 +53,10 @@
       "repeatPassword": "Повторити пароль",
       "passwordsDoNotMatch": "Паролі не співпадають"
     },
+    "Collections": {
+      "Error": "Помилка",
+      "noCollectionsMessage": "Колекцій ще немає"
+    },
     "UserProfile": {
       "postsCount": "{{postsCount}} постів",
       "subscribesCount": "{{subscribesCount}} підписок",
@@ -67,10 +77,7 @@
         "cancelChangesButton": "Скасувати зміни",
         "saveChangesButton": "Зберегти зміни"
       },
-      "Collections": {
-        "Error": "Помилка",
-        "noCollectionsMessage": "Колекцій ще немає"
-      },
+
       "UserAllowedToViewCollections": {
         "Error": "Помилка",
         "noCollectionsMessage": "Колекцій ще немає"

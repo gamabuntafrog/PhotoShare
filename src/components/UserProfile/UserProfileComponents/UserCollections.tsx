@@ -2,9 +2,9 @@ import {useParams} from "react-router-dom";
 import {Box, Typography} from "@mui/material";
 import {extendedCollectionsApi} from "../../../redux/api/rootApi";
 import MiniLoader from "../../Loaders/MiniLoader";
-import Collections from "./Collections";
 import React from "react";
 import useShortTranslation from "../../../hooks/useShortTranslation";
+import Collections from "../../Collections/Collections";
 
 
 export default function UserCollections() {

@@ -6,23 +6,17 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import {Alert, Box, Container, createTheme, Snackbar, Stack, ThemeProvider, Typography, useTheme} from "@mui/material";
+import {Alert, Box,  Stack, Typography, useTheme} from "@mui/material";
 import {useAppDispatch, useAppSelector} from "./redux/hooks";
 import userSlice, {
-    addNotification,
     disableLoading,
-    getNotifications,
-    getCurrentUser, removeErrors, logout
+    getCurrentUser,
 } from "./redux/slices/userSlice";
 import {AppDispatch} from "./redux/store";
 import {chooseRouter} from "./components/router";
-import {INotification} from "./types/notification";
 import {IResponseNotification, pullResponse, pushResponse} from "./redux/slices/responseNotificationsSlice";
-import {extendedPostsApi, extendedUsersApi} from "./redux/api/rootApi";
 import FullScreenLoader from "./components/Loaders/FullScreenLoader";
-import Header from "./components/Header";
-import { useTranslation, initReactI18next } from "react-i18next";
-import i18n from "./utils/language/i18n";
+
 
 const tryAuth = async (dispatch: AppDispatch) => {
     try {
@@ -79,6 +73,7 @@ export default function App() {
     //         setTimeout(() => subscribe(token), 500)
     //     }
     // }
+
 
     useEffect(() => {
         !!token ? tryAuth(dispatch) : dispatch(disableLoading())

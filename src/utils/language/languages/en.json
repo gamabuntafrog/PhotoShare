@@ -12,7 +12,13 @@
     "Header": {
       "exitButton": "Exit",
       "loginLink": "Login",
-      "registerLink": "Register"
+      "registerLink": "Register",
+      "SearchBar": {
+        "users": "Users",
+        "posts": "Posts",
+        "collections": "Collections",
+        "inputPlaceholder": "Search"
+      }
     },
     "Login": {
       "title": "Login",
@@ -47,6 +53,10 @@
       "repeatPassword": "Repeat password",
       "passwordsDoNotMatch": "Passwords don't match"
     },
+    "Collections": {
+      "error": "Error",
+      "noCollectionsMessage": "There already no collections yet"
+    },
     "UserProfile": {
       "postsCount": "{{postsCount}} posts",
       "subscribesCount": "{{subscribesCount}} subscribes",
@@ -66,10 +76,6 @@
         "usernameMaxLengthError": "Max username length is {{MAX_USERNAME_LENGTH}} symbols",
         "cancelChangingButton": "Cancel changing",
         "saveChangesButton": "Save changes"
-      },
-      "Collections": {
-        "error": "Error",
-        "noCollectionsMessage": "There already no collections yet"
       },
       "UserAllowedToViewCollections": {
         "error": "Error",

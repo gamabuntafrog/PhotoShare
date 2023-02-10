@@ -1,8 +1,9 @@
-import {Box, ImageList, ImageListItem, styled, Typography} from "@mui/material";
-import {ICollectionForIUser} from "../../../types/user";
-import useSx from "../../../hooks/useSx";
-import userProfileStyles, {StyledCollectionItem} from "../userProfileStyles";
-import useShortTranslation from "../../../hooks/useShortTranslation";
+import {ICollectionForIUser} from "../../types/user";
+import useSx from "../../hooks/useSx";
+import userProfileStyles, {StyledCollectionItem} from "../UserProfile/userProfileStyles";
+import useShortTranslation from "../../hooks/useShortTranslation";
+import {Box, ImageList, ImageListItem, Typography} from "@mui/material";
+import collectionsStyles from "./collectionsStyles";
 
 interface ICollectionItemProps {
     collections: ICollectionForIUser[]
@@ -11,8 +12,8 @@ interface ICollectionItemProps {
 
 export default function Collections({collections}: ICollectionItemProps) {
 
-    const {collections: styles} = useSx(userProfileStyles)
-    const t = useShortTranslation({componentNameKey: 'UserProfile.Collections'})
+    const styles = useSx(collectionsStyles)
+    const t = useShortTranslation({componentNameKey: 'Collections'})
 
     if (collections.length === 0) {
         return (

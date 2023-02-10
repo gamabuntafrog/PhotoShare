@@ -11,15 +11,19 @@ import {
     MIN_USERNAME_LENGTH
 } from "../validationSchemas";
 
+const languages = ['uk', 'en-US']
+
+const defaultLanguage = localStorage.getItem('i18nextLng') || languages.find((lang) => lang === window.navigator.language) || 'en-US'
+
 i18n
     .use(LanguageDetector)
     .use(initReactI18next) // passes i18n down to react-i18next
     .init({
         resources: {
-            en,
-            ua
+            'en-US': en,
+            'uk': ua
         },
-        fallbackLng: "en",
+        fallbackLng: defaultLanguage,
         debug: true,
         interpolation: {
             escapeValue: false,

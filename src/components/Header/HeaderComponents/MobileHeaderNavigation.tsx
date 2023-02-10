@@ -7,6 +7,7 @@ import AddBoxIcon from "@mui/icons-material/AddBox";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
+import SearchBar from "./SearchBar";
 
 interface IMobileHeaderNavigationProps {
     openModal: () => void,
@@ -30,6 +31,7 @@ export default function MobileHeaderNavigation(
         >
             {user && isLoggedIn &&
                 <>
+                    <SearchBar/>
                     <StyledHeaderNavLink className='first' to='/post/create'>
                         <IconButton color='inherit'>
                             <AddBoxIcon/>

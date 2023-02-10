@@ -107,3 +107,19 @@ export interface IUserForAddInCollection {
     username: string,
     avatar: string | null
 }
+
+export interface IUserForSearchBar {
+    _id: string,
+    username: string,
+    avatar: string | null
+}
+
+export interface IUserForUsers {
+    _id: string,
+    username: string,
+    avatar: string | null,
+    postsCount: number,
+    collectionsCount: number,
+    subscribesCount: number,
+    subscribersCount: number
+}

@@ -12,8 +12,10 @@ import Collection from "./Collection";
 import UsersPosts from "./UserProfile/UserProfileComponents/UsersPosts";
 import UserCollections from "./UserProfile/UserProfileComponents/UserCollections";
 import UserAllowedToViewCollections from "./UserProfile/UserProfileComponents/UserAllowedToViewCollections";
-
-
+import Users from "./Search/SearchComponents/Users";
+import Search from "./Search";
+import SearchPosts from './Search/SearchComponents/Posts'
+import SearchCollections from './Search/SearchComponents/Collections'
 
 const privateRouter = createBrowserRouter([
     {
@@ -65,6 +67,24 @@ const privateRouter = createBrowserRouter([
             {
                 path: "collections/:id",
                 element: <Collection/>
+            },
+            {
+                path: "search",
+                element: <Search/>,
+                children: [
+                    {
+                        path: "users",
+                        element: <Users/>
+                    },
+                    {
+                        path: "posts",
+                        element: <SearchPosts/>
+                    },
+                    {
+                        path: "collections",
+                        element: <SearchCollections/>
+                    }
+                ]
             },
             {
                 path: "*",

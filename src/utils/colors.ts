@@ -20,120 +20,120 @@ import {PaletteColorOptions} from "@mui/material";
 export const colorsArray = [
     {
         title: {
-            en: 'blue',
-            ua: 'синій'
+            'en-US': 'blue',
+            'uk': 'синій'
         },
         enum: colorTypes.blue,
         ref: blue
     },
     {
         title: {
-            en: 'red',
-            ua: 'червоний'
+            'en-US': 'red',
+            'uk': 'червоний'
         },
         enum: colorTypes.red,
         ref: red
     },
     {
         title: {
-            en: 'green',
-            ua: 'зелений'
+            'en-US': 'green',
+            'uk': 'зелений'
         },
         enum: colorTypes.green,
         ref: green
     },
     {
         title: {
-            en: 'amber',
-            ua: 'амбер'
+            'en-US': 'amber',
+            'uk': 'амбер'
         },
         enum: colorTypes.amber,
         ref: amber
     },
     {
         title: {
-            en: 'blueGrey',
-            ua: 'синьо-сірий'
+            'en-US': 'blueGrey',
+            'uk': 'синьо-сірий'
         },
         enum: colorTypes.blueGrey,
         ref: blueGrey
     },
     {
         title: {
-            en: 'orange',
-            ua: 'помаранчевий'
+            'en-US': 'orange',
+            'uk': 'помаранчевий'
         },
         enum: colorTypes.orange,
         ref: orange
     },
     {
         title: {
-            en: 'cyan',
-            ua: 'голубий'
+            'en-US': 'cyan',
+            'uk': 'голубий'
         },
         enum: colorTypes.cyan,
         ref: cyan
     },
     {
         title: {
-            en: 'brown',
-            ua: 'коричневий'
+            'en-US': 'brown',
+            'uk': 'коричневий'
         },
         enum: colorTypes.brown,
         ref: brown
     },
     {
         title: {
-            en: 'deepPurple',
-            ua: 'глубокий фіолетовий'
+            'en-US': 'deepPurple',
+            'uk': 'глубокий фіолетовий'
         },
         enum: colorTypes.deepPurple,
         ref: deepPurple
     },
     {
         title: {
-            en: 'pink',
-            ua: 'рожевий'
+            'en-US': 'pink',
+            'uk': 'рожевий'
         },
         enum: colorTypes.pink,
         ref: pink
     },
     {
         title: {
-            en: 'teal',
-            ua: 'блакитний'
+            'en-US': 'teal',
+            'uk': 'блакитний'
         },
         enum: colorTypes.teal,
         ref: teal
     },
     {
         title: {
-            en: 'indigo',
-            ua: 'індиго'
+            'en-US': 'indigo',
+            'uk': 'індиго'
         },
         enum: colorTypes.indigo,
         ref: indigo
     },
     {
         title: {
-            en: 'lightBlue',
-            ua: 'світло-синій'
+            'en-US': 'lightBlue',
+            'uk': 'світло-синій'
         },
         enum: colorTypes.lightBlue,
         ref: lightBlue
     },
     {
         title: {
-            en: 'yellow',
-            ua: 'жовтий'
+            'en-US': 'yellow',
+            'uk': 'жовтий'
         },
         enum: colorTypes.yellow,
         ref: yellow
     },
     {
         title: {
-            en: 'lightGreen',
-            ua: 'салатовий'
+            'en-US': 'lightGreen',
+            'uk': 'салатовий'
         },
         enum: colorTypes.lightGreen,
         ref: lightGreen

@@ -47,14 +47,14 @@ export default function Settings() {
                 <Box sx={{display: 'flex', mt: 2, mb: 4}}>
                     <Button
                         variant='outlined'
-                        onClick={() => i18n.changeLanguage('en')}
+                        onClick={() => i18n.changeLanguage('en-US')}
                     >
                         {t('chooseEnglish')}
                     </Button>
                     <Button
                         variant='outlined'
                         sx={{ml: 2}}
-                        onClick={() => i18n.changeLanguage('ua')}
+                        onClick={() => i18n.changeLanguage('uk')}
                     >
                         {t('chooseUkrainian')}
                     </Button>
@@ -82,7 +82,7 @@ export default function Settings() {
                                     sx={styles.colorButton(color.ref[700])}
                                     onClick={() => changePrimaryColor(color.enum)}
                                 >
-                                    {color.title[i18n.resolvedLanguage as 'en' | 'ua']}
+                                    {color.title[i18n.resolvedLanguage as 'en-US' | 'uk']}
                                 </Button>
                             </ListItem>
                         )

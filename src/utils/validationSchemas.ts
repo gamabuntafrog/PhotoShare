@@ -9,11 +9,15 @@ export const MIN_TAG_LENGTH = 3
 export const MAX_TAG_LENGTH = 30
 
 export const validateTags = (string: string | undefined) => {
-    const check = string?.split(' ').find((str) => {
-        return str[0] === '#' && str.length > MIN_TAG_LENGTH && str.length < MAX_TAG_LENGTH
+    if (!string) {
+        return false
+    }
+
+    const check = string?.split(' ').every((str) => {
+        return str[0] === '#' && (str.length > MIN_TAG_LENGTH) && (str.length < MAX_TAG_LENGTH)
     })
 
-    return !!check
+    return check
 }
 
 export const imagePresenceValidation = (value: any) => {
@@ -30,7 +34,7 @@ export const imageSizeValidation = (value: FileList) => {
     return value[0].size < twentyMB
 }
 
-const oneImageValidationSchema = Yup.mixed().test('size', '', imageSizeValidation).required('').test('required', '', imagePresenceValidation)
+const oneImageValidationSchema = Yup.mixed().test('size', 'imageIsRequired', imageSizeValidation).required('imageIsRequired').test('required', 'imageIsRequired', imagePresenceValidation)
 
 // .test('size', 'Max image size is 20mb', imageSizeValidation).required('Image is required')
 
@@ -48,9 +52,9 @@ export const MAX_COLLECTION_TITLE_LENGTH = 48
 
 export const collectionValidationSchema = Yup.object({
     title: Yup.string().min(MIN_COLLECTION_TITLE_LENGTH, 'titleMinLengthError').max(MAX_COLLECTION_TITLE_LENGTH, `titleMaxLengthError`).required('requiredTitle'),
-    tags: Yup.string().required('requiredTags').test('validation', 'tagValidationError', validateTags)
+    tags: Yup.string().test('validation', 'tagValidationError', validateTags)
 }).required()
-
+// .required('requiredTags')
 export const MIN_USERNAME_LENGTH = 4
 export const MAX_USERNAME_LENGTH = 20
 export const MIN_PASSWORD_LENGTH = 6
