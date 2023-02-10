@@ -15,7 +15,6 @@ export default function Search() {
 
     return (
         <Container
-            maxWidth={'laptop'}
             sx={styles.container}
         >
             <TextField

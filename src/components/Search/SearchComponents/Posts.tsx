@@ -56,7 +56,6 @@ export default function Posts() {
         <Box sx={{
 
         }}>
-            <Typography variant='h3' textAlign='center'>POSTS</Typography>
             <ImageList
                 variant="masonry"
                 sx={{

@@ -38,7 +38,7 @@ const searchStyles = (theme: Theme) => {
                     marginLeft: 0,
                 }
             }
-        },
+        } as const,
         outletWrapper: {
             mt: 2,
             padding: 1,

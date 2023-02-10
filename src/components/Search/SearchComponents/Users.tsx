@@ -45,7 +45,6 @@ export default function SearchUsers() {
 
     return (
         <Box>
-            <Typography variant='h3' textAlign='center'>USERS</Typography>
             <List
                 sx={{
                     display: 'flex',

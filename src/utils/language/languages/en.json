@@ -9,6 +9,24 @@
       "chooseDarkTheme": "Change theme to dark",
       "chooseLightTheme": "Change theme to light"
     },
+    "Search": {
+      "caption": "Search posts, collections and users by title, tags or username",
+      "usersLink": "USERS",
+      "postsLink": "POSTS",
+      "collectionsLink": "COLLECTIONS",
+      "Users": {
+        "notFound": "Not found",
+        "enterUsername": "Enter username"
+      },
+      "Posts": {
+        "notFound": "Not found",
+        "enterTitle": "Enter title"
+      },
+      "Collections": {
+        "notFound": "Not found",
+        "enterTitle": "Enter title"
+      }
+    },
     "Header": {
       "exitButton": "Exit",
       "loginLink": "Login",

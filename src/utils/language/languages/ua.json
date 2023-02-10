@@ -9,6 +9,24 @@
       "chooseDarkTheme": "Змінити тему на темну",
       "chooseLightTheme": "Змінити тему на світлу"
     },
+    "Search": {
+      "caption": "Шукайте пости, колекції та користувачів за заголовками, тегами чи іменами користувачів",
+      "usersLink": "КОРИСТУВАЧІ",
+      "postsLink": "ПОСТИ",
+      "collectionsLink": "КОЛЕКЦІЇ",
+      "Users": {
+        "notFound": "Не знайдено",
+        "enterUsername": "Введіть ім'я користувача"
+      },
+      "Posts": {
+        "notFound": "Не знайдено",
+        "enterTitle": "Введіть заголовок"
+      },
+      "Collections": {
+        "notFound": "Не знайдено",
+        "enterTitle": "Введіть заголовок"
+      }
+    },
     "Header": {
       "exitButton": "Вийти",
       "loginLink": "Увійти",
