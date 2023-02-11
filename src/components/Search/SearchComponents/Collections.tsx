@@ -5,6 +5,9 @@ import {useSearchParams} from "react-router-dom";
 import {useDebounce} from "use-debounce";
 import MiniLoader from "../../Loaders/MiniLoader";
 import React from "react";
+import useShortTranslation from "../../../hooks/useShortTranslation";
+import useSx from "../../../hooks/useSx";
+import searchStyles from "../searchStyles";
 
 
 export default function SearchCollections() {
@@ -21,30 +24,29 @@ export default function SearchCollections() {
         skip: debouncedQuery.length < 2
     })
 
-    console.log(collections)
+    const t = useShortTranslation({componentNameKey: 'Search.Collections'})
 
     if (isLoading) {
         return (
-            <Box>
-
+            <>
                 <MiniLoader/>
-            </Box>
+            </>
         )
     }
 
     if (!isLoading && collections.length === 0 && debouncedQuery.length > 2) {
         return (
-            <Box>
-                <Typography variant='h3' textAlign='center'>Not found</Typography>
-            </Box>
+            <>
+                <Typography variant='h3' textAlign='center'>{t('notFound')}</Typography>
+            </>
         )
     }
 
     if (collections.length === 0 && debouncedQuery.length < 2) {
         return (
-            <Box>
-                <Typography variant='h3' textAlign='center'>Enter title</Typography>
-            </Box>
+            <>
+                <Typography variant='h3' textAlign='center'>{t('enterTitle')}</Typography>
+            </>
         )
     }
 

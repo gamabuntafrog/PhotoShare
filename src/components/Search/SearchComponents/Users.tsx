@@ -3,6 +3,9 @@ import {Outlet, useNavigate, useSearchParams} from "react-router-dom";
 import {useDebounce} from "use-debounce";
 import {extendedUsersApi} from "../../../redux/api/rootApi";
 import MiniLoader from "../../Loaders/MiniLoader";
+import useShortTranslation from "../../../hooks/useShortTranslation";
+import useSx from "../../../hooks/useSx";
+import searchStyles from "../searchStyles";
 
 export default function SearchUsers() {
 
@@ -19,6 +22,10 @@ export default function SearchUsers() {
 
     const navigate = useNavigate()
 
+    const t = useShortTranslation({componentNameKey: 'Search.Users'})
+
+    const {users: styles} = useSx(searchStyles)
+
     if (isLoading) {
         return (
             <Box>
@@ -30,7 +37,7 @@ export default function SearchUsers() {
     if (!isLoading && users.length === 0 && debouncedQuery.length > 2) {
         return (
             <Box>
-                <Typography variant='h3' textAlign='center'>Not found</Typography>
+                <Typography variant='h3' textAlign='center'>{t('notFound')}</Typography>
             </Box>
         )
     }
@@ -38,37 +45,22 @@ export default function SearchUsers() {
     if (users.length === 0 && debouncedQuery.length < 2) {
         return (
             <Box>
-                <Typography variant='h3' textAlign='center'>Enter username</Typography>
+                <Typography variant='h3' textAlign='center'>{t('enterUsername')}</Typography>
             </Box>
         )
     }
 
     return (
-        <Box>
+        <>
             <List
-                sx={{
-                    display: 'flex',
-                    width: '100%'
-                }}
+                sx={styles.usersList}
             >
                 {users.map((user) => {
                     const {_id, avatar = '', username} = user
                     return (
                         <ListItem
                             key={_id}
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                width: '20%',
-                                bgcolor: 'background.paper',
-                                margin: 1,
-                                borderRadius: 4,
-                                cursor: 'pointer',
-                                '&:hover': {
-                                    bgcolor: 'primary.main',
-                                    color: '#121212'
-                                }
-                            }}
+                            sx={styles.item}
                             onClick={() => {
                                 navigate(`/users/${_id}`)
                             }}
@@ -88,6 +80,6 @@ export default function SearchUsers() {
                     )
                 })}
             </List>
-        </Box>
+        </>
     )
 }

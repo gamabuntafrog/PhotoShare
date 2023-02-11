@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import {StyledHeaderNavLink} from "../Header/headerStyles";
 import useSx from "../../hooks/useSx";
 import searchStyles from "./searchStyles";
+import useShortTranslation from "../../hooks/useShortTranslation";
 
 export default function Search() {
 
@@ -12,6 +13,8 @@ export default function Search() {
     const query = searchParams.get('query') || ''
 
     const styles = useSx(searchStyles)
+
+    const t = useShortTranslation({componentNameKey: 'Search'})
 
     return (
         <Container
@@ -29,14 +32,14 @@ export default function Search() {
                 variant='body1'
                 textAlign='center'
             >
-                Search posts, collections and users by title, tags or username
+                {t('caption')}
             </Typography>
             <Box
                 sx={styles.linksWrapper}
             >
-                <StyledHeaderNavLink className='first' to={`users?query=${query}`} end>USERS</StyledHeaderNavLink>
-                <StyledHeaderNavLink to={`posts?query=${query}`}>POSTS</StyledHeaderNavLink>
-                <StyledHeaderNavLink to={`collections?query=${query}`}>COLLECTIONS</StyledHeaderNavLink>
+                <StyledHeaderNavLink className='first' to={`users?query=${query}`} end>{t('usersLink')}</StyledHeaderNavLink>
+                <StyledHeaderNavLink to={`posts?query=${query}`}>{t('postsLink')}</StyledHeaderNavLink>
+                <StyledHeaderNavLink to={`collections?query=${query}`}>{t('collectionsLink')}</StyledHeaderNavLink>
             </Box>
             <Box
                 sx={styles.outletWrapper}

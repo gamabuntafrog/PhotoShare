@@ -6,7 +6,11 @@ const postsStyles = (theme: Theme) => {
 
     return {
         container: {
-            py: 2
+            py: 2,
+            display: 'flex',
+            flexDirection: 'row',
+
+            // height: '200vh'
         },
         errorContainer: {
             margin: '0 auto',
@@ -17,9 +21,11 @@ const postsStyles = (theme: Theme) => {
             maxHeight: '90vh'
         },
         postsList: {
-            width: '95%',
-            mx: 'auto',
-            my: 0
+            // width: '95%',
+            // mx: 'auto',
+            // my: 0,
+            margin: 1
+            // minHeight: '110vh'
         }
     }
 

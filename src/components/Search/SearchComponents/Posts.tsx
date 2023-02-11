@@ -7,6 +7,9 @@ import usePostsActions from "../../../hooks/usePostsActions";
 import PostItem from "../../PostItem";
 import React from "react";
 import useMediaQueries from "../../../hooks/useMediaQueries";
+import useShortTranslation from "../../../hooks/useShortTranslation";
+import useSx from "../../../hooks/useSx";
+import searchStyles from "../searchStyles";
 
 
 export default function Posts() {
@@ -27,43 +30,40 @@ export default function Posts() {
     const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()
     const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
 
+    const t = useShortTranslation({componentNameKey: 'Search.Posts'})
+
+    const {posts: styles} = useSx(searchStyles)
+
+
     if (isLoading) {
         return (
-            <Box>
-
+            <>
                 <MiniLoader/>
-            </Box>
+            </>
         )
     }
 
     if (!isLoading && posts.length === 0 && debouncedQuery.length > 2) {
         return (
-            <Box>
-                <Typography variant='h3' textAlign='center'>Not found</Typography>
-            </Box>
+            <>
+                <Typography variant='h3' textAlign='center'>{t('notFound')}</Typography>
+            </>
         )
     }
 
     if (posts.length === 0 && debouncedQuery.length < 2) {
         return (
-            <Box>
-                <Typography variant='h3' textAlign='center'>Enter title</Typography>
-            </Box>
+            <>
+                <Typography variant='h3' textAlign='center'>{t('enterTitle')}</Typography>
+            </>
         )
     }
 
     return (
-        <Box sx={{
-
-        }}>
+        <>
             <ImageList
                 variant="masonry"
-                sx={{
-                    width: '95%',
-                    mx: 'auto',
-                    mb: 0,
-                    mt: 2
-                }}
+                sx={styles.list}
                 gap={12}
                 cols={postsListCols}
             >
@@ -73,6 +73,6 @@ export default function Posts() {
                     key={post._id}
                 />)}
             </ImageList>
-        </Box>
+        </>
     )
 }

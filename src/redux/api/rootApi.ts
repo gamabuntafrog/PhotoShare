@@ -52,8 +52,8 @@ export const baseQueryWithInteceptors: BaseQueryFn<string | FetchArgs,
     if (isMessageInData(data)) {
         api.dispatch(pushResponse(data))
     }
-    console.log(isMessageInData(data))
-    console.log(data)
+    // console.log(isMessageInData(data))
+    // console.log(data)
 
     return result
 }
@@ -91,9 +91,15 @@ export type idType = {
 
 export const extendedPostsApi = rootApi.injectEndpoints({
     endpoints: (build) => ({
-        getMany: build.query<IPost[], void>({
-            query: () => '/posts',
+        getMany: build.query<IPost[], {page: number}>({
+            query: ({page}) => ({
+                url: '/posts',
+                params: {
+                    page
+                }
+            }),
             transformResponse: (response: IResponse<{ posts: IPost[] }>) => response.data.posts,
+
         }),
         searchPosts: build.query<IPost[], { title: string }>({
             query: ({title}) => ({
@@ -355,5 +361,4 @@ export const extendedUsersApi = rootApi.injectEndpoints({
     }),
     overrideExisting: false
 })
-
 

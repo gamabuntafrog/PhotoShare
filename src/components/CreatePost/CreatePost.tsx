@@ -104,8 +104,8 @@ export default function CreatePost() {
         setIsPostCreating(true)
 
         try {
-            await createPost({body}).unwrap()
-            navigate('/')
+            await createPost({body}).unwrap().then(() => navigate('/'))
+
         } catch (e) {
             setIsPostCreating(false)
         }

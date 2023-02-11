@@ -1,6 +1,8 @@
 import {extendedCollectionsApi, extendedPostsApi} from "../redux/api/rootApi";
 import {useEffect, useState} from "react";
 import {IPost, ISavesInfo} from "../types/post";
+import useMediaQueries from "./useMediaQueries";
+import sortItemsForMasonryList from "../utils/sortItemsForMasonryList";
 
 export interface IUsePostsProps {
     initPosts: IPost[] | undefined,
@@ -106,7 +108,15 @@ const usePostsActions = ({initPosts}: IUsePostsProps): usePostsActionsReturnValu
         }
     }
 
-    return [posts, {toggleLike, toggleSave, updateSavesInfo}] as const
+    const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()
+    const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
+
+    const sortedPostsForMasonryList = sortItemsForMasonryList(postsListCols, posts)
+
+    // console.log('notSorted: ', posts)
+    // console.log('sorted: ', sortedPostsForMasonryList)
+
+    return [sortedPostsForMasonryList, {toggleLike, toggleSave, updateSavesInfo}] as const
 }
 
 export default usePostsActions
