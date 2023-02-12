@@ -28,7 +28,7 @@ const userProfileStyles = (theme: Theme) => {
             justifyContent: 'center',
             flexDirection: 'column',
             ml: 2,
-            [theme.breakpoints.down('mobile')]: {
+            [theme.breakpoints.down('tablet')]: {
                 ml: 0,
             }
         },
