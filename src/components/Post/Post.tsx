@@ -1,4 +1,15 @@
-import {Avatar, Box, Button, Container, IconButton, Menu, MenuItem, OutlinedInput, Typography} from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Button,
+    Container,
+    IconButton,
+    Menu,
+    MenuItem,
+    OutlinedInput,
+    Typography,
+    useTheme
+} from "@mui/material";
 import {NavLink, useParams} from "react-router-dom";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
@@ -41,33 +52,26 @@ function AuthorOfPostInfo(
 
     const userActionsButton = isSubscribed ? t('unsubscribeButton') : t('subscribeButton')
 
+    const theme = useTheme()
+    const {authorInfo: styles} = useSx(postStyles)
+
     return (
         <Box
-            sx={{display: 'flex'}}
+            sx={styles.container}
         >
             <NavLink
-                style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'start',
-                }}
+                style={styles.wrapper}
                 to={`/users/${authorId}`}>
-                <Avatar sx={{width: '40px', height: '40px'}} src={avatarURL as string}/>
+                <Avatar sx={styles.avatar} src={avatarURL as string}/>
                 <Box
-                    sx={{
-                        ml: 1,
-                        lineHeight: '0px'
-                    }}
+                    sx={styles.userInfoWrapper}
                 >
                     <Typography variant='h6'>{username}</Typography>
                     <Typography variant='caption'>{t('subscribersCount', {subscribersCount})}</Typography>
                 </Box>
             </NavLink>
             {!isUserAuthorOfPost && <Button
-                sx={{
-                    ml: 2,
-                    borderRadius: 4,
-                }}
+                sx={styles.subscribeButton}
                 variant='contained'
                 onClick={onToggleSubscribe}
             >

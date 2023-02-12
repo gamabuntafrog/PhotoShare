@@ -37,7 +37,7 @@ export default function SearchUsers() {
     if (!isLoading && users.length === 0 && debouncedQuery.length > 2) {
         return (
             <Box>
-                <Typography variant='h3' textAlign='center'>{t('notFound')}</Typography>
+                <Typography sx={styles.title} variant='h3' textAlign='center'>{t('notFound')}</Typography>
             </Box>
         )
     }
@@ -45,7 +45,7 @@ export default function SearchUsers() {
     if (users.length === 0 && debouncedQuery.length < 2) {
         return (
             <Box>
-                <Typography variant='h3' textAlign='center'>{t('enterUsername')}</Typography>
+                <Typography variant='h3' sx={styles.title} textAlign='center'>{t('enterUsername')}</Typography>
             </Box>
         )
     }

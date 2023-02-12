@@ -2,24 +2,21 @@ import {
     Avatar,
     Box,
     Button,
-    MenuItem,
-    Modal,
+
     Typography, useTheme
 } from "@mui/material";
-import {NavLink, Outlet, useMatch, useOutlet, useParams} from "react-router-dom";
+import {NavLink, Outlet, useParams} from "react-router-dom";
 import {useAppSelector} from "../../redux/hooks";
 import React, {useEffect, useState} from "react";
 import {extendedCollectionsApi, extendedUsersApi} from "../../redux/api/rootApi";
 import useToggleSubscribe from "../../hooks/useToggleSubscribe";
 import {ICurrentUser} from "../../types/user";
-import {AddAuthorModal} from "./UserProfileComponents/AddAuthorModal";
 import useSx from "../../hooks/useSx";
 import userProfileStyles from "./userProfileStyles";
 import ChangeUserProfile from "./UserProfileComponents/ChangeUserProfile";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import {StyledHeaderNavLink} from "../Header/headerStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
-import {useTranslation} from "react-i18next";
 
 
 export default function UserProfile() {

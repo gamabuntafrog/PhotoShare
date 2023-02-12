@@ -10,6 +10,8 @@ import {ICurrentUser} from "../../../types/user";
 import {Dispatch, SetStateAction, useEffect} from "react";
 import setPreviewImage from "../../../utils/setPreviewImage";
 import useShortTranslation from "../../../hooks/useShortTranslation";
+import useSx from "../../../hooks/useSx";
+import userProfileStyles from "../userProfileStyles";
 
 interface ChangeUserProfile {
     turnOffChangingMode: () => void,
@@ -64,17 +66,17 @@ export default function ChangeUserProfile({turnOffChangingMode, setAvatarFile, s
 
     const usernameLabel = usernameError?.message ? t(usernameError.message) : t('usernameLabel')
 
+    const {changeUserProfile: styles} = useSx(userProfileStyles)
+
     return (
         <FormGroup
-            sx={{
-                ml: 1
-            }}
+            sx={styles.formWrapper}
         >
             <Button
                 type='button'
                 sx={{my: 1}}
             >
-                <InputLabel sx={{cursor: 'pointer', color: 'inherit', width: '100%'}} htmlFor='avatar'>
+                <InputLabel sx={styles.inputLabel} htmlFor='avatar'>
                     {t('changeAvatarButtonAsLabel')}
                 </InputLabel>
                 <input

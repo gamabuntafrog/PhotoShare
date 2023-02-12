@@ -46,7 +46,7 @@ export default function Posts() {
     if (!isLoading && posts.length === 0 && debouncedQuery.length > 2) {
         return (
             <>
-                <Typography variant='h3' textAlign='center'>{t('notFound')}</Typography>
+                <Typography variant='h3' sx={styles.title} textAlign='center'>{t('notFound')}</Typography>
             </>
         )
     }
@@ -54,7 +54,7 @@ export default function Posts() {
     if (posts.length === 0 && debouncedQuery.length < 2) {
         return (
             <>
-                <Typography variant='h3' textAlign='center'>{t('enterTitle')}</Typography>
+                <Typography variant='h3' sx={styles.title} textAlign='center'>{t('enterTitle')}</Typography>
             </>
         )
     }

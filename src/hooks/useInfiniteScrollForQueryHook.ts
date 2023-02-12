@@ -5,16 +5,17 @@ export interface IUseInfiniteScrollForQueryHookProps {
     isLoading: boolean,
     data: any[],
     setPage: React.Dispatch<React.SetStateAction<number>>,
+    page: number,
     isError: boolean
 }
 
-export default function useInfiniteScrollForQueryHook({isLoading, data, setPage, isError}: IUseInfiniteScrollForQueryHookProps) {
+export default function useInfiniteScrollForQueryHook({isLoading, data, setPage, isError, page}: IUseInfiniteScrollForQueryHookProps) {
     const [isEnd, setIsEnd] = useState(false);
     const [combinedValue, setCombinedValue] = useState(data);
 
     const {ref, inView} = useInView({
         threshold: 0,
-        rootMargin: '1000px'
+        rootMargin: page > 1 ? '1000px' : '100px'
     });
 
     useEffect(() => {

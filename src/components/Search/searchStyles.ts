@@ -4,8 +4,6 @@ import {Theme} from "@mui/material";
 const searchStyles = (theme: Theme) => {
 
 
-
-
     return {
         container: {
             display: 'flex',
@@ -16,7 +14,15 @@ const searchStyles = (theme: Theme) => {
         input: {
             mt: 10,
             mb: 2,
-            width: theme.breakpoints.values.mobile
+            width: theme.breakpoints.values.mobile,
+            [theme.breakpoints.down('mobile')]: {
+                width: '100%',
+                mx: 0.5,
+                '& *': {
+                    textAlign: 'center',
+                    ml: 0
+                }
+            }
         },
         caption: {
             mt: 1,
@@ -61,6 +67,11 @@ const searchStyles = (theme: Theme) => {
                     bgcolor: 'primary.main',
                     color: '#121212'
                 }
+            },
+            title: {
+                [theme.breakpoints.down('tablet')]: {
+                    fontSize: '25px'
+                }
             }
         },
         posts: {
@@ -69,6 +80,18 @@ const searchStyles = (theme: Theme) => {
                 mx: 'auto',
                 mb: 0,
                 mt: 2
+            },
+            title: {
+                [theme.breakpoints.down('tablet')]: {
+                    fontSize: '25px'
+                }
+            }
+        },
+        collections: {
+            title: {
+                [theme.breakpoints.down('tablet')]: {
+                    fontSize: '25px'
+                }
             }
         }
     }

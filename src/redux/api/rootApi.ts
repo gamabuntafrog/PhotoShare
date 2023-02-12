@@ -20,7 +20,7 @@ const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'develop
 const baseUrl = isDevelopment ? 'http://localhost:3001' : 'https://photosharebackend.up.railway.app'
 
 const baseQuery = fetchBaseQuery({
-    baseUrl: baseUrl,
+    baseUrl,
     prepareHeaders: (headers, {getState}) => {
         const token = (getState() as RootState).userReducer.token
 

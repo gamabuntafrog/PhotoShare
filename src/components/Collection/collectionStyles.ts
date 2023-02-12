@@ -12,26 +12,31 @@ const collectionStyles = (theme: Theme) => {
         },
         modalWrapper: {
             bgcolor: 'background.paper',
+            flexShrink: 0,
             width: '50vw',
             maxHeight: '100vh',
             overflow: 'auto',
             px: 0,
-            pt: 1,
-            pb: 3,
+            // pt: 1,
+            // pb: 3,
             color: 'text.primary',
             borderRadius: 2,
             position: 'relative',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
+            justifyContent: 'flex-start',
+            [theme.breakpoints.down('laptop')]: {
+                width: '70vw',
+            },
             [theme.breakpoints.down('tablet')]: {
                 width: '100vw',
                 borderRadius: 0,
                 minHeight: '100vh',
-            },
+            }
         },
         modalContainer: {
             px: 2,
+            mb: 3,
         },
         closeIconWrapper: {
             display: 'flex',
@@ -229,9 +234,15 @@ const collectionStyles = (theme: Theme) => {
             addNewPostButton: {mt: 3},
         },
         accordionWrapper: {
-            borderRadius: '16px !important', mb: 1, '&:before': {
+            borderRadius: '16px !important',
+            mb: 1,
+            '&:before': {
                 display: 'none'
             }
+        },
+        accordionTitle: {
+            width: '90%',
+            flexShrink: 0,
         },
         togglePrivateContainer: {
             mt: 3,
@@ -254,16 +265,43 @@ const collectionStyles = (theme: Theme) => {
                 },
                 inputLabel: {mb: 1},
                 input: {mb: 1},
-                buttonsWrapper: {display: 'flex', mt: 1}
+                buttonsWrapper: {
+                    display: 'flex',
+                    mt: 1,
+                    [theme.breakpoints.down('tablet')]: {
+                        flexDirection: 'column'
+                    }
+                },
+                saveChangesButton: {
+                    mr: 2,
+                    [theme.breakpoints.down('tablet')]: {
+                        mx: 0
+                    }
+                },
+                cancelChangesButton: {
+                    width: '25%',
+                    [theme.breakpoints.down('tablet')]: {
+                        width: '75%',
+                        mx: 'auto',
+                        mt: 1
+                    }
+                }
             },
             wrapper: {
                 mb: 2,
                 px: 1,
                 display: 'flex',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                [theme.breakpoints.down('tablet')]: {
+                    flexDirection: 'column'
+                }
             },
             secondWrapper: {
-                mr: 2
+                mr: 2,
+                [theme.breakpoints.down('tablet')]: {
+                    mr: 0,
+                    mb: 1
+                }
             }
         }
     }

@@ -108,15 +108,12 @@ const usePostsActions = ({initPosts}: IUsePostsProps): usePostsActionsReturnValu
         }
     }
 
-    const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()
-    const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
 
-    const sortedPostsForMasonryList = sortItemsForMasonryList(postsListCols, posts)
 
     // console.log('notSorted: ', posts)
     // console.log('sorted: ', sortedPostsForMasonryList)
 
-    return [sortedPostsForMasonryList, {toggleLike, toggleSave, updateSavesInfo}] as const
+    return [posts, {toggleLike, toggleSave, updateSavesInfo}] as const
 }
 
 export default usePostsActions

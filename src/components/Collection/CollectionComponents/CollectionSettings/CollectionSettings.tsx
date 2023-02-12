@@ -13,7 +13,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AuthorsInfo from "./CollectionSettingsComponents/AuthorsInfo";
 import ViewersInfo from "./CollectionSettingsComponents/ViewersInfo";
-import React, {useState} from "react";
+import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
 import {IFullCollection} from "../../../../types/collection";
 import useSx from "../../../../hooks/useSx";
 import collectionStyles from "../../collectionStyles";
@@ -29,11 +29,51 @@ interface ICollectionSettingsProps {
     isSettingsOpen: boolean
 }
 
+function useHookWithRefCallback({ifNodeFunction}: {ifNodeFunction: (node: HTMLElement) => void}) {
+    const ref = useRef<null | HTMLElement>(null)
+    const setRef = useCallback((node: null | HTMLElement) => {
+
+        if (ref.current) {
+            console.log(ref)
+            // Make sure to cleanup any events/references added to the last instance
+        }
+
+        if (node) {
+            ifNodeFunction(node)
+        }
+
+        // Save a reference to the node
+        ref.current = node
+    }, [])
+
+    return [setRef]
+}
+
+const changeBorderRadiusOnResize = (node: HTMLElement) => {
+    new ResizeObserver((entries) => {
+        const [el] = entries
+
+        if (Math.ceil(el.contentRect.height) !== Math.ceil(window.innerHeight)) {
+            if (node.style.borderRadius === '0px') {
+                node.style.borderRadius = '8px'
+            }
+
+            return
+        } else {
+            node.style.borderRadius = '0px'
+        }
+
+    }).observe(node)
+}
+
 export default function CollectionSettings({data, closeSettingsModal, isSettingsOpen}: ICollectionSettingsProps) {
 
     const {collection, currentUserStatus} = data
     const {_id: collectionId, title, tags, authors, isPrivate, viewers} = collection
     const styles = useSx(collectionStyles)
+
+    // const modalRef = useRef<null | HTMLDivElement>();
+    const [modalRef] = useHookWithRefCallback({ifNodeFunction: changeBorderRadiusOnResize})
 
     const navigate = useNavigate()
 
@@ -68,6 +108,8 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
     const t = useShortTranslation({componentNameKey: "Collection.CollectionSettings"})
 
 
+
+
     return (
         <Modal
             open={isSettingsOpen}
@@ -76,6 +118,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
         >
             <Box
                 sx={styles.modalWrapper}
+                ref={modalRef}
             >
                 <Box sx={styles.closeIconWrapper}>
                     <Typography variant='body1' sx={styles.title}>{t('title')}</Typography>
@@ -102,7 +145,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                                 aria-controls="panel1bh-content"
                                 id="panel1bh-header"
                             >
-                                <Typography sx={{width: '33%', flexShrink: 0}}>
+                                <Typography sx={styles.accordionTitle}>
                                     {t('addUsersTitle')}
                                 </Typography>
                             </AccordionSummary>
@@ -124,7 +167,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                             aria-controls="panel2bh-content"
                             id="panel2bh-header"
                         >
-                            <Typography sx={{width: '33%', flexShrink: 0}}>
+                            <Typography sx={styles.accordionTitle}>
                                 {t('authorsListTitle')}
                             </Typography>
                         </AccordionSummary>
@@ -148,7 +191,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                             aria-controls="panel3bh-content"
                             id="panel3bh-header"
                         >
-                            <Typography sx={{width: '33%', flexShrink: 0}}>
+                            <Typography sx={styles.accordionTitle}>
                                 {t('viewersListTitle')}
                             </Typography>
                         </AccordionSummary>

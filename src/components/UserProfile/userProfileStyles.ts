@@ -27,7 +27,10 @@ const userProfileStyles = (theme: Theme) => {
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: 'column',
-            ml: 2
+            ml: 2,
+            [theme.breakpoints.down('mobile')]: {
+                ml: 0,
+            }
         },
         userInfoSecondWrapper: {display: 'flex', margin: 1},
         infoItem: {mx: 1, textAlign: 'center'},
@@ -46,10 +49,22 @@ const userProfileStyles = (theme: Theme) => {
                 '& > a': {
                     marginTop: 1,
                     marginLeft: 0,
+                    textAlign: 'center'
                 }
             }
+        },
+        changeUserProfile: {
+            formWrapper: {
+                ml: 1,
+                [theme.breakpoints.down('tablet')]: {
+                    ml: 0,
+                    '& *': {
+                        textAlign: 'center'
+                    }
+                }
+            },
+            inputLabel: {cursor: 'pointer', color: 'inherit', width: '100%'}
         }
-
     }
 }
 

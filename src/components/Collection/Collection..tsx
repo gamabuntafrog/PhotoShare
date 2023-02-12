@@ -32,7 +32,6 @@ export default function Collection() {
 
     const [posts, postsActions] = usePostsActions({initPosts: data?.collection.posts})
 
-    console.log(data)
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
     const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));

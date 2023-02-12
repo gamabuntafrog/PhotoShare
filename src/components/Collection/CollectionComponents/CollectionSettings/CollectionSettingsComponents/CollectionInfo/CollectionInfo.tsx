@@ -88,10 +88,10 @@ export default function CollectionInfo({title, tags, isAdmin, collectionId}: ICo
                 <TextField error={!!tagsError} id='tags' {...register('tags')} sx={formStyles.input} multiline minRows={2} fullWidth />
 
                 <Box sx={formStyles.buttonsWrapper}>
-                    <Button disabled={isErrors} sx={{mr: 2}}  variant='contained' type='submit' onClick={onSubmit} fullWidth >
+                    <Button disabled={isErrors} sx={formStyles.saveChangesButton}  variant='contained' type='submit' onClick={onSubmit} fullWidth >
                         {tForm('saveChangesButton')}
                     </Button>
-                    <Button sx={{ width: '25%'}} color='error' variant='text' onClick={handleClose} >
+                    <Button sx={formStyles.cancelChangesButton} color='error' variant='text' onClick={handleClose} >
                         {tForm('cancelChangesButton')}
                     </Button>
                 </Box>

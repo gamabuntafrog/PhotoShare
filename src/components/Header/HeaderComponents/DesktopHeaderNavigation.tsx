@@ -70,6 +70,7 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
                                     // console.log(e)
                                     // setIsNotificationsOpen(!isNotificationsOpen)
                                 }}
+                                disabled={true}
                                 sx={{color: 'text.primary'}}
                             >
                                 <NotificationsIcon/>

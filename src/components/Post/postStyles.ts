@@ -46,6 +46,34 @@ const postStyles = (theme: Theme) => {
         },
         postButtons: {
             display: 'flex', alignItems: 'center', alignSelf: 'flex-start', width: '100%',
+        },
+        authorInfo: {
+            container: {
+                display: 'flex',
+                [theme.breakpoints.down('tablet')]: {
+                    flexDirection: 'column',
+                    alignItems: 'flex-start'
+                }
+            },
+            wrapper: {
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'start',
+            },
+            subscribeButton: {
+                ml: 2,
+                borderRadius: 4,
+                [theme.breakpoints.down('tablet')]: {
+                    ml: 0,
+                    mt: 1,
+                    borderRadius: 2,
+                }
+            },
+            avatar: {width: '40px', height: '40px'},
+            userInfoWrapper: {
+                ml: 1,
+                lineHeight: '0px'
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ import useShortTranslation from "../../hooks/useShortTranslation";
 import {useInView} from "react-intersection-observer";
 import useInfiniteScrollForQueryHook from "../../hooks/useInfiniteScrollForQueryHook";
 import {IPost} from "../../types/post";
+import sortItemsForMasonryList from "../../utils/sortItemsForMasonryList";
 
 
 function useGetManyPostsQueryWithInfiniteScroll() {
@@ -22,7 +23,7 @@ function useGetManyPostsQueryWithInfiniteScroll() {
         error
     } = extendedPostsApi.useGetManyQuery({page})
 
-    const {paginatedData, isEnd, ref} = useInfiniteScrollForQueryHook({isLoading, data, setPage, isError: !!error})
+    const {paginatedData, isEnd, ref} = useInfiniteScrollForQueryHook({isLoading, data, setPage, page, isError: !!error})
 
     return {data: paginatedData, isLoading, error, ref, isEnd}
 }
@@ -83,11 +84,16 @@ function MasonryPostsDrawer({posts, postsActions}: {posts: IPost[], postsActions
 
     const styles = useSx(postsStyles)
 
+    const sortedPostsForMasonryList = sortItemsForMasonryList(postsListCols, posts)
+
     return (
         <>
             {columns.map((_, index) => {
-                const postsLengthInOneColumn = Math.ceil(posts.length / postsListCols)
-                const slicedPosts = posts.slice(index * postsLengthInOneColumn, index * postsLengthInOneColumn + postsLengthInOneColumn)
+                const postsLengthInOneColumn = Math.round(sortedPostsForMasonryList.length / postsListCols)
+                console.log(`length ${sortedPostsForMasonryList.length}`)
+                console.log(postsLengthInOneColumn)
+
+                const slicedPosts = sortedPostsForMasonryList.slice(index * postsLengthInOneColumn, index * postsLengthInOneColumn + postsLengthInOneColumn)
 
                 return (
                     <ImageList

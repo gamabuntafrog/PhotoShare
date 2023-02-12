@@ -47,6 +47,7 @@ export default function MobileHeaderNavigation(
                             // setIsNotificationsOpen(!isNotificationsOpen)
                         }}
                         sx={{color: 'text.primary'}}
+                        disabled={true}
                     >
                         <NotificationsIcon/>
                         {/*{unCheckedNotificationsLength > 0 &&*/}

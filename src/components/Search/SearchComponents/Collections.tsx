@@ -26,6 +26,8 @@ export default function SearchCollections() {
 
     const t = useShortTranslation({componentNameKey: 'Search.Collections'})
 
+    const {collections: styles} = useSx(searchStyles)
+
     if (isLoading) {
         return (
             <>
@@ -37,7 +39,7 @@ export default function SearchCollections() {
     if (!isLoading && collections.length === 0 && debouncedQuery.length > 2) {
         return (
             <>
-                <Typography variant='h3' textAlign='center'>{t('notFound')}</Typography>
+                <Typography variant='h3' sx={styles.title} textAlign='center'>{t('notFound')}</Typography>
             </>
         )
     }
@@ -45,7 +47,7 @@ export default function SearchCollections() {
     if (collections.length === 0 && debouncedQuery.length < 2) {
         return (
             <>
-                <Typography variant='h3' textAlign='center'>{t('enterTitle')}</Typography>
+                <Typography variant='h3' sx={styles.title} textAlign='center'>{t('enterTitle')}</Typography>
             </>
         )
     }
