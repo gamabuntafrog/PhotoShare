@@ -4,10 +4,11 @@ import {useInView} from "react-intersection-observer";
 export interface IUseInfiniteScrollForQueryHookProps {
     isLoading: boolean,
     data: any[],
-    setPage: React.Dispatch<React.SetStateAction<number>>
+    setPage: React.Dispatch<React.SetStateAction<number>>,
+    isError: boolean
 }
 
-export default function useInfiniteScrollForQueryHook({isLoading, data, setPage}: IUseInfiniteScrollForQueryHookProps) {
+export default function useInfiniteScrollForQueryHook({isLoading, data, setPage, isError}: IUseInfiniteScrollForQueryHookProps) {
     const [isEnd, setIsEnd] = useState(false);
     const [combinedValue, setCombinedValue] = useState(data);
 
@@ -17,6 +18,7 @@ export default function useInfiniteScrollForQueryHook({isLoading, data, setPage}
     });
 
     useEffect(() => {
+        if (isError) return;
         if (!data || isLoading) return
         if (data.length < 1 && combinedValue.length > 0) {
             setIsEnd(true)
@@ -40,10 +42,13 @@ export default function useInfiniteScrollForQueryHook({isLoading, data, setPage}
     }, [data, isLoading, inView]);
 
     useEffect(() => {
+        if (isError) return;
         if (!inView || isLoading) return
 
         setPage(prev => prev + 1)
     }, [inView]);
+
+
 
     return {paginatedData: combinedValue, isEnd, ref, inView}
 }

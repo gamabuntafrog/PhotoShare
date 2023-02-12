@@ -31,8 +31,12 @@ const initialState: IUserSlice = {
     }
 }
 
-const usersBaseURL = 'http://localhost:3001/users'
-const authBaseURL = 'http://localhost:3001/auth'
+const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+
+const baseUrl = isDevelopment ? 'http://localhost:3001' : 'https://photosharebackend.up.railway.app'
+
+const usersBaseURL = `${baseUrl}/users`
+const authBaseURL = `${baseUrl}/auth`
 
 export interface IResponse<T> { code: number, data: T, status: string }
 export interface IResponseWithMessage<T> { code: number, data: T, status: string, message: string }

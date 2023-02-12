@@ -15,8 +15,12 @@ import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {pushResponse} from "../slices/responseNotificationsSlice";
 import {returnTransformedError} from "../utils";
 
+const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+
+const baseUrl = isDevelopment ? 'http://localhost:3001' : 'https://photosharebackend.up.railway.app'
+
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:3001',
+    baseUrl: baseUrl,
     prepareHeaders: (headers, {getState}) => {
         const token = (getState() as RootState).userReducer.token
 
@@ -40,7 +44,7 @@ export const baseQueryWithInteceptors: BaseQueryFn<string | FetchArgs,
     if (error) {
         const errorData = result.error.data as IResponse<any> | IResponseWithMessage<any>
 
-        if ('message' in errorData) {
+        if (errorData && 'message' in errorData) {
             api.dispatch(pushResponse(errorData))
         }
     }

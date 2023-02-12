@@ -23,8 +23,6 @@ interface IAuthorOfPostInfoProps {
     username: string,
     subscribersCount: number,
     isUserAuthorOfPost: boolean,
-    isSubscribed: boolean,
-    onToggleSubscribe: () => void
 }
 
 function AuthorOfPostInfo(
@@ -34,13 +32,14 @@ function AuthorOfPostInfo(
         username,
         subscribersCount,
         isUserAuthorOfPost,
-        isSubscribed,
-        onToggleSubscribe
     }: IAuthorOfPostInfoProps) {
+
+    const {toggleSubscribe, isSubscribed} = useToggleSubscribe(authorId)
+    const onToggleSubscribe = () => toggleSubscribe(authorId, isSubscribed)
 
     const t = useShortTranslation({componentNameKey: 'Post'})
 
-    const userActionsButton = isSubscribed ? t('subscribeButton') : t('unsubscribeButton')
+    const userActionsButton = isSubscribed ? t('unsubscribeButton') : t('subscribeButton')
 
     return (
         <Box
@@ -90,7 +89,6 @@ export default function Post() {
     const closeModal = () => setIsModalOpen(false)
 
     const [post, {toggleLike, toggleSave, updateSavesInfo, deletePost}] = usePostActions({initPost: data})
-    const {toggleSubscribe, isSubscribed} = useToggleSubscribe(post?.author._id || '')
 
     const t = useShortTranslation({componentNameKey: 'Post'})
 
@@ -124,7 +122,6 @@ export default function Post() {
     const isUserAuthorOfPost = authorId === currentUserId
 
     const onToggleLike = () => toggleLike(postId, isLiked)
-    const onToggleSubscribe = () => toggleSubscribe(authorId, isSubscribed)
     const onDeletePost = () => deletePost(postId)
 
     return (
@@ -174,8 +171,6 @@ export default function Post() {
                         username={username}
                         subscribersCount={subscribersCount}
                         isUserAuthorOfPost={isUserAuthorOfPost}
-                        isSubscribed={isSubscribed}
-                        onToggleSubscribe={onToggleSubscribe}
                     />
                     <Box sx={{my: 1}}>
                         <Typography variant='body1'>{body}</Typography>

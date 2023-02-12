@@ -22,25 +22,25 @@ function useGetManyPostsQueryWithInfiniteScroll() {
         error
     } = extendedPostsApi.useGetManyQuery({page})
 
-    const {paginatedData, isEnd, ref} = useInfiniteScrollForQueryHook({isLoading, data, setPage})
+    const {paginatedData, isEnd, ref} = useInfiniteScrollForQueryHook({isLoading, data, setPage, isError: !!error})
 
     return {data: paginatedData, isLoading, error, ref, isEnd}
 }
 
-export default function Posts() {
 
-    const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()
-    const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
+
+export default function Posts() {
 
     const {data, isLoading: isPostsLoading, error: postsError, ref, isEnd} = useGetManyPostsQueryWithInfiniteScroll()
 
-
     const [posts, postsActions] = usePostsActions({initPosts: data})
+
+    // useEffect(() => {
+    //     console.log('changed')
+    // }, [data]);
 
 
     const styles = useSx(postsStyles)
-
-    const arr = Array.from({length: postsListCols})
 
     const t = useShortTranslation({componentNameKey: 'Posts'})
 

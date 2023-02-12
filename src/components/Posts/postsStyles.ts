@@ -7,6 +7,7 @@ const postsStyles = (theme: Theme) => {
     return {
         container: {
             py: 2,
+            px: 1,
             display: 'flex',
             flexDirection: 'row',
 
