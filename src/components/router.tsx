@@ -16,12 +16,14 @@ import SearchUsers from "./Search/SearchComponents/Users";
 import Search from "./Search";
 import SearchPosts from './Search/SearchComponents/Posts'
 import SearchCollections from './Search/SearchComponents/Collections'
+import ScrollToTop from "./ScrollToTop";
 
 const privateRouter = createBrowserRouter([
     {
         path: "/",
         element: (
             <>
+                <ScrollToTop/>
                 <Header/>
                 <Outlet/>
             </>
@@ -99,6 +101,7 @@ const publicRouter = createBrowserRouter([
         path: "/",
         element: (
             <>
+                <ScrollToTop/>
                 <Header/>
                 <Outlet/>
             </>

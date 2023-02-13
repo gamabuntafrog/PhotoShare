@@ -82,11 +82,13 @@ const fetchUser = async (token: string): Promise<ICurrentUser> => {
     return responseData.data.user
 }
 
-export const getCurrentUser = createAsyncThunk<{ user: ICurrentUser, token: string }, void, { state: RootState }>('users/getCurrent', async (args, {getState, rejectWithValue}) => {
+export const getCurrentUser = createAsyncThunk<{ user: ICurrentUser | null, token: string | null }, void, { state: RootState }>('users/getCurrent', async (args, {getState, rejectWithValue}) => {
     const {userReducer} = getState()
 
     try {
-        const token = userReducer.token!
+        const token = userReducer.token
+
+        if (!token) return {user: null, token: null}
 
         const user = await fetchUser(token)
 
@@ -202,6 +204,15 @@ const userSlice = createSlice({
             state.isLoading = true
         })
         builder.addCase(getCurrentUser.fulfilled, (state, {payload}) => {
+            if (!payload.token) {
+                state.token = null;
+                state.user = null;
+                state.isLoading = false
+                state.isLoggedIn = false
+
+                return
+            }
+
             state.token = payload.token
             state.user = payload.user
             state.isLoading = false

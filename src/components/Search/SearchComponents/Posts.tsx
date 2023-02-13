@@ -24,7 +24,7 @@ export default function Posts() {
     }, {
         skip: debouncedQuery.length < 2
     })
-    console.log(debouncedQuery.length < 2)
+
     const [posts, postsActions] = usePostsActions({initPosts})
 
     const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()

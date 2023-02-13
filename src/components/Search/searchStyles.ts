@@ -76,7 +76,7 @@ const searchStyles = (theme: Theme) => {
         },
         posts: {
             list: {
-                width: '95%',
+                width: '20%',
                 mx: 'auto',
                 mb: 0,
                 mt: 2

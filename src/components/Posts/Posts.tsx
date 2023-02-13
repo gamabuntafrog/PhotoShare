@@ -1,17 +1,14 @@
-import {Avatar, Box, Container, IconButton, ImageList, Typography} from "@mui/material";
-import PostItem from "../PostItem/PostItem";
+import {Avatar, Box, Container,  Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
-import usePostsActions, {IPostsActions} from "../../hooks/usePostsActions";
+import {extendedPostsApi} from "../../redux/api/rootApi";
+import usePostsActions from "../../hooks/usePostsActions";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import useSx from "../../hooks/useSx";
 import postsStyles from "./postsStyles";
-import useMediaQueries from "../../hooks/useMediaQueries";
 import useShortTranslation from "../../hooks/useShortTranslation";
-import {useInView} from "react-intersection-observer";
 import useInfiniteScrollForQueryHook from "../../hooks/useInfiniteScrollForQueryHook";
-import {IPost} from "../../types/post";
-import sortItemsForMasonryList from "../../utils/sortItemsForMasonryList";
+
+import MasonryPostsDrawer from "../MasonryPostsDrawer";
 
 
 function useGetManyPostsQueryWithInfiniteScroll() {
@@ -76,51 +73,5 @@ export default function Posts() {
     )
 }
 
-function MasonryPostsDrawer({posts, postsActions}: {posts: IPost[], postsActions: IPostsActions}) {
-    const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()
-    const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
 
-    const columns = Array.from({length: postsListCols})
 
-    const styles = useSx(postsStyles)
-
-    const sortedPostsForMasonryList = sortItemsForMasonryList(postsListCols, posts)
-
-    return (
-        <>
-            {columns.map((_, index) => {
-                const postsLengthInOneColumn = Math.round(sortedPostsForMasonryList.length / postsListCols)
-                console.log(`length ${sortedPostsForMasonryList.length}`)
-                console.log(postsLengthInOneColumn)
-
-                const slicedPosts = sortedPostsForMasonryList.slice(index * postsLengthInOneColumn, index * postsLengthInOneColumn + postsLengthInOneColumn)
-
-                return (
-                    <ImageList
-                        variant="masonry"
-                        sx={styles.postsList}
-                        gap={12}
-                        key={index}
-                        cols={1}
-                    >
-                        {slicedPosts.map((post) => <PostItem
-                            postsActions={postsActions}
-                            post={post}
-                            key={post._id}
-                        />)}
-                    </ImageList>
-                )
-            })}
-        </>
-    )
-}
-
-// 1 ImageList = 1 column
-
-// for example: if postsListCols = 3
-// html: first column second column third column
-//             image         image        image
-//             image         image        image
-//             image         image        image
-//             image         image        image
-//etc...

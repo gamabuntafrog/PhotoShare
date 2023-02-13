@@ -16,6 +16,7 @@ import {AppDispatch} from "./redux/store";
 import {chooseRouter} from "./components/router";
 import {IResponseNotification, pullResponse, pushResponse} from "./redux/slices/responseNotificationsSlice";
 import FullScreenLoader from "./components/Loaders/FullScreenLoader";
+import i18n from './utils/language/i18n';
 
 
 const tryAuth = async (dispatch: AppDispatch) => {
@@ -44,16 +45,16 @@ const responsedNotificationsCleaner = (dispatch: AppDispatch, notificationsLengt
     }
 }
 
-
+const changeDocumentLanguage = (language: typeof i18n.language) => {
+    document.documentElement.lang = language
+};
 
 
 export default function App() {
-    const {user, isLoading, isLoggedIn, token} = useAppSelector((state) => state.userReducer)
-    const mode = useAppSelector((state) => state.themeReducer.mode)
+    const {isLoading, isLoggedIn} = useAppSelector((state) => state.userReducer)
     const notifications = useAppSelector(state => state.responseNotificationsReducer.notifications)
     const dispatch = useAppDispatch()
 
-    useEffect(() => responsedNotificationsCleaner(dispatch, notifications.length), [notifications.length]);
 
     // const subscribe = async (token: string) => {
     //     try {
@@ -74,10 +75,9 @@ export default function App() {
     //     }
     // }
 
-
-    useEffect(() => {
-        !!token ? tryAuth(dispatch) : dispatch(disableLoading())
-    }, []);
+    useEffect(() => responsedNotificationsCleaner(dispatch, notifications.length), [notifications.length]);
+    useEffect(() => changeDocumentLanguage(i18n.language), [i18n.language]);
+    useEffect(() => void tryAuth(dispatch), []);
 
     // useEffect(() => {
     //     if (token && user) {
@@ -94,8 +94,7 @@ export default function App() {
 
     return (
         <Box sx={{
-            bgcolor: mode === 'dark' ? 'background.default' : 'background.paper',
-            color: 'var(--text-primary)',
+            color: 'text.primary',
             overflow: 'auto',
             [theme.breakpoints.down('mobile')]: {
                 pb: '60px'
