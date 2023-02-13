@@ -29,7 +29,7 @@ export default function UserCollections() {
 
     return (
         <Box>
-            <Collections collections={collections}/>
+            <Collections collections={collections || []}/>
         </Box>
     )
 }

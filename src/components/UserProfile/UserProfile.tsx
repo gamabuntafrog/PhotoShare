@@ -81,7 +81,7 @@ export default function UserProfile() {
     const openAddAuthorModal = () => setIsAddUserModalOpen(true)
 
     return (
-        <Box>
+        <Box sx={{minHeight: '100vh'}}>
             {/*<AddAuthorModal*/}
             {/*    isAddUserModalOpen={isAddUserModalOpen}*/}
             {/*    closeAddAuthorModal={closeAddAuthorModal}*/}

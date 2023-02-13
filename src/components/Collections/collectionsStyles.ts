@@ -8,7 +8,7 @@ const collectionsStyles = (theme: Theme) => {
         container: {
             width: '90%',
             mx: 'auto',
-            pb: 0,
+            pb: 2,
         },
         wrapper: {
             display: 'grid',
