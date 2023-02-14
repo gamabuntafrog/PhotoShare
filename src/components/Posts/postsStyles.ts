@@ -22,7 +22,13 @@ const postsStyles = (theme: Theme) => {
             maxHeight: '90vh'
         },
         postsList: {
-            // width: '95%',
+            width: '20%',
+            [theme.breakpoints.down('laptop')]: {
+                width: '33.33%'
+            },
+            [theme.breakpoints.down('tablet')]: {
+                width: '50%'
+            },
             // mx: 'auto',
             // my: 0,
             margin: 1
