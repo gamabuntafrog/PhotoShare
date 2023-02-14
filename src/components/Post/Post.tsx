@@ -26,6 +26,7 @@ import useSx from "../../hooks/useSx";
 import postStyles, {StyledPostImage} from "./postStyles";
 import DeleteIcon from '@mui/icons-material/Delete';
 import useShortTranslation from "../../hooks/useShortTranslation";
+import StandardHelmet from "../StandardHelmet";
 
 
 interface IAuthorOfPostInfoProps {
@@ -98,13 +99,16 @@ export default function Post() {
 
     const styles = useSx(postStyles)
 
-    if (!post && isPostLoading) return <FullScreenLoader/>
+    if (!post && isPostLoading) return <FullScreenLoader withMeta/>
 
     if (!post || !post.author) {
         return (
-            <Container sx={{height: '92vh', ...styles.postContainer}}>
-                <Typography variant='h1' textAlign='center'>{t('doesNotExists')}</Typography>
-            </Container>
+            <>
+                <StandardHelmet keyOfOther='error'/>
+                <Container sx={{height: '92vh', ...styles.postContainer}}>
+                    <Typography variant='h1' textAlign='center'>{t('doesNotExists')}</Typography>
+                </Container>
+            </>
         )
     }
 
@@ -129,59 +133,62 @@ export default function Post() {
     const onDeletePost = () => deletePost(postId)
 
     return (
-        <Container
-            sx={styles.postContainer}
-        >
-            <CreateCollectionModal
-                postId={postId}
-                onCreate={updateSavesInfo}
-                closeModal={closeModal}
-                isModalOpen={isModalOpen}
-            />
-            <Box
-                key={postId}
-                sx={styles.postWrapper}
+        <>
+            <StandardHelmet keyOfTitle='post' options={{username}}/>
+            <Container
+                sx={styles.postContainer}
             >
-                <StyledPostImage
-                    src={postImageURL}
+                <CreateCollectionModal
+                    postId={postId}
+                    onCreate={updateSavesInfo}
+                    closeModal={closeModal}
+                    isModalOpen={isModalOpen}
                 />
                 <Box
-                    sx={styles.postInfo}
+                    key={postId}
+                    sx={styles.postWrapper}
                 >
-                    <Box sx={styles.postButtons}>
-                        <IconButton onClick={onToggleLike}>
-                            {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
-                        </IconButton>
-                        <Typography sx={{ml: 0.5}}>
-                            {likesCount}
-                        </Typography>
-                        <PostSavesInfo
-                            collections={savesInfo}
-                            toggleSave={toggleSave}
-                            postId={postId}
-                            isSaved={isSaved}
-                            openModal={openModal}
-                        />
-                        {isUserAuthorOfPost &&
-                            <IconButton color='error' onClick={onDeletePost}>
-                                <DeleteIcon/>
-                            </IconButton>
-                        }
-                    </Box>
-                    <Typography variant='h3'>{title}</Typography>
-                    <AuthorOfPostInfo
-                        authorId={authorId}
-                        avatarURL={avatarURL}
-                        username={username}
-                        subscribersCount={subscribersCount}
-                        isUserAuthorOfPost={isUserAuthorOfPost}
+                    <StyledPostImage
+                        src={postImageURL}
                     />
-                    <Box sx={{my: 1}}>
-                        <Typography variant='body1'>{body}</Typography>
-                        <Typography variant='body2'>{formattedTags}</Typography>
+                    <Box
+                        sx={styles.postInfo}
+                    >
+                        <Box sx={styles.postButtons}>
+                            <IconButton onClick={onToggleLike}>
+                                {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
+                            </IconButton>
+                            <Typography sx={{ml: 0.5}}>
+                                {likesCount}
+                            </Typography>
+                            <PostSavesInfo
+                                collections={savesInfo}
+                                toggleSave={toggleSave}
+                                postId={postId}
+                                isSaved={isSaved}
+                                openModal={openModal}
+                            />
+                            {isUserAuthorOfPost &&
+                                <IconButton color='error' onClick={onDeletePost}>
+                                    <DeleteIcon/>
+                                </IconButton>
+                            }
+                        </Box>
+                        <Typography variant='h3'>{title}</Typography>
+                        <AuthorOfPostInfo
+                            authorId={authorId}
+                            avatarURL={avatarURL}
+                            username={username}
+                            subscribersCount={subscribersCount}
+                            isUserAuthorOfPost={isUserAuthorOfPost}
+                        />
+                        <Box sx={{my: 1}}>
+                            <Typography variant='body1'>{body}</Typography>
+                            <Typography variant='body2'>{formattedTags}</Typography>
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
-        </Container>
+            </Container>
+        </>
     )
 }

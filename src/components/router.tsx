@@ -48,7 +48,7 @@ const privateRouter = createBrowserRouter([
                     {
                         path: "collections",
                         element: <UserCollections/>
-                    },                    {
+                    }, {
                         path: "allowedToView",
                         element: <UserAllowedToViewCollections/>
                     },

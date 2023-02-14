@@ -19,6 +19,7 @@ import collectionStyles from "./collectionStyles";
 import CollectionInfo from "./CollectionComponents/CollectionInfo";
 import CollectionSettings from "./CollectionComponents/CollectionSettings";
 import useShortTranslation from "../../hooks/useShortTranslation";
+import StandardHelmet from "../StandardHelmet";
 
 
 export default function Collection() {
@@ -46,62 +47,69 @@ export default function Collection() {
 
     const t = useShortTranslation({componentNameKey: "Collection"})
 
-    if (isCollectionLoading) return <FullScreenLoader/>
+    if (isCollectionLoading) return <FullScreenLoader withMeta/>
 
     if (collectionError || !data) {
         return (
-            <Container sx={styles.errorContainer}>
-                <Typography variant='h1' sx={{textAlign: 'center'}}>{t('errorMessage')}</Typography>
-            </Container>
+            <>
+                <StandardHelmet keyOfOther='error'/>
+                <Container sx={styles.errorContainer}>
+                    <Typography variant='h1' sx={{textAlign: 'center'}}>{t('errorMessage')}</Typography>
+                </Container>
+            </>
         )
     }
 
 
     const {collection, currentUserStatus} = data
-    const {_id: collectionId, title, tags, authors} = collection
+    const {_id: collectionId, title, tags, authors, isPrivate} = collection
 
     const {isAuthor, isAdmin} = currentUserStatus
 
     const formattedTags = tags.join(' ')
 
+    const headTitleKey = isPrivate ? 'privateCollection' : 'publicCollection'
 
     const collectionPostsListCols = isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5
 
     return (
-        <Box>
-            {(isAuthor || isAdmin) && (
-                <CollectionSettings
-                    data={data}
-                    closeSettingsModal={closeSettingsModal}
-                    isSettingsOpen={isSettingsOpen}
-                />
-            )}
-            <Box sx={styles.collectionWrapper}>
-                {(isAuthor || isAdmin) &&
-                    <Button sx={styles.openButton} variant='contained' onClick={openSettingsModal}>
-                        {t('openSettingsButton')}
-                    </Button>
-                }
-                <CollectionInfo
-                    title={title}
-                    formattedTags={formattedTags}
-                    authors={authors}
-                    isCurrentUserAuthorOfCollection={isAuthor}
-                    collectionId={collectionId}
-                />
+        <>
+            <StandardHelmet keyOfTitle={headTitleKey}/>
+            <Box>
+                {(isAuthor || isAdmin) && (
+                    <CollectionSettings
+                        data={data}
+                        closeSettingsModal={closeSettingsModal}
+                        isSettingsOpen={isSettingsOpen}
+                    />
+                )}
+                <Box sx={styles.collectionWrapper}>
+                    {(isAuthor || isAdmin) &&
+                        <Button sx={styles.openButton} variant='contained' onClick={openSettingsModal}>
+                            {t('openSettingsButton')}
+                        </Button>
+                    }
+                    <CollectionInfo
+                        title={title}
+                        formattedTags={formattedTags}
+                        authors={authors}
+                        isCurrentUserAuthorOfCollection={isAuthor}
+                        collectionId={collectionId}
+                    />
+                </Box>
+                <ImageList
+                    variant="masonry"
+                    sx={styles.collectionPostsList}
+                    gap={12}
+                    cols={collectionPostsListCols}
+                >
+                    {posts.map((post) => <PostItem
+                        postsActions={postsActions}
+                        post={post}
+                        key={post._id}
+                    />)}
+                </ImageList>
             </Box>
-            <ImageList
-                variant="masonry"
-                sx={styles.collectionPostsList}
-                gap={12}
-                cols={collectionPostsListCols}
-            >
-                {posts.map((post) => <PostItem
-                    postsActions={postsActions}
-                    post={post}
-                    key={post._id}
-                />)}
-            </ImageList>
-        </Box>
+        </>
     )
 }

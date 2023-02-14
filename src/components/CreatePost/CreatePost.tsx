@@ -23,6 +23,7 @@ import FullScreenLoader from "../Loaders/FullScreenLoader";
 import useSx from "../../hooks/useSx";
 import createPostStyles, {StyledImage} from "./createPostStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
+import StandardHelmet from "../StandardHelmet";
 
 
 export const breakableText = {wordBreak: 'break-all', whiteSpace: 'break-spaces'}
@@ -130,9 +131,6 @@ export default function CreatePost() {
         navigate(`/post/create/${collectionId}`)
     }
 
-    // const a = (navigate) => {
-    //     navigate()
-    // }
 
     const styles = useSx(createPostStyles)
     const t = useShortTranslation({componentNameKey: 'CreatePost'})
@@ -145,124 +143,127 @@ export default function CreatePost() {
     const imageLabel = imageError?.message ? t(imageError.message) : Boolean(imageFile) ? t('selectedImageLabel') : t('imageLabel')
     const tagsLabel = tagsError?.message ? t(tagsError.message) : t('tagsLabel')
 
-    if (isPostCreating || isUserCollectionsLoading) return <FullScreenLoader/>
+    if (isPostCreating || isUserCollectionsLoading) return <FullScreenLoader withMeta/>
 
     return (
-        <Container
-            sx={styles.createPostContainer}
-        >
-            <CreateCollectionModal
-                refetch={refetchCallback}
-                closeModal={closeModal}
-                isModalOpen={isCreateCollectionModalOpen}
-            />
-            <Box
-                sx={styles.formWrapper}
+        <>
+            <StandardHelmet keyOfTitle='createPost' options={{willSavedIn: willSavedInCollectionTitle}}/>
+            <Container
+                sx={styles.createPostContainer}
             >
-                <form
-                    style={styles.form}
-                    onSubmit={onSubmit}
+                <CreateCollectionModal
+                    refetch={refetchCallback}
+                    closeModal={closeModal}
+                    isModalOpen={isCreateCollectionModalOpen}
+                />
+                <Box
+                    sx={styles.formWrapper}
                 >
-                    <Grid container sx={styles.formInputsWrapper}
+                    <form
+                        style={styles.form}
+                        onSubmit={onSubmit}
                     >
-                        <Grid item ml='auto'>
-                            <CollectionsInfo
-                                selectCollection={selectCollectionCallback}
-                                collections={userCollections}
-                                openModal={openModal}
-                                collectionIdError={!!collectionIdIndexError}
-                                willSavedInCollectionTitle={willSavedInCollectionTitle}
-                            />
-                        </Grid>
-                        <Grid sx={{...styles.breakableText, my: 2}} item>
-                            {titleError &&
-                                <InputLabel htmlFor='title' error={!!titleError} sx={styles.formInputLabel}>
-                                    {titleLabel}
-                                </InputLabel>
-                            }
-                            <Input
-                                placeholder={t('titlePlaceholder')}
-                                error={!!titleError}
-                                fullWidth id='title'
-                                {...register('title')}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <InputLabel htmlFor='body' error={!!bodyError} sx={styles.formInputLabel}>
-                                {bodyLabel}
-                            </InputLabel>
-                            <TextField
-                                placeholder={t('bodyPlaceholder')}
-                                multiline
-                                maxRows={6}
-                                minRows={3}
-                                error={!!bodyError}
-                                fullWidth
-                                id='body'
-                                {...register('body')}
-                            />
-                        </Grid>
-                        <Grid item>
-                            <Button
-                                type='button'
-                                sx={{my: 1}}
-                                color={!!imageError ? 'error' : 'primary'}
-                                fullWidth
-                                onClick={onImageInputLabelClick}
-                            >
-                                <InputLabel
-                                    error={!!imageError}
-                                    sx={styles.imageButtonInputLabel}
-                                    htmlFor='imageList'
-                                    ref={imageInputLabelRef}
-                                >
-                                    {imageLabel}
-                                </InputLabel>
-                                <input
-                                    {...registeredImageList}
-                                    id='imageList'
-                                    type='file'
-                                    accept="image/*"
-                                    onChange={(e) => {
-                                        registeredImageList.onChange(e)
-                                        if (e.target.files) {
-                                            setPreviewImage(e.target.files, setImageFile)
-                                        }
-                                    }}
-                                    hidden
+                        <Grid container sx={styles.formInputsWrapper}
+                        >
+                            <Grid item ml='auto'>
+                                <CollectionsInfo
+                                    selectCollection={selectCollectionCallback}
+                                    collections={userCollections}
+                                    openModal={openModal}
+                                    collectionIdError={!!collectionIdIndexError}
+                                    willSavedInCollectionTitle={willSavedInCollectionTitle}
                                 />
+                            </Grid>
+                            <Grid sx={{...styles.breakableText, my: 2}} item>
+                                {titleError &&
+                                    <InputLabel htmlFor='title' error={!!titleError} sx={styles.formInputLabel}>
+                                        {titleLabel}
+                                    </InputLabel>
+                                }
+                                <Input
+                                    placeholder={t('titlePlaceholder')}
+                                    error={!!titleError}
+                                    fullWidth id='title'
+                                    {...register('title')}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <InputLabel htmlFor='body' error={!!bodyError} sx={styles.formInputLabel}>
+                                    {bodyLabel}
+                                </InputLabel>
+                                <TextField
+                                    placeholder={t('bodyPlaceholder')}
+                                    multiline
+                                    maxRows={6}
+                                    minRows={3}
+                                    error={!!bodyError}
+                                    fullWidth
+                                    id='body'
+                                    {...register('body')}
+                                />
+                            </Grid>
+                            <Grid item>
+                                <Button
+                                    type='button'
+                                    sx={{my: 1}}
+                                    color={!!imageError ? 'error' : 'primary'}
+                                    fullWidth
+                                    onClick={onImageInputLabelClick}
+                                >
+                                    <InputLabel
+                                        error={!!imageError}
+                                        sx={styles.imageButtonInputLabel}
+                                        htmlFor='imageList'
+                                        ref={imageInputLabelRef}
+                                    >
+                                        {imageLabel}
+                                    </InputLabel>
+                                    <input
+                                        {...registeredImageList}
+                                        id='imageList'
+                                        type='file'
+                                        accept="image/*"
+                                        onChange={(e) => {
+                                            registeredImageList.onChange(e)
+                                            if (e.target.files) {
+                                                setPreviewImage(e.target.files, setImageFile)
+                                            }
+                                        }}
+                                        hidden
+                                    />
+                                </Button>
+                            </Grid>
+                            <Grid item>
+                                <InputLabel
+                                    htmlFor='tags'
+                                    error={!!tagsError}
+                                    sx={styles.formInputLabel}>
+                                    {tagsLabel}
+                                </InputLabel>
+                                <OutlinedInput
+                                    placeholder={t('tagsPlaceholder')}
+                                    error={!!tagsError}
+                                    fullWidth
+                                    id='tags'
+                                    {...register('tags')}
+                                />
+                            </Grid>
+                            <Button
+                                variant='contained'
+                                disabled={isErrors}
+                                type='submit'
+                                sx={styles.uploadButton}
+                            >
+                                {isErrors ? t('submitButtonDisabled') : t('submitButton')}
                             </Button>
                         </Grid>
-                        <Grid item>
-                            <InputLabel
-                                htmlFor='tags'
-                                error={!!tagsError}
-                                sx={styles.formInputLabel}>
-                                {tagsLabel}
-                            </InputLabel>
-                            <OutlinedInput
-                                placeholder={t('tagsPlaceholder')}
-                                error={!!tagsError}
-                                fullWidth
-                                id='tags'
-                                {...register('tags')}
-                            />
-                        </Grid>
-                        <Button
-                            variant='contained'
-                            disabled={isErrors}
-                            type='submit'
-                            sx={styles.uploadButton}
-                        >
-                            {isErrors ? t('submitButtonDisabled') : t('submitButton')}
-                        </Button>
-                    </Grid>
-                </form>
-                <Box
-                    sx={styles.imageWrapper}>
-                    <StyledImage src={imageFile || ''}/>
+                    </form>
+                    <Box
+                        sx={styles.imageWrapper}>
+                        <StyledImage src={imageFile || ''}/>
+                    </Box>
                 </Box>
-            </Box>
-        </Container>
+            </Container>
+        </>
     )
 }

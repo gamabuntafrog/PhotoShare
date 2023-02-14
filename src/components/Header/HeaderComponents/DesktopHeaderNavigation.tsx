@@ -1,29 +1,16 @@
 import {ICurrentUser, IUserForSearchBar} from "../../../types/user";
 import useSx from "../../../hooks/useSx";
-import headerStyles, {StyledHeaderNavLink, StyledMenuNavLink} from "../headerStyles";
+import headerStyles, {StyledHeaderNavLink} from "../headerStyles";
 import {
-    Autocomplete,
-    AutocompleteRenderInputParams,
     Box,
     Button,
-    FormControl,
     IconButton,
-    InputAdornment, InputLabel, MenuItem, Select, SelectChangeEvent,
-    TextField
 } from "@mui/material";
-import {NavLink, useNavigate} from "react-router-dom";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SettingsIcon from "@mui/icons-material/Settings";
-import React, {ChangeEvent, SyntheticEvent, useState} from "react";
-import {useTranslation} from "react-i18next";
+import React from "react";
 import useShortTranslation from "../../../hooks/useShortTranslation";
-import TuneIcon from '@mui/icons-material/Tune';
-import SearchIcon from '@mui/icons-material/Search';
-import {CustomIconButton} from "../../../library/CustomIconButton";
-import SearchOffIcon from '@mui/icons-material/SearchOff';
-import {useDebounce} from "use-debounce";
-import {extendedUsersApi} from "../../../redux/api/rootApi";
 import SearchBar from "./SearchBar";
 
 

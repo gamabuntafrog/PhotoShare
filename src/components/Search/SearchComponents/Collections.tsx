@@ -8,6 +8,7 @@ import React from "react";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import useSx from "../../../hooks/useSx";
 import searchStyles from "../searchStyles";
+import StandardHelmet from "../../StandardHelmet";
 
 
 export default function SearchCollections() {
@@ -30,15 +31,14 @@ export default function SearchCollections() {
 
     if (isLoading) {
         return (
-            <>
-                <MiniLoader/>
-            </>
+            <MiniLoader withMeta/>
         )
     }
 
     if (!isLoading && collections.length === 0 && debouncedQuery.length > 2) {
         return (
             <>
+                <StandardHelmet keyOfOther='error'/>
                 <Typography variant='h3' sx={styles.title} textAlign='center'>{t('notFound')}</Typography>
             </>
         )

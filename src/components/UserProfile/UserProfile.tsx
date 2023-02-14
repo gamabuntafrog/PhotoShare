@@ -17,6 +17,8 @@ import ChangeUserProfile from "./UserProfileComponents/ChangeUserProfile";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import {StyledHeaderNavLink} from "../Header/headerStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
+import {Helmet} from "react-helmet";
+import StandardHelmet from "../StandardHelmet";
 
 
 export default function UserProfile() {
@@ -38,16 +40,18 @@ export default function UserProfile() {
     const t = useShortTranslation({componentNameKey: 'UserProfile'})
 
 
-    if (isLoading || isUserUpdating) return <FullScreenLoader/>
+    if (isLoading || isUserUpdating) return <FullScreenLoader withMeta/>
 
     if (!user || error || !currentUser) {
         return (
-            <Box sx={styles.loaderOrErrorWrapper}>
-                <Typography variant='h1'>Not Found</Typography>
-            </Box>
+            <>
+                <StandardHelmet keyOfOther='error'/>
+                <Box sx={styles.loaderOrErrorWrapper}>
+                    <Typography variant='h1'>Not Found</Typography>
+                </Box>
+            </>
         )
     }
-
 
     const {
         avatar,
@@ -82,6 +86,7 @@ export default function UserProfile() {
 
     return (
         <Box sx={{minHeight: '100vh'}}>
+            <StandardHelmet keyOfTitle='userProfile' options={{username}}/>
             {/*<AddAuthorModal*/}
             {/*    isAddUserModalOpen={isAddUserModalOpen}*/}
             {/*    closeAddAuthorModal={closeAddAuthorModal}*/}

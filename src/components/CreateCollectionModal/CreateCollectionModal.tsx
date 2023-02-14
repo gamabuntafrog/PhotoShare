@@ -10,6 +10,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import useSx from "../../hooks/useSx";
 import createCollectionStyles from "./createCollectionModalStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
+import StandardHelmet from "../StandardHelmet";
+import MiniLoader from "../Loaders/MiniLoader";
 
 interface ICollectionFormData {
     title: string,
@@ -85,44 +87,50 @@ export default function CreateCollectionModal(
     const tagsLabel = tagsError?.message ? t(tagsError.message) : t('tagsLabel')
 
     return (
-        <Modal
-            open={isModalOpen}
-            onClose={closeModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-            sx={styles.backdrop}
-        >
-            <Container
-                sx={styles.wrapper}
-                maxWidth='tablet'
+        <>
+            {isModalOpen && (
+                <StandardHelmet keyOfTitle='createCollectionModal'/>
+            )}
+            <Modal
+                open={isModalOpen}
+                onClose={closeModal}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+                sx={styles.backdrop}
             >
-                {isCollectionCreatingLoading ?
-                    <Typography color='text.standard' variant='h1'>{t('loading')}</Typography>
-                    :
-                    <>
-                        <IconButton color='error' sx={{alignSelf: 'end'}} onClick={closeModal}>
-                            <CloseIcon/>
-                        </IconButton>
-                        <Typography
-                            variant='h3'
-                            sx={styles.title}
-                        >
-                            {t('title')}
-                        </Typography>
-                        <form style={styles.form} onSubmit={onSubmit}>
-                            <InputLabel htmlFor='title' error={!!titleError} sx={styles.label}>
-                                {titleLabel}
-                            </InputLabel>
-                            <OutlinedInput fullWidth id='title' {...register('title')}/>
-                            <InputLabel htmlFor='tags' error={!!tagsError} sx={styles.label}>
-                                {tagsLabel}
-                            </InputLabel>
-                            <OutlinedInput fullWidth id='tags' {...register('tags')}/>
-                            <Button type='submit' variant='outlined' sx={styles.submitButton}>{t('submitButton')}</Button>
-                        </form>
-                    </>
-                }
-            </Container>
-        </Modal>
+                <Container
+                    sx={styles.wrapper}
+                    maxWidth='tablet'
+                >
+                    {isCollectionCreatingLoading ?
+                        <MiniLoader withMeta/>
+                        :
+                        <>
+                            <IconButton color='error' sx={{alignSelf: 'end'}} onClick={closeModal}>
+                                <CloseIcon/>
+                            </IconButton>
+                            <Typography
+                                variant='h3'
+                                sx={styles.title}
+                            >
+                                {t('title')}
+                            </Typography>
+                            <form style={styles.form} onSubmit={onSubmit}>
+                                <InputLabel htmlFor='title' error={!!titleError} sx={styles.label}>
+                                    {titleLabel}
+                                </InputLabel>
+                                <OutlinedInput fullWidth id='title' {...register('title')}/>
+                                <InputLabel htmlFor='tags' error={!!tagsError} sx={styles.label}>
+                                    {tagsLabel}
+                                </InputLabel>
+                                <OutlinedInput fullWidth id='tags' {...register('tags')}/>
+                                <Button type='submit' variant='outlined'
+                                        sx={styles.submitButton}>{t('submitButton')}</Button>
+                            </form>
+                        </>
+                    }
+                </Container>
+            </Modal>
+        </>
     )
 }

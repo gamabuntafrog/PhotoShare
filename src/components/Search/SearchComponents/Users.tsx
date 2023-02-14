@@ -28,9 +28,11 @@ export default function SearchUsers() {
 
     if (isLoading) {
         return (
-            <Box>
-                <MiniLoader/>
-            </Box>
+            <>
+                <Box>
+                    <MiniLoader/>
+                </Box>
+            </>
         )
     }
 

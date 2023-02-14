@@ -1,5 +1,22 @@
 {
   "translation": {
+    "Helmet": {
+      "loading": "Loading..",
+      "error": "Error",
+      "titles": {
+        "posts": "Photos",
+        "settings": "Settings",
+        "userProfile": "{{username}}",
+        "createPost": "Create post | {{willSavedIn}}",
+        "createCollectionModal": "Create Collection",
+        "post": "Photo by {{username}}",
+        "privateCollection": "Private collection",
+        "publicCollection": "Public collection",
+        "search": "Search",
+        "login": "Login",
+        "register": "Register"
+      }
+    },
     "Settings": {
       "title": "Settings",
       "chooseLanguageTitle": "Language",

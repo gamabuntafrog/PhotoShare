@@ -115,7 +115,7 @@ const headerStyles = (theme: Theme) => {
             inputWrapper: {
                 display: 'flex',
                 alignItems: 'center',
-                [theme.breakpoints.down(800)]: {
+                    [theme.breakpoints.down(1200)]: {
                     width: '100%',
                     justifyContent: 'center',
                     position: 'fixed',
@@ -183,10 +183,6 @@ export const StyledHeaderLogo = styled("svg")(({theme}) => ({
     width: 200,
     height: 50,
     [theme.breakpoints.down('tablet')]: {
-        width: 100,
-        height: 35
-    },
-    [theme.breakpoints.down('mobile')]: {
         display: 'none'
     },
     filter: `drop-shadow(-3px 4px 4px ${theme.palette.primary.main})`,
@@ -197,13 +193,13 @@ export const StyledHeaderLogo = styled("svg")(({theme}) => ({
 }))
 
 export const StyledMobileHeaderLogo = styled(StyledHeaderLogo)(({theme}) => ({
-    [theme.breakpoints.up('mobile')]: {
+    [theme.breakpoints.up('tablet')]: {
         display: 'none',
     },
-    [theme.breakpoints.down('mobile')]: {
+    [theme.breakpoints.down('tablet')]: {
         display: 'block',
-        height: 50,
-        width: 75
+        height: 40,
+        width: 60
     },
 }))
 

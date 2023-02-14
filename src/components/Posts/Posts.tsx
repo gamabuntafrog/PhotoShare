@@ -1,4 +1,4 @@
-import {Avatar, Box, Container,  Typography} from "@mui/material";
+import {Avatar, Box, Container, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {extendedPostsApi} from "../../redux/api/rootApi";
 import usePostsActions from "../../hooks/usePostsActions";
@@ -9,6 +9,8 @@ import useShortTranslation from "../../hooks/useShortTranslation";
 import useInfiniteScrollForQueryHook from "../../hooks/useInfiniteScrollForQueryHook";
 
 import MasonryPostsDrawer from "../MasonryPostsDrawer";
+import {Helmet} from "react-helmet";
+import StandardHelmet from "../StandardHelmet";
 
 
 function useGetManyPostsQueryWithInfiniteScroll() {
@@ -20,11 +22,16 @@ function useGetManyPostsQueryWithInfiniteScroll() {
         error
     } = extendedPostsApi.useGetManyQuery({page})
 
-    const {paginatedData, isEnd, ref} = useInfiniteScrollForQueryHook({isLoading, data, setPage, page, isError: !!error})
+    const {paginatedData, isEnd, ref} = useInfiniteScrollForQueryHook({
+        isLoading,
+        data,
+        setPage,
+        page,
+        isError: !!error
+    })
 
     return {data: paginatedData, isLoading, error, ref, isEnd}
 }
-
 
 
 export default function Posts() {
@@ -33,39 +40,33 @@ export default function Posts() {
 
     const [posts, postsActions] = usePostsActions({initPosts: data})
 
-    // useEffect(() => {
-    //     console.log('changed')
-    // }, [data]);
-
-
     const styles = useSx(postsStyles)
 
     const t = useShortTranslation({componentNameKey: 'Posts'})
+    const tH = useShortTranslation({componentNameKey: 'Helmet'})
 
-    if (isPostsLoading) return <FullScreenLoader/>
+    if (isPostsLoading) return (
+        <FullScreenLoader withMeta/>
+    )
 
     if (postsError) {
         return (
-            <Container sx={styles.errorContainer}>
-                <Typography variant='h1' sx={{textAlign: 'center'}}>{t('error')}</Typography>
-            </Container>
-        )
-    }
-
-    if (posts.length === 0) {
-        return (
-            <Container sx={styles.errorContainer}>
-                <Typography variant='h1' sx={{textAlign: 'center'}}>{t('noPostsMessage')}</Typography>
-            </Container>
+            <>
+                <StandardHelmet keyOfOther='error'/>
+                <Container sx={styles.errorContainer}>
+                    <Typography variant='h1' sx={{textAlign: 'center'}}>{t('error')}</Typography>
+                </Container>
+            </>
         )
     }
 
     return (
         <>
+            <StandardHelmet keyOfTitle='posts'/>
             <Box
                 sx={styles.container}
             >
-               <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
+                <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
             </Box>
             <div ref={ref}/>
             {isEnd && <Typography variant='h4' textAlign='center' sx={{my: 2}}>This is the end</Typography>}

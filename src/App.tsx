@@ -16,6 +16,7 @@ import FullScreenLoader from "./components/Loaders/FullScreenLoader";
 import i18n from './utils/language/i18n';
 import useSx from "./hooks/useSx";
 import NotificationStack from "./components/NotificationStack";
+import StandardHelmet from "./components/StandardHelmet";
 
 
 const appStyles = (theme: Theme) => {
@@ -46,20 +47,22 @@ export default function App() {
     useEffect(() => changeDocumentLanguage(i18n.language), [i18n.language]);
     useEffect(() => void dispatch(getCurrentUser()), []);
 
-
     const styles = useSx(appStyles)
 
-    if (isLoading) return <FullScreenLoader/>
+    if (isLoading) return (
+        <FullScreenLoader withMeta/>
+    )
 
     const router = chooseRouter(isLoggedIn)
 
     return (
-        <Box sx={styles.wrapper}>
-            <NotificationStack/>
-            <RouterProvider router={router}/>
-        </Box>
+        <>
+            <StandardHelmet/>
+            <Box sx={styles.wrapper}>
+                <NotificationStack/>
+                <RouterProvider router={router}/>
+            </Box>
+        </>
     );
-
-
 }
 

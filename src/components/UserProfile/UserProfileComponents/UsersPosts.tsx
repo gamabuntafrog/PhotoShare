@@ -9,6 +9,7 @@ import postsStyles from "../../Posts/postsStyles";
 import useMediaQueries from "../../../hooks/useMediaQueries";
 import PostItem from "../../PostItem";
 import useShortTranslation from "../../../hooks/useShortTranslation";
+import MasonryPostsDrawer from "../../MasonryPostsDrawer";
 
 
 export default function UsersPosts() {
@@ -43,20 +44,7 @@ export default function UsersPosts() {
         <Box
             sx={styles.container}
         >
-            <ImageList
-                variant="masonry"
-                sx={styles.postsList}
-                gap={12}
-                cols={postsListCols}
-            >
-                {posts.map((post) => <PostItem
-                    showAuthor={false}
-                    postsActions={postsActions}
-                    post={post}
-                    key={post._id}
-                />)}
-            </ImageList>
-
+            <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
         </Box>
     )
 }

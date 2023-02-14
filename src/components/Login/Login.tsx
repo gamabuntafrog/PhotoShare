@@ -20,6 +20,7 @@ import loginStyles from "./loginStyles";
 import { StyledHeaderNavLink } from "../Header/headerStyles";
 import {useTranslation} from "react-i18next";
 import useShortTranslation from "../../hooks/useShortTranslation";
+import StandardHelmet from "../StandardHelmet";
 
 
 interface IFormData {
@@ -68,70 +69,73 @@ export default function Login() {
     const submitButtonText = isNotValidated ? t('loginButtonDisabled') : t('loginButton')
 
     return (
-        <Box
-            sx={styles.backdrop}
-        >
-            <Box sx={styles.loginContainer}>
-                <Typography sx={styles.title} variant='h1'>{t('title')}</Typography>
-                <FormGroup
-                    onSubmit={onSubmit}
-                    sx={styles.form}
-                >
-                    <InputLabel
-                        sx={{whiteSpace: 'unset'}}
-                        error={!!emailError}
-                        htmlFor={`${htmlInputId.email}`}
+        <>
+            <StandardHelmet keyOfTitle='login'/>
+            <Box
+                sx={styles.backdrop}
+            >
+                <Box sx={styles.loginContainer}>
+                    <Typography sx={styles.title} variant='h1'>{t('title')}</Typography>
+                    <FormGroup
+                        onSubmit={onSubmit}
+                        sx={styles.form}
                     >
-                        {emailLabel}
-                    </InputLabel>
-                    <OutlinedInput
-                        id={`${htmlInputId.email}`}
-                        sx={styles.formInput}
-                        error={!!emailError}
-                        type='email'
-                        {...register('email')}
-                    />
-                    <InputLabel
-                        sx={{whiteSpace: 'unset'}}
-                        error={!!passwordError}
-                        htmlFor={`${htmlInputId.password}`}
-                    >
-                        {passwordLabel}
-                    </InputLabel>
-                    <OutlinedInput
-                        id={`${htmlInputId.password}`}
-                        sx={styles.formInput}
-                        error={!!passwordError}
-                        {...register('password')}
-                        type={showPassword ? 'text' : 'password'}
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                    edge="end"
-                                    sx={{mr: '-4px'}}
-                                >
-                                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                                </IconButton>
-                            </InputAdornment>
-                        }
-                    />
-                    <Button
-                        type='submit'
-                        variant='contained'
-                        onClick={onSubmit}
-                        disabled={isNotValidated}
-                        sx={styles.signInButton}
-                    >
-                        {submitButtonText}
-                    </Button>
-                    <StyledHeaderNavLink style={styles.signUpLink} to='/register'>
-                        {t('hasNotUserAccount')}
-                    </StyledHeaderNavLink>
-                </FormGroup>
+                        <InputLabel
+                            sx={{whiteSpace: 'unset'}}
+                            error={!!emailError}
+                            htmlFor={`${htmlInputId.email}`}
+                        >
+                            {emailLabel}
+                        </InputLabel>
+                        <OutlinedInput
+                            id={`${htmlInputId.email}`}
+                            sx={styles.formInput}
+                            error={!!emailError}
+                            type='email'
+                            {...register('email')}
+                        />
+                        <InputLabel
+                            sx={{whiteSpace: 'unset'}}
+                            error={!!passwordError}
+                            htmlFor={`${htmlInputId.password}`}
+                        >
+                            {passwordLabel}
+                        </InputLabel>
+                        <OutlinedInput
+                            id={`${htmlInputId.password}`}
+                            sx={styles.formInput}
+                            error={!!passwordError}
+                            {...register('password')}
+                            type={showPassword ? 'text' : 'password'}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                        sx={{mr: '-4px'}}
+                                    >
+                                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                        />
+                        <Button
+                            type='submit'
+                            variant='contained'
+                            onClick={onSubmit}
+                            disabled={isNotValidated}
+                            sx={styles.signInButton}
+                        >
+                            {submitButtonText}
+                        </Button>
+                        <StyledHeaderNavLink style={styles.signUpLink} to='/register'>
+                            {t('hasNotUserAccount')}
+                        </StyledHeaderNavLink>
+                    </FormGroup>
+                </Box>
             </Box>
-        </Box>
+        </>
     )
 }

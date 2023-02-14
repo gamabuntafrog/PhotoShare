@@ -1,5 +1,22 @@
 {
   "translation": {
+    "Helmet": {
+      "loading": "Завантаження..",
+      "error": "Помилка",
+      "titles": {
+        "posts": "Фотографії",
+        "settings": "Налаштування",
+        "userProfile": "{{username}}",
+        "createPost": "Створення посту | {{willSavedIn}}",
+        "createCollectionModal": "Створення колекції",
+        "post": "Фото від {{username}}",
+        "privateCollection": "Приватна колекція",
+        "publicCollection": "Публічна колекція",
+        "search": "Пошук",
+        "login": "Увійти",
+        "register": "Реєстрація"
+      }
+    },
     "Settings": {
       "title": "Налаштуванння",
       "chooseLanguageTitle": "Мова",
