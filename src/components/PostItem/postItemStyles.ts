@@ -12,7 +12,8 @@ const postItemStyles = (theme: Theme) => {
             display: 'inline-block',
             '&:hover .buttonsBar': {
                 opacity: 1
-            }
+            },
+            width: '100%'
         },
         postItemWrapper: {
             position: 'relative',
