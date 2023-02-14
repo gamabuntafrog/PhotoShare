@@ -1,25 +1,22 @@
 import {
     Box,
     Button,
-    Container,
-    Input,
     Typography,
     FormGroup,
     OutlinedInput,
     InputLabel,
-    Snackbar,
+
     Alert, IconButton, InputAdornment
 } from "@mui/material";
 import {useEffect, useState} from "react";
-import {disableLoading, getCurrentUser, login, removeErrors} from "../../redux/slices/userSlice";
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
+import { login} from "../../redux/slices/userSlice";
+import {useAppDispatch} from "../../redux/hooks";
 import {useForm} from "react-hook-form";
 import {Image, Visibility, VisibilityOff} from "@mui/icons-material";
 import {yupResolver} from '@hookform/resolvers/yup';
 import {loginValidationSchema} from "../../utils/validationSchemas";
 import useSx from "../../hooks/useSx";
 import loginStyles from "./loginStyles";
-import {NavLink} from "react-router-dom";
 import { StyledHeaderNavLink } from "../Header/headerStyles";
 import {useTranslation} from "react-i18next";
 import useShortTranslation from "../../hooks/useShortTranslation";

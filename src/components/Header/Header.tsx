@@ -1,10 +1,7 @@
 import {
     Avatar,
     Box,
-    Button,
-    Container, Drawer,
-    IconButton,
-    Link,
+    Container,
     List,
     ListItem,
 } from "@mui/material";
@@ -75,11 +72,10 @@ export function Notifications({notifications, setIsNotificationsOpen}: {
 
 export default function Header() {
 
-    const {user, isLoading, isLoggedIn, notifications} = useAppSelector((state) => state.userReducer)
+    const {user, isLoggedIn} = useAppSelector((state) => state.userReducer)
     const styles = useSx(headerStyles)
 
     const [isOpen, setIsOpen] = useState(false);
-    const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
     const dispatch = useAppDispatch()
 
@@ -92,11 +88,6 @@ export default function Header() {
         await dispatch(logout())
         closeModal()
     }
-
-    const {username, _id: currentUserId} = user || {}
-
-    const unCheckedNotificationsLength = notifications?.filter(({checked}) => checked === false).length
-
 
     return (
         <Box sx={styles.header}>

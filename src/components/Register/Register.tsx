@@ -1,20 +1,16 @@
 import {useForm} from "react-hook-form";
-import {useAppDispatch, useAppSelector} from "../../redux/hooks";
-import {getCurrentUser, removeErrors, register as registerUser} from "../../redux/slices/userSlice";
+import {useAppDispatch} from "../../redux/hooks";
+import {register as registerUser} from "../../redux/slices/userSlice";
 import {
-    Alert,
-    Box,
     Button,
     Container,
     FormGroup, IconButton,
     InputAdornment,
     InputLabel,
     OutlinedInput,
-    Snackbar,
     Typography
 } from "@mui/material";
 import {yupResolver} from "@hookform/resolvers/yup";
-import * as Yup from "yup";
 import {registerValidationSchema} from "../../utils/validationSchemas";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 import {useState} from "react";

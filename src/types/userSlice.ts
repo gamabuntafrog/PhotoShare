@@ -6,10 +6,6 @@ export interface IUserSlice {
     user: ICurrentUser | null,
     isLoading: boolean,
     token: null | string,
-    notifications: INotificationWithUser[],
-    errors: {
-        authError: boolean,
-    }
 }
 
 export interface IUserSliceAuthorized {
@@ -17,5 +13,4 @@ export interface IUserSliceAuthorized {
     user: ICurrentUser,
     isLoading: boolean,
     token: string,
-    notifications: INotificationWithUser[]
 }

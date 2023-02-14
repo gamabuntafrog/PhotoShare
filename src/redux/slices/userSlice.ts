@@ -3,7 +3,7 @@ import {RootState} from "../store";
 import {ICurrentUser, IUser} from "../../types/user";
 import {IUserSlice} from "../../types/userSlice";
 import {INotificationWithUser} from "../../types/notification";
-import {IResponseNotification} from "./responseNotificationsSlice";
+import {IResponseNotification, pushResponse} from "./responseNotificationsSlice";
 
 export interface IResponseError {message: string, code: number, status: 'success' | 'error'}
 
@@ -25,10 +25,6 @@ const initialState: IUserSlice = {
     user: null,
     isLoading: true,
     token: null,
-    notifications: [],
-    errors: {
-        authError: false,
-    }
 }
 
 const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
@@ -82,7 +78,7 @@ const fetchUser = async (token: string): Promise<ICurrentUser> => {
     return responseData.data.user
 }
 
-export const getCurrentUser = createAsyncThunk<{ user: ICurrentUser | null, token: string | null }, void, { state: RootState }>('users/getCurrent', async (args, {getState, rejectWithValue}) => {
+export const getCurrentUser = createAsyncThunk<{ user: ICurrentUser | null, token: string | null }, void, { state: RootState }>('users/getCurrent', async (args, {getState, rejectWithValue, dispatch}) => {
     const {userReducer} = getState()
 
     try {
@@ -95,6 +91,7 @@ export const getCurrentUser = createAsyncThunk<{ user: ICurrentUser | null, toke
         return {user, token}
     } catch (e) {
         console.log(e)
+        dispatch(pushResponse(createStandardCustomError(e as IResponseError)))
         return rejectWithValue(createStandardCustomError(e as IResponseError))
     }
 })
@@ -145,20 +142,6 @@ export const logout = createAsyncThunk<void, void, { state: RootState }>('logout
     return
 })
 
-export const getNotifications = createAsyncThunk('users/notifications', async ({
-                                                                                   token,
-                                                                                   withUsers
-}: { token: string, withUsers: boolean }) => {
-    const response: { data: { notifications: INotificationWithUser[] } } = await fetch(`${usersBaseURL}/notifications/all?users=${withUsers}`, {
-        method: 'GET',
-        headers: {
-            authorization: `Bearer ${token}`
-        },
-    }).then((res) => res.json())
-    // не треба ніякої дати, просто пушу в базу даних сповіщення і після отримання роблю рефетч на клієнті!
-    // console.log(response)
-    return response.data.notifications
-})
 
 const userSlice = createSlice({
     name: 'user',
@@ -166,12 +149,6 @@ const userSlice = createSlice({
     reducers: {
         disableLoading: (state) => {
             state.isLoading = false
-        },
-        addNotification: (state, {payload}) => {
-            state.notifications.push(payload)
-        },
-        removeErrors: (state) => {
-            state.errors = initialState.errors
         },
         subscribeToUser: (state, {payload: userId}) => {
             state.user?.subscribes.push(userId)
@@ -181,14 +158,7 @@ const userSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(getNotifications.pending, (state, {payload}) => {
-        })
-        builder.addCase(getNotifications.fulfilled, (state, {payload}) => {
-            state.notifications = payload
-        })
-        builder.addCase(getNotifications.rejected, (state, {payload}) => {
-        })
-        builder.addCase(register.pending, (state, {payload}) => {
+        builder.addCase(register.pending, (state) => {
             state.isLoading = true
         })
         builder.addCase(register.fulfilled, (state, {payload}) => {
@@ -197,10 +167,10 @@ const userSlice = createSlice({
             state.isLoading = false
             state.isLoggedIn = true
         })
-        builder.addCase(register.rejected, (state, {payload}) => {
-            return {...initialState, isLoading: false, errors: {...state.errors, authError: true}}
+        builder.addCase(register.rejected, () => {
+            return {...initialState, isLoading: false}
         })
-        builder.addCase(getCurrentUser.pending, (state, {payload}) => {
+        builder.addCase(getCurrentUser.pending, (state) => {
             state.isLoading = true
         })
         builder.addCase(getCurrentUser.fulfilled, (state, {payload}) => {
@@ -218,16 +188,16 @@ const userSlice = createSlice({
             state.isLoading = false
             state.isLoggedIn = true
         })
-        builder.addCase(getCurrentUser.rejected, (state, {payload}) => {
-            return {...initialState, isLoading: false, errors: {...state.errors, authError: true}}
-        })
-        builder.addCase(logout.fulfilled, (state, action) => {
+        builder.addCase(getCurrentUser.rejected, () => {
             return {...initialState, isLoading: false}
         })
-        builder.addCase(logout.rejected, (state, action) => {
+        builder.addCase(logout.fulfilled, () => {
+            return {...initialState, isLoading: false}
+        })
+        builder.addCase(logout.rejected, () => {
             return {...initialState, isLoading: false}
         })
     }
 })
-export const {disableLoading, addNotification, removeErrors, subscribeToUser, unsubscribeFromUser} = userSlice.actions
+export const {disableLoading,subscribeToUser, unsubscribeFromUser} = userSlice.actions
 export default userSlice
