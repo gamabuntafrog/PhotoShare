@@ -17,7 +17,6 @@ import ChangeUserProfile from "./UserProfileComponents/ChangeUserProfile";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import {StyledHeaderNavLink} from "../Header/headerStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
-import {Helmet} from "react-helmet";
 import StandardHelmet from "../StandardHelmet";
 
 
@@ -85,7 +84,7 @@ export default function UserProfile() {
     const openAddAuthorModal = () => setIsAddUserModalOpen(true)
 
     return (
-        <Box sx={{minHeight: '100vh'}}>
+        <Box>
             <StandardHelmet keyOfTitle='userProfile' options={{username}}/>
             {/*<AddAuthorModal*/}
             {/*    isAddUserModalOpen={isAddUserModalOpen}*/}
@@ -148,7 +147,9 @@ export default function UserProfile() {
                     <StyledHeaderNavLink to={`allowedToView`}>{t('linkToAllowedToView')}</StyledHeaderNavLink>
                 )}
             </Box>
-            <Outlet/>
+            <Box sx={{minHeight: '100vh'}}>
+                <Outlet/>
+            </Box>
         </Box>
     )
 }

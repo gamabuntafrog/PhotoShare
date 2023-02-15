@@ -1,6 +1,7 @@
 import {IOnePost, IPost} from "../types/post";
 import {extendedCollectionsApi, extendedPostsApi} from "../redux/api/rootApi";
 import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 export interface IUsePostProps {
     initPost: IOnePost | undefined,
@@ -26,6 +27,7 @@ const usePostActions = ({initPost}: IUsePostProps): usePostActionsReturnValue =>
     const [unsavePost] = extendedCollectionsApi.useDeletePostFromCollectionMutation()
     const [savePost] = extendedCollectionsApi.useSavePostInCollectionMutation()
     const [deletePostFn] = extendedPostsApi.useDeletePostMutation()
+    const navigate = useNavigate()
 
     const [post, setPost] = useState(initPost);
 
@@ -109,9 +111,7 @@ const usePostActions = ({initPost}: IUsePostProps): usePostActionsReturnValue =>
     }
 
     const deletePost = async (id: string) => {
-        await deletePostFn({id})
-
-        setPost(undefined)
+        await deletePostFn({id}).then(() => navigate('/'))
     }
 
     return [post, {toggleLike, toggleSave, updateSavesInfo, deletePost}] as const

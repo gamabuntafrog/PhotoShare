@@ -1,26 +1,24 @@
 import {
     Box, Button,
-    Container, IconButton,
+    Container,
     ImageList,
     Typography
 } from "@mui/material";
-import {NavLink, useNavigate, useParams} from "react-router-dom";
-import {useAppSelector} from "../../redux/hooks";
+import {useParams} from "react-router-dom";
 import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PostItem from "../PostItem";
 import React, {useEffect, useState} from "react";
-import {extendedCollectionsApi, extendedUsersApi} from "../../redux/api/rootApi";
+import {extendedCollectionsApi} from "../../redux/api/rootApi";
 import usePostsActions from "../../hooks/usePostsActions";
-import {ICurrentUser} from "../../types/user";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import useSx from "../../hooks/useSx";
 import collectionStyles from "./collectionStyles";
-import CollectionInfo from "./CollectionComponents/CollectionInfo";
-import CollectionSettings from "./CollectionComponents/CollectionSettings";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
 
+const CollectionInfo = React.lazy(() => import( "./CollectionComponents/CollectionInfo"));
+const CollectionSettings = React.lazy(() => import( "./CollectionComponents/CollectionSettings"));
 
 export default function Collection() {
     const {id = ''} = useParams<{ id: string }>()!
@@ -44,7 +42,6 @@ export default function Collection() {
     const openSettingsModal = () => setIsSettingsOpen(true)
     const closeSettingsModal = () => setIsSettingsOpen(false)
 
-
     const t = useShortTranslation({componentNameKey: "Collection"})
 
     if (isCollectionLoading) return <FullScreenLoader withMeta/>
@@ -59,7 +56,6 @@ export default function Collection() {
             </>
         )
     }
-
 
     const {collection, currentUserStatus} = data
     const {_id: collectionId, title, tags, authors, isPrivate} = collection
@@ -77,11 +73,13 @@ export default function Collection() {
             <StandardHelmet keyOfTitle={headTitleKey}/>
             <Box>
                 {(isAuthor || isAdmin) && (
-                    <CollectionSettings
-                        data={data}
-                        closeSettingsModal={closeSettingsModal}
-                        isSettingsOpen={isSettingsOpen}
-                    />
+                    <React.Suspense fallback={<FullScreenLoader fixed withMeta/>}>
+                        <CollectionSettings
+                            data={data}
+                            closeSettingsModal={closeSettingsModal}
+                            isSettingsOpen={isSettingsOpen}
+                        />
+                    </React.Suspense>
                 )}
                 <Box sx={styles.collectionWrapper}>
                     {(isAuthor || isAdmin) &&

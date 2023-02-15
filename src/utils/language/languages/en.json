@@ -195,6 +195,8 @@
         "privateModeDescription": "Make your collection invisible for non-viewers and non-authors",
         "deleteCollectionButton": "Delete collection",
         "leaveCollectionButton": "Leave collection",
+        "isUserWantToLeave": "Are you sure want to leave?",
+        "isUserWantToDeleteCollection": "Are you sure want to delete collection?",
         "CollectionInfo": {
           "form": {
             "titleLabel": "Title",
@@ -204,6 +206,7 @@
             "titleMaxLengthError": "Max title length is {{MAX_COLLECTION_TITLE_LENGTH}} symbols",
             "titleMinLengthError": "Min title length is {{MIN_COLLECTION_TITLE_LENGTH}} symbols",
             "tagValidationError": "Every tag must have \"#\" ang min length 3 symbols"
+
           },
           "editButton": "Edit"
         },

@@ -1,12 +1,6 @@
 import React from "react";
 import {createBrowserRouter, Navigate, Outlet} from "react-router-dom";
 import Header from "./Header";
-import UsersPosts from "./UserProfile/UserProfileComponents/UsersPosts";
-import UserCollections from "./UserProfile/UserProfileComponents/UserCollections";
-import UserAllowedToViewCollections from "./UserProfile/UserProfileComponents/UserAllowedToViewCollections";
-import SearchUsers from "./Search/SearchComponents/Users";
-import SearchPosts from './Search/SearchComponents/Posts'
-import SearchCollections from './Search/SearchComponents/Collections'
 import ScrollToTop from "./ScrollToTop";
 import FullScreenLoader from "./Loaders/FullScreenLoader";
 
@@ -16,9 +10,15 @@ const Settings = React.lazy(() => import( "./Settings"));
 const UserProfile = React.lazy(() => import( "./UserProfile"));
 const CreatePost = React.lazy(() => import( "./CreatePost"));
 const Search = React.lazy(() => import( "./Search"));
+const SearchPosts = React.lazy(() => import( "./Search/SearchComponents/Posts"));
+const SearchUsers = React.lazy(() => import( "./Search/SearchComponents/Users"));
+const SearchCollections = React.lazy(() => import( "./Search/SearchComponents/Collections"));
 const Collection = React.lazy(() => import( "./Collection"));
 const Login = React.lazy(() => import( "./Login"));
 const Register = React.lazy(() => import( "./Register"));
+const UsersPosts = React.lazy(() => import( "./UserProfile/UserProfileComponents/UsersPosts"));
+const UserCollections = React.lazy(() => import( "./UserProfile/UserProfileComponents/UserCollections"));
+const UserAllowedToViewCollections = React.lazy(() => import( "./UserProfile/UserProfileComponents/UserAllowedToViewCollections"));
 
 const privateRouter = createBrowserRouter([
     {
@@ -27,114 +27,96 @@ const privateRouter = createBrowserRouter([
             <>
                 <ScrollToTop/>
                 <Header/>
-                <Outlet/>
+                <React.Suspense fallback={<FullScreenLoader withMeta/>}>
+                    <Outlet/>
+                </React.Suspense>
             </>
         ),
         children: [
             {
                 index: true,
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <Posts/>
-                        </React.Suspense>
-                    </>
+                    <Posts/>
                 )
             },
             {
                 path: "settings",
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <Settings/>
-                        </React.Suspense>
-                    </>
+                    <Settings/>
                 )
             },
             {
                 path: "users/:id",
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <UserProfile/>
-                        </React.Suspense>
-                    </>
+                    <UserProfile/>
                 ),
                 children: [
                     {
                         index: true,
-                        element: <UsersPosts/>,
+                        element: (
+                            <UsersPosts/>
+                        ),
                     },
                     {
                         path: "collections",
-                        element: <UserCollections/>
+                        element: (
+                            <UserCollections/>
+                        ),
                     }, {
                         path: "allowedToView",
-                        element: <UserAllowedToViewCollections/>
+                        element: (
+                            <UserAllowedToViewCollections/>
+                        ),
                     },
                 ]
             },
             {
                 path: "post/create",
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <CreatePost/>
-                        </React.Suspense>
-                    </>
+                    <CreatePost/>
                 )
             },
             {
                 path: "post/create/:id",
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <CreatePost/>
-                        </React.Suspense>
-                    </>
+                    <CreatePost/>
                 )
             },
             {
                 path: "posts/:id",
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <Post/>
-                        </React.Suspense>
-                    </>
+                    <Post/>
                 )
             },
             {
                 path: "collections/:id",
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <Collection/>
-                        </React.Suspense>
-                    </>
+                    <Collection/>
                 )
             },
             {
                 path: "search",
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <Search/>
-                        </React.Suspense>
-                    </>
+                    <Search/>
                 ),
                 children: [
                     {
                         path: "users",
-                        element: <SearchUsers/>
+                        element: (
+                            <SearchUsers/>
+                        ),
                     },
                     {
                         path: "posts",
-                        element: <SearchPosts/>
+                        element: (
+                            <SearchPosts/>
+                        ),
                     },
                     {
                         path: "collections",
-                        element: <SearchCollections/>
+                        element: (
+                            <SearchCollections/>
+                        ),
                     }
                 ]
             },
@@ -153,38 +135,28 @@ const publicRouter = createBrowserRouter([
             <>
                 <ScrollToTop/>
                 <Header/>
-                <Outlet/>
+                <React.Suspense fallback={<FullScreenLoader withMeta/>}>
+                    <Outlet/>
+                </React.Suspense>
             </>
         ),
         children: [
             {
                 index: true,
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <Login/>
-                        </React.Suspense>
-                    </>
+                    <Login/>
                 )
             },
             {
                 path: "register",
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <Register/>
-                        </React.Suspense>
-                    </>
+                    <Register/>
                 )
             },
             {
                 path: "settings",
                 element: (
-                    <>
-                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
-                            <Settings/>
-                        </React.Suspense>
-                    </>
+                    <Settings/>
                 )
             },
             {

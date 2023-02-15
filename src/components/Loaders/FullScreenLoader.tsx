@@ -3,10 +3,11 @@ import React from "react";
 import StandardHelmet from "../StandardHelmet";
 
 interface IFullScreenLoaderProps {
-    withMeta?: boolean
+    withMeta?: boolean,
+    fixed?: boolean
 }
 
-export default function FullScreenLoader({withMeta}: IFullScreenLoaderProps) {
+export default function FullScreenLoader({withMeta, fixed}: IFullScreenLoaderProps) {
 
     return (
         <>
@@ -20,6 +21,16 @@ export default function FullScreenLoader({withMeta}: IFullScreenLoaderProps) {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
+                ...(fixed && {
+                    bgcolor: 'rgba(0, 0, 0, 0.4)',
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    zIndex: 100,
+                    width: '100%',
+                    height: '100%',
+                })
             }}>
                 <CircularProgress size='20vw'/>
             </Box>

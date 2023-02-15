@@ -6,27 +6,23 @@ import {
     Input,
     InputLabel,
     OutlinedInput, TextField,
-    Typography, useTheme
 } from "@mui/material";
 import {useForm, useFormState} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import React, {useEffect, useRef, useState} from "react";
-
 import {useNavigate, useParams} from "react-router-dom";
 import setPreviewImage from "../../utils/setPreviewImage";
 import convertImageToString from "../../utils/convertImageToString";
 import CreateCollectionModal from "../CreateCollectionModal";
 import {createPostValidationSchema} from "../../utils/validationSchemas";
 import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
-import CollectionsInfo from "./CreatePostComponents/CollectionsInfo";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import useSx from "../../hooks/useSx";
 import createPostStyles, {StyledImage} from "./createPostStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
 
-
-export const breakableText = {wordBreak: 'break-all', whiteSpace: 'break-spaces'}
+const CollectionsInfo = React.lazy(() => import( "./CreatePostComponents/CollectionsInfo"));
 
 interface IFormData {
     title: string,
@@ -35,6 +31,7 @@ interface IFormData {
     tags: string,
     collectionIdIndex: number
 }
+
 
 
 export default function CreatePost() {

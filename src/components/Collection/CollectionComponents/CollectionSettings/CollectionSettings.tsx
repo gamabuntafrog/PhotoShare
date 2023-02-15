@@ -6,22 +6,24 @@ import {
     Button,
     IconButton,
     Modal, Switch,
-    TextField,
     Typography
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import AuthorsInfo from "./CollectionSettingsComponents/AuthorsInfo";
-import ViewersInfo from "./CollectionSettingsComponents/ViewersInfo";
-import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from "react";
+import React, {useCallback, useRef} from "react";
 import {IFullCollection} from "../../../../types/collection";
 import useSx from "../../../../hooks/useSx";
 import collectionStyles from "../../collectionStyles";
 import {extendedCollectionsApi} from "../../../../redux/api/rootApi";
-import AddUserToCollection from "./CollectionSettingsComponents/AddUserToCollection";
-import CollectionInfo from "./CollectionSettingsComponents/CollectionInfo";
 import {useNavigate} from "react-router-dom";
 import useShortTranslation from "../../../../hooks/useShortTranslation";
+import FullScreenLoader from "../../../Loaders/FullScreenLoader";
+
+const CollectionInfo = React.lazy(() => import( "./CollectionSettingsComponents/CollectionInfo"));
+const AddUserToCollection = React.lazy(() => import( "./CollectionSettingsComponents/AddUserToCollection"));
+const AuthorsInfo = React.lazy(() => import( "./CollectionSettingsComponents/AuthorsInfo"));
+const ViewersInfo = React.lazy(() => import( "./CollectionSettingsComponents/ViewersInfo"));
+
 
 interface ICollectionSettingsProps {
     data: IFullCollection,
@@ -29,12 +31,11 @@ interface ICollectionSettingsProps {
     isSettingsOpen: boolean
 }
 
-function useHookWithRefCallback({ifNodeFunction}: {ifNodeFunction: (node: HTMLElement) => void}) {
+function useHookWithRefCallback({ifNodeFunction}: { ifNodeFunction: (node: HTMLElement) => void }) {
     const ref = useRef<null | HTMLElement>(null)
     const setRef = useCallback((node: null | HTMLElement) => {
 
         if (ref.current) {
-            console.log(ref)
             // Make sure to cleanup any events/references added to the last instance
         }
 
@@ -72,7 +73,6 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
     const {_id: collectionId, title, tags, authors, isPrivate, viewers} = collection
     const styles = useSx(collectionStyles)
 
-    // const modalRef = useRef<null | HTMLDivElement>();
     const [modalRef] = useHookWithRefCallback({ifNodeFunction: changeBorderRadiusOnResize})
 
     const navigate = useNavigate()
@@ -93,21 +93,19 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
 
     const formattedTags = tags.join(' ')
 
+    const t = useShortTranslation({componentNameKey: "Collection.CollectionSettings"})
+
     const onLeaveCollection = async () => {
-        if (window.confirm('Are you sure want to leave?')) {
+        if (window.confirm(t('isUserWantToLeave'))) {
             await deleteCurrentUserFromCollection({collectionId}).then(() => navigate('/'))
         }
     }
 
     const onDeleteCollection = async () => {
-        if (isAdmin && window.confirm('Are you sure want to delete collection?')) {
+        if (isAdmin && window.confirm(t('isUserWantToDeleteCollection'))) {
             await deleteCollection({id: collectionId}).then(() => navigate('/'))
         }
     }
-
-    const t = useShortTranslation({componentNameKey: "Collection.CollectionSettings"})
-
-
 
 
     return (

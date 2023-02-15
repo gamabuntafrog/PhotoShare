@@ -15,7 +15,7 @@ export default function useInfiniteScrollForQueryHook({isLoading, data, setPage,
 
     const {ref, inView} = useInView({
         threshold: 0,
-        rootMargin: page > 1 ? '1000px' : '100px'
+        rootMargin: page > 1 ? '500px' : '100px'
     });
 
     useEffect(() => {

@@ -1,18 +1,17 @@
 import React, {useEffect, useState} from "react";
 import {useDebounce} from "use-debounce";
 import {
-  TextField,
+    TextField,
     Typography
 } from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
-import UsersList from "./AddUserToCollectionComponents/UsersList";
 import MiniLoader from "../../../../../Loaders/MiniLoader";
 import collectionStyles from "../../../../collectionStyles";
 import useSx from "../../../../../../hooks/useSx";
 import {extendedUsersApi} from "../../../../../../redux/api/rootApi";
 import useShortTranslation from "../../../../../../hooks/useShortTranslation";
+import FullScreenLoader from "../../../../../Loaders/FullScreenLoader";
 
-
+const UsersList = React.lazy(() => import( "./AddUserToCollectionComponents/UsersList"));
 
 interface IAddAuthorToCollectionModalProps {
     collectionId: string,
@@ -56,7 +55,9 @@ export default function AddUserToCollection(
             />
             {isLoading && <MiniLoader bgOff size='100px'/>}
             {showUsersCondition && (
-                <UsersList authors={users} collectionId={collectionId}/>
+                <React.Suspense fallback={<FullScreenLoader fixed withMeta/>}>
+                    <UsersList authors={users} collectionId={collectionId}/>
+                </React.Suspense>
             )}
             {showNotFoundCondition &&
                 <Typography

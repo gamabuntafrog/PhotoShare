@@ -196,6 +196,8 @@
         "privateModeDescription": "Зробіть вашу колекцію невидимою для всіх окрім глядачів та авторів",
         "deleteCollectionButton": "Видалити колекцію",
         "leaveCollectionButton": "Залишити колекцію",
+        "isUserWantToLeave": "Ви впевнені що хочете залишити колекцію?",
+        "isUserWantToDeleteCollection": "Ви впевнені що хочете видалити колекцію?",
         "CollectionInfo": {
           "form": {
             "titleLabel": "Заголовок",
@@ -205,6 +207,7 @@
             "titleMaxLengthError": "Максимальна довжина заголовку {{MAX_COLLECTION_TITLE_LENGTH}} символів",
             "titleMinLengthError": "Мінімальна довжина заголовку {{MIN_COLLECTION_TITLE_LENGTH}} символа",
             "tagValidationError": "Кожен тег мусить починатися з \"#\" з мінімальною довжиною в 3 символа"
+
           },
           "editButton": "Редагувати"
         },
