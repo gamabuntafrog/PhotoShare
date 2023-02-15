@@ -15,7 +15,7 @@ export default function StandardHelmet({keyOfTitle, keyOfOther, options}: IStand
     if (keyOfTitle) {
         return (
             <Helmet>
-                <title>{translateTitle(keyOfTitle, options)} | PhotoShare</title>
+                <title>{translateTitle(keyOfTitle, options)}</title>
             </Helmet>
         )
     }
@@ -23,7 +23,7 @@ export default function StandardHelmet({keyOfTitle, keyOfOther, options}: IStand
     if (keyOfOther) {
         return (
             <Helmet>
-                <title>{translateOther(keyOfOther, options)} | PhotoShare</title>
+                <title>{translateOther(keyOfOther, options)}</title>
             </Helmet>
         )
     }

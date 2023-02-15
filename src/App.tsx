@@ -17,6 +17,7 @@ import i18n from './utils/language/i18n';
 import useSx from "./hooks/useSx";
 import NotificationStack from "./components/NotificationStack";
 import StandardHelmet from "./components/StandardHelmet";
+import {Helmet} from "react-helmet";
 
 
 const appStyles = (theme: Theme) => {
@@ -36,15 +37,10 @@ const appStyles = (theme: Theme) => {
     }
 }
 
-const changeDocumentLanguage = (language: typeof i18n.language) => {
-    document.documentElement.lang = language
-};
-
 export default function App() {
     const {isLoading, isLoggedIn} = useAppSelector((state) => state.userReducer)
     const dispatch = useAppDispatch()
 
-    useEffect(() => changeDocumentLanguage(i18n.language), [i18n.language]);
     useEffect(() => void dispatch(getCurrentUser()), []);
 
     const styles = useSx(appStyles)
@@ -57,7 +53,10 @@ export default function App() {
 
     return (
         <>
-            <StandardHelmet/>
+            <Helmet titleTemplate='%s | PhotoShare'>
+                <html lang={i18n.language} />
+                <title>PhotoShare</title>
+            </Helmet>
             <Box sx={styles.wrapper}>
                 <NotificationStack/>
                 <RouterProvider router={router}/>
