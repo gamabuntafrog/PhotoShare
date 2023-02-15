@@ -9,7 +9,9 @@ const searchStyles = (theme: Theme) => {
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            minHeight: '100vh',
+            overflowX: 'none'
         },
         input: {
             mt: 10,
@@ -48,7 +50,8 @@ const searchStyles = (theme: Theme) => {
         outletWrapper: {
             mt: 2,
             padding: 1,
-            width: '100%'
+            width: '100%',
+            minHeight: '60vh'
         },
         users: {
             usersList: {

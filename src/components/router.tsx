@@ -1,22 +1,24 @@
-import {createBrowserRouter, Navigate, Outlet, useParams} from "react-router-dom";
-import Header from "./Header";
-import Posts from "./Posts";
-import Settings from "./Settings";
-import UserProfile from "./UserProfile";
-import Login from "./Login";
 import React from "react";
-import Register from "./Register";
-import CreatePost from "./CreatePost";
-import Post from "./Post";
-import Collection from "./Collection";
+import {createBrowserRouter, Navigate, Outlet} from "react-router-dom";
+import Header from "./Header";
 import UsersPosts from "./UserProfile/UserProfileComponents/UsersPosts";
 import UserCollections from "./UserProfile/UserProfileComponents/UserCollections";
 import UserAllowedToViewCollections from "./UserProfile/UserProfileComponents/UserAllowedToViewCollections";
 import SearchUsers from "./Search/SearchComponents/Users";
-import Search from "./Search";
 import SearchPosts from './Search/SearchComponents/Posts'
 import SearchCollections from './Search/SearchComponents/Collections'
 import ScrollToTop from "./ScrollToTop";
+import FullScreenLoader from "./Loaders/FullScreenLoader";
+
+const Post = React.lazy(() => import( "./Post"));
+const Posts = React.lazy(() => import( "./Posts"));
+const Settings = React.lazy(() => import( "./Settings"));
+const UserProfile = React.lazy(() => import( "./UserProfile"));
+const CreatePost = React.lazy(() => import( "./CreatePost"));
+const Search = React.lazy(() => import( "./Search"));
+const Collection = React.lazy(() => import( "./Collection"));
+const Login = React.lazy(() => import( "./Login"));
+const Register = React.lazy(() => import( "./Register"));
 
 const privateRouter = createBrowserRouter([
     {
@@ -31,15 +33,33 @@ const privateRouter = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Posts/>
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <Posts/>
+                        </React.Suspense>
+                    </>
+                )
             },
             {
                 path: "settings",
-                element: <Settings/>
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <Settings/>
+                        </React.Suspense>
+                    </>
+                )
             },
             {
                 path: "users/:id",
-                element: <UserProfile/>,
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <UserProfile/>
+                        </React.Suspense>
+                    </>
+                ),
                 children: [
                     {
                         index: true,
@@ -56,23 +76,53 @@ const privateRouter = createBrowserRouter([
             },
             {
                 path: "post/create",
-                element: <CreatePost/>
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <CreatePost/>
+                        </React.Suspense>
+                    </>
+                )
             },
             {
                 path: "post/create/:id",
-                element: <CreatePost/>
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <CreatePost/>
+                        </React.Suspense>
+                    </>
+                )
             },
             {
                 path: "posts/:id",
-                element: <Post/>
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <Post/>
+                        </React.Suspense>
+                    </>
+                )
             },
             {
                 path: "collections/:id",
-                element: <Collection/>
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <Collection/>
+                        </React.Suspense>
+                    </>
+                )
             },
             {
                 path: "search",
-                element: <Search/>,
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <Search/>
+                        </React.Suspense>
+                    </>
+                ),
                 children: [
                     {
                         path: "users",
@@ -109,15 +159,33 @@ const publicRouter = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <Login/>
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <Login/>
+                        </React.Suspense>
+                    </>
+                )
             },
             {
                 path: "register",
-                element: <Register/>
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <Register/>
+                        </React.Suspense>
+                    </>
+                )
             },
             {
                 path: "settings",
-                element: <Settings/>
+                element: (
+                    <>
+                        <React.Suspense fallback={<FullScreenLoader withMeta />}>
+                            <Settings/>
+                        </React.Suspense>
+                    </>
+                )
             },
             {
                 path: "*",

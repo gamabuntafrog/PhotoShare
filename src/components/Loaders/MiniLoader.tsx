@@ -27,7 +27,7 @@ export default function MiniLoader({size, bgOff, withMeta}: IMiniLoaderProps) {
                 height: size || '20vh',
                 mx: 'auto',
             }}>
-                <Box sx={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)'}}>
+                <Box sx={{position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '100%', height: '100%'}}>
                     <CircularProgress size={size || '20vw'}/>
                 </Box>
             </Box>
