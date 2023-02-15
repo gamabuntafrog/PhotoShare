@@ -4,14 +4,13 @@ import {useDebounce} from "use-debounce";
 import {Box, ImageList, Typography} from "@mui/material";
 import MiniLoader from "../../Loaders/MiniLoader";
 import usePostsActions from "../../../hooks/usePostsActions";
-import PostItem from "../../PostItem";
 import React from "react";
 import useMediaQueries from "../../../hooks/useMediaQueries";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import useSx from "../../../hooks/useSx";
 import searchStyles from "../searchStyles";
-import MasonryPostsDrawer from "../../MasonryPostsDrawer";
 
+const MasonryPostsDrawer = React.lazy(() => import( "../../MasonryPostsDrawer"));
 
 export default function Posts() {
 

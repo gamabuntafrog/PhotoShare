@@ -7,11 +7,9 @@ import useSx from "../../hooks/useSx";
 import postsStyles from "./postsStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import useInfiniteScrollForQueryHook from "../../hooks/useInfiniteScrollForQueryHook";
-
-import MasonryPostsDrawer from "../MasonryPostsDrawer";
-import {Helmet} from "react-helmet";
 import StandardHelmet from "../StandardHelmet";
 
+const MasonryPostsDrawer = React.lazy(() => import( "../MasonryPostsDrawer"));
 
 function useGetManyPostsQueryWithInfiniteScroll() {
     const [page, setPage] = useState(1);
