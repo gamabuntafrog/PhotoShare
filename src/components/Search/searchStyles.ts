@@ -63,9 +63,23 @@ const searchStyles = (theme: Theme) => {
                 margin: 1,
                 borderRadius: 4,
                 cursor: 'pointer',
+                padding: 2,
                 '&:hover': {
                     bgcolor: 'primary.main',
                     color: '#121212'
+                },
+                [theme.breakpoints.down('tablet')]: {
+                    width: '50%',
+                    padding: 1
+                }
+            },
+            avatar: {
+                width: 100,
+                height: 100,
+                mx: 'auto',
+                [theme.breakpoints.down('tablet')]: {
+                    width: '95%',
+                    height: 'auto',
                 }
             },
             title: {

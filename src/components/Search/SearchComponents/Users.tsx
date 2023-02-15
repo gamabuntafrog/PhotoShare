@@ -68,10 +68,7 @@ export default function SearchUsers() {
                             }}
                         >
                             <ListItemAvatar>
-                                <Avatar sx={{
-                                    width: 100,
-                                    height: 100
-                                }} src={avatar as string}/>
+                                <Avatar sx={styles.avatar} src={avatar as string}/>
                             </ListItemAvatar>
                             <ListItemText>
                                 <Typography>

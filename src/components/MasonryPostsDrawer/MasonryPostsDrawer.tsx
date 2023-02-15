@@ -4,7 +4,7 @@ import useMediaQueries from "../../hooks/useMediaQueries";
 import useSx from "../../hooks/useSx";
 import postsStyles from "../Posts/postsStyles";
 import sortItemsForMasonryList from "../../utils/sortItemsForMasonryList";
-import {ImageList} from "@mui/material";
+import {Box, ImageList} from "@mui/material";
 import PostItem from "../PostItem";
 import React from "react";
 
@@ -20,9 +20,9 @@ export default function MasonryPostsDrawer({posts, postsActions}: {posts: IPost[
     const sortedPostsForMasonryList = sortItemsForMasonryList(postsListCols, posts)
 
     return (
-        <>
+        <Box sx={{display: 'flex'}}>
             {columns.map((_, index) => {
-                const postsLengthInOneColumn = Math.round(sortedPostsForMasonryList.length / postsListCols)
+                const postsLengthInOneColumn = Math.round(sortedPostsForMasonryList.length / postsListCols) || 1
 
                 const slicedPosts = sortedPostsForMasonryList.slice(index * postsLengthInOneColumn, index * postsLengthInOneColumn + postsLengthInOneColumn)
 
@@ -42,7 +42,7 @@ export default function MasonryPostsDrawer({posts, postsActions}: {posts: IPost[
                     </ImageList>
                 )
             })}
-        </>
+        </Box>
     )
 }
 

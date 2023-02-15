@@ -10,6 +10,7 @@ import useMediaQueries from "../../../hooks/useMediaQueries";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import useSx from "../../../hooks/useSx";
 import searchStyles from "../searchStyles";
+import MasonryPostsDrawer from "../../MasonryPostsDrawer";
 
 
 export default function Posts() {
@@ -61,18 +62,7 @@ export default function Posts() {
 
     return (
         <>
-            <ImageList
-                variant="masonry"
-                sx={styles.list}
-                gap={12}
-                cols={postsListCols}
-            >
-                {posts.map((post) => <PostItem
-                    postsActions={postsActions}
-                    post={post}
-                    key={post._id}
-                />)}
-            </ImageList>
+            <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
         </>
     )
 }
