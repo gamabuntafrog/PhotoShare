@@ -7,9 +7,9 @@ import {
 import MiniLoader from "../../../../../Loaders/MiniLoader";
 import collectionStyles from "../../../../collectionStyles";
 import useSx from "../../../../../../hooks/useSx";
-import {extendedUsersApi} from "../../../../../../redux/api/rootApi";
 import useShortTranslation from "../../../../../../hooks/useShortTranslation";
 import FullScreenLoader from "../../../../../Loaders/FullScreenLoader";
+import extendedUsersApi from "../../../../../../redux/api/extendedUsersApi";
 
 const UsersList = React.lazy(() => import( "./AddUserToCollectionComponents/UsersList"));
 

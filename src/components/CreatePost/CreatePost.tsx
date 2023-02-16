@@ -15,12 +15,13 @@ import setPreviewImage from "../../utils/setPreviewImage";
 import convertImageToString from "../../utils/convertImageToString";
 import CreateCollectionModal from "../CreateCollectionModal";
 import {createPostValidationSchema} from "../../utils/validationSchemas";
-import {extendedCollectionsApi, extendedPostsApi} from "../../redux/api/rootApi";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import useSx from "../../hooks/useSx";
 import createPostStyles, {StyledImage} from "./createPostStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
+import extendedPostsApi from "../../redux/api/extendedPostsApi";
+import extendedCollectionsApi from "../../redux/api/extendedCollectionsApi";
 
 const CollectionsInfo = React.lazy(() => import( "./CreatePostComponents/CollectionsInfo"));
 

@@ -1,8 +1,7 @@
-import {extendedCollectionsApi, extendedPostsApi} from "../redux/api/rootApi";
 import {useEffect, useState} from "react";
+import extendedCollectionsApi from "../redux/api/extendedCollectionsApi";
+import extendedPostsApi from "../redux/api/extendedPostsApi";
 import {IPost, ISavesInfo} from "../types/post";
-import useMediaQueries from "./useMediaQueries";
-import sortItemsForMasonryList from "../utils/sortItemsForMasonryList";
 
 export interface IUsePostsProps {
     initPosts: IPost[] | undefined,

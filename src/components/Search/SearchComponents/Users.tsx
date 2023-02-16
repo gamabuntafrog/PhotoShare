@@ -1,11 +1,11 @@
 import {Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography} from "@mui/material";
 import {Outlet, useNavigate, useSearchParams} from "react-router-dom";
 import {useDebounce} from "use-debounce";
-import {extendedUsersApi} from "../../../redux/api/rootApi";
 import MiniLoader from "../../Loaders/MiniLoader";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import useSx from "../../../hooks/useSx";
 import searchStyles from "../searchStyles";
+import extendedUsersApi from "../../../redux/api/extendedUsersApi";
 
 export default function SearchUsers() {
 

@@ -1,6 +1,6 @@
 import {useAppDispatch, useAppSelector} from "../redux/hooks";
-import {extendedUsersApi} from "../redux/api/rootApi";
 import {subscribeToUser, unsubscribeFromUser} from "../redux/slices/userSlice";
+import extendedUsersApi from "../redux/api/extendedUsersApi";
 
 const useToggleSubscribe = (authorId: string) => {
     const subscribes = useAppSelector((state) => state.userReducer.user!.subscribes) as string[]

@@ -1,5 +1,4 @@
 import {IAuthorOfCollection} from "../../../types/collection";
-import {useTheme} from "@mui/material/styles";
 import {Avatar, Box, Button, Typography} from "@mui/material";
 import {NavLink, useNavigate} from "react-router-dom";
 import React from "react";

@@ -15,7 +15,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import React, {useEffect, useState} from "react";
-import {extendedCollectionsApi, extendedPostsApi, extendedUsersApi} from "../../redux/api/rootApi";
+import extendedPostsApi from "../../redux/api/extendedPostsApi";
 import PostSavesInfo from "../PostSavesInfo";
 import CreateCollectionModal from "../CreateCollectionModal";
 import usePostActions from "../../hooks/usePostActions";

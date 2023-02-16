@@ -14,10 +14,9 @@ import React, {useCallback, useRef} from "react";
 import {IFullCollection} from "../../../../types/collection";
 import useSx from "../../../../hooks/useSx";
 import collectionStyles from "../../collectionStyles";
-import {extendedCollectionsApi} from "../../../../redux/api/rootApi";
 import {useNavigate} from "react-router-dom";
 import useShortTranslation from "../../../../hooks/useShortTranslation";
-import FullScreenLoader from "../../../Loaders/FullScreenLoader";
+import extendedCollectionsApi from "../../../../redux/api/extendedCollectionsApi";
 
 const CollectionInfo = React.lazy(() => import( "./CollectionSettingsComponents/CollectionInfo"));
 const AddUserToCollection = React.lazy(() => import( "./CollectionSettingsComponents/AddUserToCollection"));

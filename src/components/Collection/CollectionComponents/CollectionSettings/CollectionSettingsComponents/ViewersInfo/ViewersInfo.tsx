@@ -9,9 +9,9 @@ import React, {ChangeEvent, useState} from "react";
 import useSx from "../../../../../../hooks/useSx";
 import collectionStyles from "../../../../collectionStyles";
 import useAnchorEl from "../../../../../../hooks/useAnchorEl";
-import {extendedCollectionsApi} from "../../../../../../redux/api/rootApi";
 import CallMadeIcon from "@mui/icons-material/CallMade";
 import useShortTranslation from "../../../../../../hooks/useShortTranslation";
+import extendedCollectionsApi from "../../../../../../redux/api/extendedCollectionsApi";
 
 
 interface IViewerInfoProps {

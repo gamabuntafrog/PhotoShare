@@ -5,13 +5,13 @@ import React from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {collectionValidationSchema} from "../../utils/validationSchemas";
 import {updateSavesInfo} from "../../hooks/usePostsActions";
-import {extendedCollectionsApi} from "../../redux/api/rootApi";
 import CloseIcon from '@mui/icons-material/Close';
 import useSx from "../../hooks/useSx";
 import createCollectionStyles from "./createCollectionModalStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
 import MiniLoader from "../Loaders/MiniLoader";
+import extendedCollectionsApi from "../../redux/api/extendedCollectionsApi";
 
 interface ICollectionFormData {
     title: string,

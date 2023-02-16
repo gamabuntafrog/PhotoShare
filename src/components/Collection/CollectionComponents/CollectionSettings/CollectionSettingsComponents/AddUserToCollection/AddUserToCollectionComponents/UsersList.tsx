@@ -1,7 +1,6 @@
 import {Avatar, Button, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
 import {NavLink} from "react-router-dom";
 import React from "react";
-import {extendedCollectionsApi} from "../../../../../../../redux/api/rootApi";
 import useSx from "../../../../../../../hooks/useSx";
 import collectionStyles from "../../../../../collectionStyles";
 import useAnchorEl from "../../../../../../../hooks/useAnchorEl";
@@ -9,6 +8,7 @@ import StyledCustomMenuItem from "../../../../../../../library/CustomMenu/Styled
 import StyledCustomMenu from "../../../../../../../library/CustomMenu/StyledCustomMenu";
 import {IUserForAddInCollection} from "../../../../../../../types/user";
 import useShortTranslation from "../../../../../../../hooks/useShortTranslation";
+import extendedCollectionsApi from "../../../../../../../redux/api/extendedCollectionsApi";
 
 interface IUsersListProps {
     authors: IUserForAddInCollection[],

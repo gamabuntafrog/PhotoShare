@@ -9,13 +9,13 @@ import {useTheme} from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import PostItem from "../PostItem";
 import React, {useEffect, useState} from "react";
-import {extendedCollectionsApi} from "../../redux/api/rootApi";
 import usePostsActions from "../../hooks/usePostsActions";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
 import useSx from "../../hooks/useSx";
 import collectionStyles from "./collectionStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
+import extendedCollectionsApi from "../../redux/api/extendedCollectionsApi";
 
 const CollectionInfo = React.lazy(() => import( "./CollectionComponents/CollectionInfo"));
 const CollectionSettings = React.lazy(() => import( "./CollectionComponents/CollectionSettings"));

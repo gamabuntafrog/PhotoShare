@@ -4,7 +4,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 import {themeSlice} from "./slices/themeSlice";
 import userSlice from "./slices/userSlice";
 import {responseNotificationsSlice} from "./slices/responseNotificationsSlice";
-import {extendedPostsApi, rootApi} from "./api/rootApi";
+import {rootApi} from "./api/rootApi";
 
 
 const persistUserConfig = {

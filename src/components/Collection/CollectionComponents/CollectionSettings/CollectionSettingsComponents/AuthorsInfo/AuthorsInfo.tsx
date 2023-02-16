@@ -9,10 +9,10 @@ import {IAuthorOfCollection} from "../../../../../../types/collection";
 import useAnchorEl from "../../../../../../hooks/useAnchorEl";
 import useSx from "../../../../../../hooks/useSx";
 import collectionStyles from "../../../../collectionStyles";
-import {extendedCollectionsApi} from "../../../../../../redux/api/rootApi";
 
 import CallMadeIcon from '@mui/icons-material/CallMade';
 import useShortTranslation from "../../../../../../hooks/useShortTranslation";
+import extendedCollectionsApi from "../../../../../../redux/api/extendedCollectionsApi";
 
 interface IAuthorInfo {
     author: IAuthorOfCollection,

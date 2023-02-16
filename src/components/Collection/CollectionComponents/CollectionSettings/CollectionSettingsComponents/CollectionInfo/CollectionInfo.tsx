@@ -12,10 +12,10 @@ import React, {useState} from "react";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {collectionValidationSchema} from "../../../../../../utils/validationSchemas";
-import {extendedCollectionsApi} from "../../../../../../redux/api/rootApi";
 import useSx from "../../../../../../hooks/useSx";
 import collectionStyles from "../../../../collectionStyles";
 import useShortTranslation from "../../../../../../hooks/useShortTranslation";
+import extendedCollectionsApi from "../../../../../../redux/api/extendedCollectionsApi";
 
 interface ICollectionInfoProps {
     title: string,

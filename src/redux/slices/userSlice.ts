@@ -4,6 +4,7 @@ import {ICurrentUser, IUser} from "../../types/user";
 import {IUserSlice} from "../../types/userSlice";
 import {INotificationWithUser} from "../../types/notification";
 import {IResponseNotification, pushResponse} from "./responseNotificationsSlice";
+import baseUrl from "../../utils/baseUrl";
 
 export interface IResponseError {message: string, code: number, status: 'success' | 'error'}
 
@@ -26,10 +27,6 @@ const initialState: IUserSlice = {
     isLoading: true,
     token: null,
 }
-
-const isDevelopment = !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
-
-const baseUrl = isDevelopment ? 'http://localhost:3001' : 'https://photosharebackend.up.railway.app'
 
 const usersBaseURL = `${baseUrl}/users`
 const authBaseURL = `${baseUrl}/auth`

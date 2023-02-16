@@ -8,7 +8,6 @@ import {
 import {NavLink, Outlet, useParams} from "react-router-dom";
 import {useAppSelector} from "../../redux/hooks";
 import React, {useEffect, useState} from "react";
-import {extendedCollectionsApi, extendedUsersApi} from "../../redux/api/rootApi";
 import useToggleSubscribe from "../../hooks/useToggleSubscribe";
 import {ICurrentUser} from "../../types/user";
 import useSx from "../../hooks/useSx";
@@ -18,6 +17,7 @@ import FullScreenLoader from "../Loaders/FullScreenLoader";
 import {StyledHeaderNavLink} from "../Header/headerStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
+import extendedUsersApi from "../../redux/api/extendedUsersApi";
 
 
 export default function UserProfile() {

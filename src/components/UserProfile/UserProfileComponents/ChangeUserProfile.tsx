@@ -1,8 +1,6 @@
 import {Button, FormGroup, InputLabel, OutlinedInput} from "@mui/material";
 import {useAppDispatch, useAppSelector} from "../../../redux/hooks";
 import convertImageToString from "../../../utils/convertImageToString";
-import {IResponseNotification, pushResponse} from "../../../redux/slices/responseNotificationsSlice";
-import {extendedUsersApi} from "../../../redux/api/rootApi";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {changeProfileValidationSchema} from "../../../utils/validationSchemas";
@@ -12,6 +10,7 @@ import setPreviewImage from "../../../utils/setPreviewImage";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import useSx from "../../../hooks/useSx";
 import userProfileStyles from "../userProfileStyles";
+import extendedUsersApi from "../../../redux/api/extendedUsersApi";
 
 interface ChangeUserProfile {
     turnOffChangingMode: () => void,

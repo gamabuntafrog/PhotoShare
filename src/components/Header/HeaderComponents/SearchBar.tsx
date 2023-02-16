@@ -8,7 +8,6 @@ import {
     SelectChangeEvent,
     TextField, useTheme
 } from "@mui/material";
-import {extendedUsersApi} from "../../../redux/api/rootApi";
 import {useNavigate} from "react-router-dom";
 import {IUserForSearchBar} from "../../../types/user";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -18,6 +17,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import useSx from "../../../hooks/useSx";
 import headerStyles from "../headerStyles";
 import useShortTranslation from "../../../hooks/useShortTranslation";
+import extendedUsersApi from "../../../redux/api/extendedUsersApi";
 
 type queryTypes = 'users' | 'posts' | 'collections'
 

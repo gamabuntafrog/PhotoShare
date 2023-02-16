@@ -4,14 +4,14 @@ import {useInView} from "react-intersection-observer";
 export interface IUseInfiniteScrollForQueryHookProps {
     isLoading: boolean,
     data: any[],
-    setPage: React.Dispatch<React.SetStateAction<number>>,
-    page: number,
-    isError: boolean
+    isError: boolean,
+    triggerCallback: ({page}: {page: number}) => void
 }
 
-export default function useInfiniteScrollForQueryHook({isLoading, data, setPage, isError, page}: IUseInfiniteScrollForQueryHookProps) {
+export default function useInfiniteScrollForQueryHook({isLoading, data, isError, triggerCallback}: IUseInfiniteScrollForQueryHookProps) {
     const [isEnd, setIsEnd] = useState(false);
     const [combinedValue, setCombinedValue] = useState(data);
+    const [page, setPage] = useState(1);
 
     const {ref, inView} = useInView({
         threshold: 0,
@@ -23,11 +23,8 @@ export default function useInfiniteScrollForQueryHook({isLoading, data, setPage,
         if (!data || isLoading) return
         if (data.length < 1 && combinedValue.length > 0) {
             setIsEnd(true)
-            // console.log('isEnd')
             return
         }
-
-        // console.log('data: ', data)
 
         setCombinedValue(prev => {
             if (prev.length < 1) return data
@@ -49,6 +46,9 @@ export default function useInfiniteScrollForQueryHook({isLoading, data, setPage,
         setPage(prev => prev + 1)
     }, [inView]);
 
+    useEffect(() => {
+        triggerCallback({page})
+    }, [page]);
 
 
     return {paginatedData: combinedValue, isEnd, ref, inView}

@@ -1,6 +1,5 @@
 import {Box, Typography} from "@mui/material";
 import Collections from "../../Collections";
-import {extendedCollectionsApi, extendedPostsApi} from "../../../redux/api/rootApi";
 import {useSearchParams} from "react-router-dom";
 import {useDebounce} from "use-debounce";
 import MiniLoader from "../../Loaders/MiniLoader";
@@ -9,6 +8,7 @@ import useShortTranslation from "../../../hooks/useShortTranslation";
 import useSx from "../../../hooks/useSx";
 import searchStyles from "../searchStyles";
 import StandardHelmet from "../../StandardHelmet";
+import extendedCollectionsApi from "../../../redux/api/extendedCollectionsApi";
 
 
 export default function SearchCollections() {

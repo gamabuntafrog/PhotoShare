@@ -1,7 +1,7 @@
-import {extendedCollectionsApi} from "../../../redux/api/rootApi";
 import {Box, MenuItem, Modal, Typography} from "@mui/material";
 import MiniLoader from "../../Loaders/MiniLoader";
 import React from "react";
+import extendedCollectionsApi from "../../../redux/api/extendedCollectionsApi";
 
 interface IAddAuthorModalProps {
     isAddUserModalOpen: boolean,

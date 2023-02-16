@@ -1,4 +1,3 @@
-import {extendedPostsApi} from "../../../redux/api/rootApi";
 import {useSearchParams} from "react-router-dom";
 import {useDebounce} from "use-debounce";
 import {Box, ImageList, Typography} from "@mui/material";
@@ -9,6 +8,7 @@ import useMediaQueries from "../../../hooks/useMediaQueries";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import useSx from "../../../hooks/useSx";
 import searchStyles from "../searchStyles";
+import extendedPostsApi from "../../../redux/api/extendedPostsApi";
 
 const MasonryPostsDrawer = React.lazy(() => import( "../../MasonryPostsDrawer"));
 

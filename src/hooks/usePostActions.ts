@@ -1,7 +1,8 @@
 import {IOnePost, IPost} from "../types/post";
-import {extendedCollectionsApi, extendedPostsApi} from "../redux/api/rootApi";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import extendedPostsApi from "../redux/api/extendedPostsApi";
+import extendedCollectionsApi from "../redux/api/extendedCollectionsApi";
 
 export interface IUsePostProps {
     initPost: IOnePost | undefined,
