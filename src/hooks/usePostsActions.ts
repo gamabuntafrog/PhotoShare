@@ -25,13 +25,13 @@ const usePostsActions = ({initPosts}: IUsePostsProps): usePostsActionsReturnValu
     const [unsavePost] = extendedCollectionsApi.useDeletePostFromCollectionMutation()
     const [savePost] = extendedCollectionsApi.useSavePostInCollectionMutation()
 
-    const [posts, setPosts] = useState(initPosts || []);
+    const [posts, setPosts] = useState([] as IPost[]);
 
     useEffect(() => {
         if (initPosts) {
             setPosts(initPosts)
         }
-    }, [initPosts]);
+    }, [initPosts?.length]);
 
     const toggleLike = async (id: string, isLiked: boolean) => {
         try {
@@ -107,10 +107,6 @@ const usePostsActions = ({initPosts}: IUsePostsProps): usePostsActionsReturnValu
         }
     }
 
-
-
-    // console.log('notSorted: ', posts)
-    // console.log('sorted: ', sortedPostsForMasonryList)
 
     return [posts, {toggleLike, toggleSave, updateSavesInfo}] as const
 }

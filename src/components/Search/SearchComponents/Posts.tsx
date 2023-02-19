@@ -9,6 +9,8 @@ import useShortTranslation from "../../../hooks/useShortTranslation";
 import useSx from "../../../hooks/useSx";
 import searchStyles from "../searchStyles";
 import extendedPostsApi from "../../../redux/api/extendedPostsApi";
+import useGetManyPostsByTitleWithInfiniteScroll
+    from "../../../redux/api/hooks/useGetManyPostsByTitleWithInfiniteScroll";
 
 const MasonryPostsDrawer = React.lazy(() => import( "../../MasonryPostsDrawer"));
 
@@ -19,49 +21,36 @@ export default function Posts() {
     const query = searchParams.get('query') || ''
     const [debouncedQuery] = useDebounce(query, 500)
 
-    const {data: initPosts, isLoading} = extendedPostsApi.useSearchPostsQuery({
-        title: debouncedQuery
-    }, {
-        skip: debouncedQuery.length < 2
-    })
+    const {data: initPosts, isLoading, ref, isEnd} = useGetManyPostsByTitleWithInfiniteScroll({title: debouncedQuery})
 
     const [posts, postsActions] = usePostsActions({initPosts})
-
-    const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()
-    const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
 
     const t = useShortTranslation({componentNameKey: 'Search.Posts'})
 
     const {posts: styles} = useSx(searchStyles)
 
-
     if (isLoading) {
         return (
-            <>
-                <MiniLoader/>
-            </>
+            <MiniLoader/>
         )
     }
 
     if (!isLoading && posts.length === 0 && debouncedQuery.length > 2) {
         return (
-            <>
-                <Typography variant='h3' sx={styles.title} textAlign='center'>{t('notFound')}</Typography>
-            </>
+            <Typography variant='h3' sx={styles.title} textAlign='center'>{t('notFound')}</Typography>
         )
     }
 
     if (posts.length === 0 && debouncedQuery.length < 2) {
         return (
-            <>
-                <Typography variant='h3' sx={styles.title} textAlign='center'>{t('enterTitle')}</Typography>
-            </>
+            <Typography variant='h3' sx={styles.title} textAlign='center'>{t('enterTitle')}</Typography>
         )
     }
 
     return (
         <>
             <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
+            <div ref={ref} />
         </>
     )
 }

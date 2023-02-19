@@ -103,6 +103,7 @@
       "linkToCollections": "COLLECTIONS",
       "linkToAllowedToView": "ALLOWED TO VIEW",
       "userCreatedAt": "Created at {{date}}",
+      "notFound": "Not found",
       "ChangeUserProfile": {
         "changeAvatarButtonAsLabel": "Change avatar",
         "usernameLabel": "Username",

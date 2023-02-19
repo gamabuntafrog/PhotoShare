@@ -5,10 +5,17 @@ export interface IUseInfiniteScrollForQueryHookProps {
     isLoading: boolean,
     data: any[],
     isError: boolean,
-    triggerCallback: ({page}: {page: number}) => void
+    triggerCallback: ({page}: { page: number }) => void,
+    refetchDependencies?: any[]
 }
 
-export default function useInfiniteScrollForQueryHook({isLoading, data, isError, triggerCallback}: IUseInfiniteScrollForQueryHookProps) {
+export default function useInfiniteScrollForQueryHook({
+                                                          isLoading,
+                                                          data,
+                                                          isError,
+                                                          triggerCallback,
+                                                          refetchDependencies = []
+                                                      }: IUseInfiniteScrollForQueryHookProps) {
     const [isEnd, setIsEnd] = useState(false);
     const [combinedValue, setCombinedValue] = useState(data);
     const [page, setPage] = useState(1);
@@ -17,6 +24,18 @@ export default function useInfiniteScrollForQueryHook({isLoading, data, isError,
         threshold: 0,
         rootMargin: page > 1 ? '500px' : '100px'
     });
+
+    useEffect(() => {
+        console.log('refetch')
+        setPage(1)
+        setCombinedValue([])
+        setIsEnd(false)
+        triggerCallback({page: 1})
+    }, [...refetchDependencies]);
+
+    useEffect(() => {
+        console.log([page, isError, isLoading, isEnd])
+    }, [page, isError, isLoading, isEnd]);
 
     useEffect(() => {
         if (isError) return;
@@ -47,9 +66,13 @@ export default function useInfiniteScrollForQueryHook({isLoading, data, isError,
     }, [inView]);
 
     useEffect(() => {
+        console.log(inView)
+    }, [inView]);
+
+
+    useEffect(() => {
         triggerCallback({page})
     }, [page]);
 
-
-    return {paginatedData: combinedValue, isEnd, ref, inView}
+    return {paginatedData: combinedValue, isEnd, ref, inView, page}
 }

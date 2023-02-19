@@ -24,7 +24,7 @@ const postItemStyles = (theme: Theme) => {
         image: {
             width: '100%',
             borderRadius: '8px',
-            backgroundColor: primary.main,
+            backgroundColor: primary.main
         },
         postTopButtonsWrapper: {
             display: 'flex',

@@ -103,6 +103,7 @@
       "linkToCollections": "КОЛЕКЦІЇ",
       "linkToAllowedToView": "ДОЗВОЛЕНИЙ ПЕРЕГЛЯД",
       "userCreatedAt": "Дата реєстрації {{date}}",
+      "notFound": "Не знайдено",
       "ChangeUserProfile": {
         "changeAvatarButtonAsLabel": "Змінити аватар",
         "usernameLabel": "Ім'я користувача",

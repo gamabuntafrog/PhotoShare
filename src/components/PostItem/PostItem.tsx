@@ -70,6 +70,10 @@ export default function PostItem({post, postsActions, showAuthor = true}: IPostI
                             src={postImageURL}
                             style={styles.image}
                             className='postImage'
+                            alt={title}
+                            loading='lazy'
+                            role='presentation'
+                            decoding='async'
                         />
                     </NavLink>
                     <Box

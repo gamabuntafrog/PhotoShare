@@ -46,7 +46,7 @@ export default function UserProfile() {
             <>
                 <StandardHelmet keyOfOther='error'/>
                 <Box sx={styles.loaderOrErrorWrapper}>
-                    <Typography variant='h1'>Not Found</Typography>
+                    <Typography variant='h1'>{t('notFound')}</Typography>
                 </Box>
             </>
         )

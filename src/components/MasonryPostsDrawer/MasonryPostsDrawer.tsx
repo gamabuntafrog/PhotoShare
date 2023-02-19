@@ -9,7 +9,7 @@ import PostItem from "../PostItem";
 import React from "react";
 
 
-export default function MasonryPostsDrawer({posts, postsActions, ref}: {posts: IPost[], postsActions: IPostsActions, ref?: any}) {
+export default function MasonryPostsDrawer({posts, postsActions}: {posts: IPost[], postsActions: IPostsActions}) {
     const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()
     const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
 
@@ -42,7 +42,6 @@ export default function MasonryPostsDrawer({posts, postsActions, ref}: {posts: I
                     </ImageList>
                 )
             })}
-            <div ref={ref} />
         </Box>
     )
 }
