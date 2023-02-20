@@ -220,7 +220,18 @@
           "asAdmin": "As admin",
           "asAuthor": "As author",
           "asViewer": "As viewer",
-          "inputPlaceholder": "Enter username"
+          "inputPlaceholder": "Enter username",
+          "deleteButton": "Delete"
+        },
+        "RequestsInfo": {
+          "notFoundMessage": "Not found",
+          "addButton": "Add",
+          "asAdmin": "As admin",
+          "asAuthor": "As author",
+          "asViewer": "As viewer",
+          "inputPlaceholder": "Enter username",
+          "deleteButton": "Delete",
+          "listIsEmpty": "List is empty"
         },
         "AuthorsInfo": {
           "wrongUsernameMessage": "Wrong username",

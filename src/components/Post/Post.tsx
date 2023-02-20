@@ -39,11 +39,11 @@ function AuthorOfPostInfo(
         authorId,
         avatarURL,
         username,
-        subscribersCount,
+        subscribersCount: initSubscribersCount,
         isUserAuthorOfPost,
     }: IAuthorOfPostInfoProps) {
 
-    const {toggleSubscribe, isSubscribed} = useToggleSubscribe(authorId)
+    const {toggleSubscribe, isSubscribed, subscribersCount} = useToggleSubscribe(authorId, initSubscribersCount)
     const onToggleSubscribe = () => toggleSubscribe(authorId, isSubscribed)
 
     const t = useShortTranslation({componentNameKey: 'Post'})

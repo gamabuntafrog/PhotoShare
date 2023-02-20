@@ -141,6 +141,13 @@ const extendedCollectionsApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ['Collection']
         }),
+        deleteRequestedUserFromCollection: build.mutation<unknown, { collectionId: string, userId: string }>({
+            query: ({collectionId, userId}) => ({
+                url: `/collections/${collectionId}/requests/${userId}`,
+                method: `DELETE`
+            }),
+            invalidatesTags: ['Collection']
+        }),
         deleteCurrentUserFromCollection: build.mutation<unknown, { collectionId: string }>({
             query: ({collectionId}) => ({
                 url: `/collections/${collectionId}/current`,

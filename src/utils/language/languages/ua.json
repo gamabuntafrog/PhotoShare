@@ -223,6 +223,16 @@
           "asViewer": "Як глядача",
           "inputPlaceholder": "Введіть ім'я користувача"
         },
+        "RequestsInfo": {
+          "notFoundMessage": "Не знайдено",
+          "addButton": "Додати",
+          "asAdmin": "Як адміна",
+          "asAuthor": "Як автора",
+          "asViewer": "Як глядача",
+          "inputPlaceholder": "Введіть ім'я користувача",
+          "deleteButton": "Видалити",
+          "listIsEmpty": "Список пустий"
+        },
         "AuthorsInfo": {
           "wrongUsernameMessage": "Невірне ім'я користувача",
           "addNewButton": "Додати нового користувача",

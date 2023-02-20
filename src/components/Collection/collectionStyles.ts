@@ -194,10 +194,8 @@ const collectionStyles = (theme: Theme) => {
             errorTitle: {padding: 1, textAlign: 'center', wordBreak: 'break-word'}
         },
         buttonsWrapper: {
-            position: 'absolute',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            top: 20
+            display: 'flex',
+            justifyContent: 'center'
         },
         collectionInfo: {
             wrapper: {mb: 2, mt: 6},

@@ -32,7 +32,7 @@ export default function UserProfile() {
     const [isChangingMode, setIsChangingMode] = useState(false);
     const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
-    const {isSubscribed, toggleSubscribe} = useToggleSubscribe(id)
+    const {isSubscribed, toggleSubscribe, subscribersCount} = useToggleSubscribe(id, user?.subscribersCount || 0)
 
     const styles = useSx(userProfileStyles)
 
@@ -59,7 +59,6 @@ export default function UserProfile() {
         createdAt,
         _id: userId,
         subscribesCount,
-        subscribersCount,
         postsCount,
         canViewAllowedToViewCollections
     } = user

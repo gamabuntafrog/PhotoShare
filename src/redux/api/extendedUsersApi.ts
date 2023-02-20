@@ -43,7 +43,7 @@ const extendedUsersApi = rootApi.injectEndpoints({
                     collections: true
                 }
             }),
-            transformResponse: (res: IResponse<{ user: IUserWithCollections }>) => res.data.user
+            transformResponse: (res: IResponse<{ user: IUserWithCollections }>) => res.data.user,
         }),
         updateCurrentUser: build.mutation<unknown, { body: { username: string, avatar: string } }>({
             query: ({body}) => ({

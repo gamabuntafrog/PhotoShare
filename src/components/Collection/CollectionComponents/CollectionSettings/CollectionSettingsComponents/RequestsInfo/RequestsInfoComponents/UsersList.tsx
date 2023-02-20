@@ -26,11 +26,12 @@ function UserItem({user, collectionId}: IUserItemProps) {
 
     const [addAuthor] = extendedCollectionsApi.useAddAuthorToCollectionMutation()
     const [addViewer] = extendedCollectionsApi.useAddViewerToCollectionMutation()
+    const [deleteRequestedUser] = extendedCollectionsApi.useDeleteRequestedUserFromCollectionMutation()
 
     const {addAuthorModal: styles} = useSx(collectionStyles)
     const {anchorEl, isAnchorEl, handleClick, handleClose} = useAnchorEl()
 
-    const t = useShortTranslation({componentNameKey: 'Collection.CollectionSettings.AddUserToCollection'})
+    const t = useShortTranslation({componentNameKey: 'Collection.CollectionSettings.RequestsInfo'})
 
     return (
         <ListItem
@@ -62,6 +63,14 @@ function UserItem({user, collectionId}: IUserItemProps) {
                 onClick={handleClick}
             >
                 {t('addButton')}
+            </Button>
+            <Button
+                variant='outlined'
+                color='error'
+                onClick={() => deleteRequestedUser({collectionId, userId: authorId})}
+                sx={{ml: 1}}
+            >
+                {t('deleteButton')}
             </Button>
             <StyledCustomMenu
                 anchorEl={anchorEl}
