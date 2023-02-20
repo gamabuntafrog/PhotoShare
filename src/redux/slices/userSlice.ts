@@ -26,6 +26,7 @@ const initialState: IUserSlice = {
     user: null,
     isLoading: true,
     token: null,
+    language: "en-US"
 }
 
 const usersBaseURL = `${baseUrl}/users`
@@ -43,7 +44,6 @@ const fetchToken = async ({email, password}: { email: string, password: string }
         },
         method: 'POST'
     })
-    console.log(response)
 
     if (!response.ok) {
         const error = await response.json()
@@ -62,8 +62,6 @@ const fetchUser = async (token: string): Promise<ICurrentUser> => {
             authorization: `Bearer ${token}`
         }
     })
-
-    console.log(response)
 
     if (!response.ok) {
         const error = await response.json()
@@ -152,6 +150,9 @@ const userSlice = createSlice({
         },
         unsubscribeFromUser: (state, {payload: userId}) => {
             state.user!.subscribes = state.user?.subscribes.filter((id) => id !== userId) || []
+        },
+        changeLanguage: (state, {payload: language}) => {
+            state.language = language
         }
     },
     extraReducers: (builder) => {
@@ -196,5 +197,5 @@ const userSlice = createSlice({
         })
     }
 })
-export const {disableLoading,subscribeToUser, unsubscribeFromUser} = userSlice.actions
+export const {disableLoading,subscribeToUser, unsubscribeFromUser, changeLanguage} = userSlice.actions
 export default userSlice

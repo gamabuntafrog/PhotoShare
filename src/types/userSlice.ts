@@ -6,6 +6,7 @@ export interface IUserSlice {
     user: ICurrentUser | null,
     isLoading: boolean,
     token: null | string,
+    language: 'en-US' | 'uk'
 }
 
 export interface IUserSliceAuthorized {

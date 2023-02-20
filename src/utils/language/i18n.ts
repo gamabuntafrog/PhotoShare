@@ -24,7 +24,7 @@ i18n
             'uk': ua
         },
         fallbackLng: defaultLanguage,
-        debug: true,
+        debug: false,
         interpolation: {
             escapeValue: false,
             defaultVariables: {

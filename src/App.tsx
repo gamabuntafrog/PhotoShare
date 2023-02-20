@@ -9,16 +9,16 @@ import '@fontsource/roboto/700.css';
 import {Alert, Box, Stack, Theme,} from "@mui/material";
 import {useAppDispatch, useAppSelector} from "./redux/hooks";
 import userSlice, {
+    changeLanguage,
     getCurrentUser,
 } from "./redux/slices/userSlice";
 import {chooseRouter} from "./components/router";
 import FullScreenLoader from "./components/Loaders/FullScreenLoader";
-import i18n from './utils/language/i18n';
 import useSx from "./hooks/useSx";
 import NotificationStack from "./components/NotificationStack";
-import StandardHelmet from "./components/StandardHelmet";
 import {Helmet} from "react-helmet";
-
+import { useTranslation } from 'react-i18next';
+import i18n from "./utils/language/i18n";
 
 const appStyles = (theme: Theme) => {
 
@@ -40,8 +40,10 @@ const appStyles = (theme: Theme) => {
 export default function App() {
     const {isLoading, isLoggedIn} = useAppSelector((state) => state.userReducer)
     const dispatch = useAppDispatch()
+    const {i18n: {language}} = useTranslation()
 
     useEffect(() => void dispatch(getCurrentUser()), []);
+    useEffect(() => void dispatch(changeLanguage(language)), [language]);
 
     const styles = useSx(appStyles)
 

@@ -10,7 +10,7 @@ import {rootApi} from "./api/rootApi";
 const persistUserConfig = {
   key: 'user',
   storage,
-  whitelist: ['token']
+  whitelist: ['token', 'language']
 }
 
 const persistThemeConfig = {

@@ -8,10 +8,14 @@ import baseUrl from "../../utils/baseUrl";
 const baseQuery = fetchBaseQuery({
     baseUrl,
     prepareHeaders: (headers, {getState}) => {
-        const token = (getState() as RootState).userReducer.token
+        const {token, language} = (getState() as RootState).userReducer
 
         if (token) {
             headers.set('authorization', `Bearer ${token}`)
+        }
+
+        if (language) {
+            headers.set('language', language)
         }
 
         return headers

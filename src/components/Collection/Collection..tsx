@@ -16,6 +16,10 @@ import collectionStyles from "./collectionStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
 import extendedCollectionsApi from "../../redux/api/extendedCollectionsApi";
+import extendedPostsApi from "../../redux/api/extendedPostsApi";
+import useGetPostsByCollectionIdWithInfiniteScroll
+    from "../../redux/api/hooks/useGetPostsByCollectionIdWithInfiniteScroll";
+import MasonryPostsDrawer from "../MasonryPostsDrawer";
 
 const CollectionInfo = React.lazy(() => import( "./CollectionComponents/CollectionInfo"));
 const CollectionSettings = React.lazy(() => import( "./CollectionComponents/CollectionSettings"));
@@ -24,12 +28,14 @@ export default function Collection() {
     const {id = ''} = useParams<{ id: string }>()!
 
     const {
-        data,
+        data: collectionData,
         isLoading: isCollectionLoading,
         error: collectionError,
     } = extendedCollectionsApi.useGetOneWithPostsAndAuthorQuery({id})
 
-    const [posts, postsActions] = usePostsActions({initPosts: data?.collection.posts})
+    const {data: postsData, isLoading: isPostsLoading, isError: postsError, ref} = useGetPostsByCollectionIdWithInfiniteScroll({id})
+
+    const [posts, postsActions] = usePostsActions({initPosts: postsData})
 
     const theme = useTheme()
     const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
@@ -44,9 +50,9 @@ export default function Collection() {
 
     const t = useShortTranslation({componentNameKey: "Collection"})
 
-    if (isCollectionLoading) return <FullScreenLoader withMeta/>
+    if (isCollectionLoading || isPostsLoading) return <FullScreenLoader withMeta/>
 
-    if (collectionError || !data) {
+    if (collectionError || !collectionData || postsError) {
         return (
             <>
                 <StandardHelmet keyOfOther='error'/>
@@ -57,7 +63,7 @@ export default function Collection() {
         )
     }
 
-    const {collection, currentUserStatus} = data
+    const {collection, currentUserStatus} = collectionData
     const {_id: collectionId, title, tags, authors, isPrivate} = collection
 
     const {isAuthor, isAdmin} = currentUserStatus
@@ -75,7 +81,7 @@ export default function Collection() {
                 {(isAuthor || isAdmin) && (
                     <React.Suspense fallback={<FullScreenLoader fixed withMeta/>}>
                         <CollectionSettings
-                            data={data}
+                            data={collectionData}
                             closeSettingsModal={closeSettingsModal}
                             isSettingsOpen={isSettingsOpen}
                         />
@@ -95,18 +101,8 @@ export default function Collection() {
                         collectionId={collectionId}
                     />
                 </Box>
-                <ImageList
-                    variant="masonry"
-                    sx={styles.collectionPostsList}
-                    gap={12}
-                    cols={collectionPostsListCols}
-                >
-                    {posts.map((post) => <PostItem
-                        postsActions={postsActions}
-                        post={post}
-                        key={post._id}
-                    />)}
-                </ImageList>
+                <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
+                <div ref={ref} />
             </Box>
         </>
     )

@@ -4,9 +4,6 @@ import {
     Button,
     Container,
     IconButton,
-    Menu,
-    MenuItem,
-    OutlinedInput,
     Typography,
     useTheme
 } from "@mui/material";
@@ -53,7 +50,6 @@ function AuthorOfPostInfo(
 
     const userActionsButton = isSubscribed ? t('unsubscribeButton') : t('subscribeButton')
 
-    const theme = useTheme()
     const {authorInfo: styles} = useSx(postStyles)
 
     return (

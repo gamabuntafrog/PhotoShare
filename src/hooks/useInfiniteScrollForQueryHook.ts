@@ -34,15 +34,14 @@ export default function useInfiniteScrollForQueryHook({
     }, [...refetchDependencies]);
 
     useEffect(() => {
-        console.log([page, isError, isLoading, isEnd])
-    }, [page, isError, isLoading, isEnd]);
-
-    useEffect(() => {
         if (isError) return;
-        if (!data || isLoading) return
+        if (data.length < 1 || isLoading) return
         if (data.length < 1 && combinedValue.length > 0) {
             setIsEnd(true)
             return
+        }
+        if (data.length < 15) {
+            setIsEnd(true)
         }
 
         setCombinedValue(prev => {
@@ -60,15 +59,11 @@ export default function useInfiniteScrollForQueryHook({
 
     useEffect(() => {
         if (isError) return;
-        if (!inView || isLoading) return
+        if (!inView || isLoading) return;
+        if (isEnd) return;
 
         setPage(prev => prev + 1)
     }, [inView]);
-
-    useEffect(() => {
-        console.log(inView)
-    }, [inView]);
-
 
     useEffect(() => {
         triggerCallback({page})

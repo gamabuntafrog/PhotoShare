@@ -3,9 +3,9 @@ import useInfiniteScrollForSearchBuIdQuery from "../../../hooks/useInfiniteScrol
 
 
 
-export default function useGetPostsByUserIdWithInfiniteScroll({id}: { id: string }) {
+export default function useGetPostsByCollectionIdWithInfiniteScroll({id}: { id: string }) {
 
-    const [trigger, {data = [], isLoading, isError}] = extendedPostsApi.useLazyGetPostsByUserIdQuery()
+    const [trigger, {data = [], isLoading, isError}] = extendedPostsApi.useLazyGetPostsByCollectionIdQuery()
 
     const {paginatedData, ref, isEnd} = useInfiniteScrollForSearchBuIdQuery({trigger, isLoading, isError, id, data})
 

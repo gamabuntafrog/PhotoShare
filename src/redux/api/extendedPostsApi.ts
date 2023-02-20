@@ -15,6 +15,15 @@ const extendedPostsApi = rootApi.injectEndpoints({
             }),
             transformResponse: (response: IResponse<{ posts: IPost[] }>) => response.data.posts,
         }),
+        getPostsByCollectionId: build.query<IPost[], {arrayOfId: string[], id: string}>({
+            query: ({arrayOfId, id}) => ({
+                url: `/posts/collections/${id}`,
+                params: {
+                    arrayOfId: JSON.stringify(arrayOfId)
+                }
+            }),
+            transformResponse: (response: IResponse<{ posts: IPost[] }>) => response.data.posts,
+        }),
         searchPosts: build.query<IPost[], { title: string, page: number, arrayOfId: string[] }>({
             query: ({title, page, arrayOfId}) => ({
                 url: `/posts/search`,
