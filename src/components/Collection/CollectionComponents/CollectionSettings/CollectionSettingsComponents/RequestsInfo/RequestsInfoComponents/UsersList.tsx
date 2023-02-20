@@ -1,27 +1,28 @@
-import {Avatar, Button, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
-import {NavLink} from "react-router-dom";
-import React from "react";
+import {IUserForAddInCollection} from "../../../../../../../types/user";
+import extendedCollectionsApi from "../../../../../../../redux/api/extendedCollectionsApi";
 import useSx from "../../../../../../../hooks/useSx";
 import collectionStyles from "../../../../../collectionStyles";
 import useAnchorEl from "../../../../../../../hooks/useAnchorEl";
-import StyledCustomMenuItem from "../../../../../../../library/CustomMenu/StyledCustomMenuItem";
-import StyledCustomMenu from "../../../../../../../library/CustomMenu/StyledCustomMenu";
-import {IUserForAddInCollection} from "../../../../../../../types/user";
 import useShortTranslation from "../../../../../../../hooks/useShortTranslation";
-import extendedCollectionsApi from "../../../../../../../redux/api/extendedCollectionsApi";
+import {Avatar, Button, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
+import {NavLink} from "react-router-dom";
+import StyledCustomMenu from "../../../../../../../library/CustomMenu/StyledCustomMenu";
+import StyledCustomMenuItem from "../../../../../../../library/CustomMenu/StyledCustomMenuItem";
+import React from "react";
+import {IUserFromRequestsOfCollection} from "../../../../../../../types/collection";
 
 interface IUsersListProps {
-    authors: IUserForAddInCollection[],
+    users: IUserFromRequestsOfCollection[],
     collectionId: string
 }
 
 interface IUserItemProps {
-    author: IUserForAddInCollection,
+    user: IUserFromRequestsOfCollection,
     collectionId: string
 }
 
-function UserItem({author, collectionId}: IUserItemProps) {
-    const {_id: authorId, username, avatar} = author
+function UserItem({user, collectionId}: IUserItemProps) {
+    const {_id: authorId, username, avatar} = user
 
     const [addAuthor] = extendedCollectionsApi.useAddAuthorToCollectionMutation()
     const [addViewer] = extendedCollectionsApi.useAddViewerToCollectionMutation()
@@ -102,14 +103,14 @@ function UserItem({author, collectionId}: IUserItemProps) {
     )
 }
 
-export default function UsersList({authors, collectionId}: IUsersListProps) {
+export default function UsersList({users, collectionId}: IUsersListProps) {
 
     return (
         <List>
-            {authors?.map((author) => <UserItem
-                    author={author}
+            {users?.map((user) => <UserItem
+                user={user}
                     collectionId={collectionId}
-                    key={author._id}
+                    key={user._id}
                 />
             )}
         </List>

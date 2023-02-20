@@ -92,6 +92,20 @@ const extendedCollectionsApi = rootApi.injectEndpoints({
             }),
             invalidatesTags: ['Collection']
         }),
+        sendRequestToJoinToCollection: build.mutation<unknown, {collectionId: string}>({
+            query: ({collectionId}) => ({
+                url: `/collections/${collectionId}/requests`,
+                method: 'POST'
+            }),
+            invalidatesTags: ['Collection']
+        }),
+        unsendRequestToJoinFromCollection: build.mutation<unknown, {collectionId: string}>({
+            query: ({collectionId}) => ({
+                url: `/collections/${collectionId}/requests`,
+                method: 'DELETE'
+            }),
+            invalidatesTags: ['Collection']
+        }),
         changeAuthorRoleInCollection: build.mutation<unknown, { collectionId: string, authorId: string, role: 'ADMIN' | 'AUTHOR' }>({
             query: ({collectionId, authorId, role}) => ({
                 url: `/collections/${collectionId}/authors/${authorId}/roles`,

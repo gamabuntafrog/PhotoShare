@@ -26,6 +26,12 @@ export interface IViewerOfCollection {
     _id: string,
 }
 
+export interface IUserFromRequestsOfCollection {
+    username: string,
+    avatar: string | null,
+    _id: string,
+}
+
 export interface ICollectionWithPosts {
     authors: IAuthorOfCollection[],
     viewers: IViewerOfCollection[],
@@ -34,13 +40,25 @@ export interface ICollectionWithPosts {
     title: string,
     _id: string,
     isPrivate: boolean,
+}
 
+export interface ICollectionWithoutPosts {
+    authors: IAuthorOfCollection[],
+    viewers: IViewerOfCollection[],
+    requests: IUserFromRequestsOfCollection[],
+    tags: string[],
+    posts: string[],
+    title: string,
+    _id: string,
+    isPrivate: boolean,
 }
 
 export interface IFullCollection {
-    collection: ICollectionWithPosts,
+    collection: ICollectionWithoutPosts,
     currentUserStatus: {
         isAuthor: boolean,
-        isAdmin: boolean
+        isAdmin: boolean,
+        isViewer: boolean,
+        isInQueue: boolean
     }
 }

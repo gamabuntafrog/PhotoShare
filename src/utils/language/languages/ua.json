@@ -182,6 +182,8 @@
     "Collection": {
       "openSettingsButton": "Налаштування",
       "errorMessage": "Помилка",
+      "sendRequest": "Відправити запит на приєднання",
+      "unsendRequest": "Відмінити запит",
       "CollectionInfo": {
         "admin": "Адмін",
         "author": "Автор",
@@ -194,6 +196,7 @@
         "authorsListTitle": "Автори",
         "viewersListTitle": "Глядачі",
         "privateModeTitle": "Приватний режим",
+        "requestsToJoinTitle": "Запити на приєднання",
         "privateModeDescription": "Зробіть вашу колекцію невидимою для всіх окрім глядачів та авторів",
         "deleteCollectionButton": "Видалити колекцію",
         "leaveCollectionButton": "Залишити колекцію",

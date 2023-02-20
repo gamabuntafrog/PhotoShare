@@ -181,6 +181,8 @@
     "Collection": {
       "openSettingsButton": "Settings",
       "errorMessage": "Error",
+      "sendRequest": "Send request to join",
+      "unsendRequest": "Unsend request",
       "CollectionInfo": {
         "admin": "Admin",
         "author": "Author",
@@ -193,6 +195,7 @@
         "authorsListTitle": "Authors",
         "viewersListTitle": "Viewers",
         "privateModeTitle": "Private mode",
+        "requestsToJoinTitle": "Requests to join",
         "privateModeDescription": "Make your collection invisible for non-viewers and non-authors",
         "deleteCollectionButton": "Delete collection",
         "leaveCollectionButton": "Leave collection",

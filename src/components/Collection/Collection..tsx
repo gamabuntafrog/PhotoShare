@@ -33,13 +33,14 @@ export default function Collection() {
         error: collectionError,
     } = extendedCollectionsApi.useGetOneWithPostsAndAuthorQuery({id})
 
-    const {data: postsData, isLoading: isPostsLoading, isError: postsError, ref} = useGetPostsByCollectionIdWithInfiniteScroll({id})
+    const {
+        data: postsData,
+        isLoading: isPostsLoading,
+        isError: postsError,
+        ref
+    } = useGetPostsByCollectionIdWithInfiniteScroll({id})
 
     const [posts, postsActions] = usePostsActions({initPosts: postsData})
-
-    const theme = useTheme()
-    const isSmallerLaptop = useMediaQuery(theme.breakpoints.down('laptop'));
-    const isSmallerTablet = useMediaQuery(theme.breakpoints.down('tablet'));
 
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
@@ -49,6 +50,9 @@ export default function Collection() {
     const closeSettingsModal = () => setIsSettingsOpen(false)
 
     const t = useShortTranslation({componentNameKey: "Collection"})
+
+    const [sendRequest] = extendedCollectionsApi.useSendRequestToJoinToCollectionMutation()
+    const [unsendRequest] = extendedCollectionsApi.useUnsendRequestToJoinFromCollectionMutation()
 
     if (isCollectionLoading || isPostsLoading) return <FullScreenLoader withMeta/>
 
@@ -66,13 +70,11 @@ export default function Collection() {
     const {collection, currentUserStatus} = collectionData
     const {_id: collectionId, title, tags, authors, isPrivate} = collection
 
-    const {isAuthor, isAdmin} = currentUserStatus
+    const {isAuthor, isAdmin, isViewer, isInQueue} = currentUserStatus
 
     const formattedTags = tags.join(' ')
 
     const headTitleKey = isPrivate ? 'privateCollection' : 'publicCollection'
-
-    const collectionPostsListCols = isSmallerLaptop ? isSmallerTablet ? 2 : 3 : 5
 
     return (
         <>
@@ -88,11 +90,23 @@ export default function Collection() {
                     </React.Suspense>
                 )}
                 <Box sx={styles.collectionWrapper}>
-                    {(isAuthor || isAdmin) &&
-                        <Button sx={styles.openButton} variant='contained' onClick={openSettingsModal}>
-                            {t('openSettingsButton')}
-                        </Button>
-                    }
+                    <Box sx={styles.buttonsWrapper}>
+                        {(isAuthor || isAdmin) &&
+                            <Button sx={{mx: 1}} variant='contained' onClick={openSettingsModal}>
+                                {t('openSettingsButton')}
+                            </Button>
+                        }
+                        {(!isAuthor && !isAdmin && !isViewer && !isInQueue) &&
+                            <Button sx={{mx: 1}} variant='contained' onClick={() => sendRequest({collectionId: id})}>
+                                {t('sendRequest')}
+                            </Button>
+                        }
+                        {(isInQueue) &&
+                            <Button sx={{mx: 1}} variant='contained' onClick={() => unsendRequest({collectionId: id})}>
+                                {t('unsendRequest')}
+                            </Button>
+                        }
+                    </Box>
                     <CollectionInfo
                         title={title}
                         formattedTags={formattedTags}
@@ -102,7 +116,7 @@ export default function Collection() {
                     />
                 </Box>
                 <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
-                <div ref={ref} />
+                <div ref={ref}/>
             </Box>
         </>
     )

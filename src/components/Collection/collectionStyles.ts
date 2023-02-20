@@ -193,9 +193,10 @@ const collectionStyles = (theme: Theme) => {
             },
             errorTitle: {padding: 1, textAlign: 'center', wordBreak: 'break-word'}
         },
-        openButton: {
+        buttonsWrapper: {
             position: 'absolute',
-            right: 20,
+            left: '50%',
+            transform: 'translateX(-50%)',
             top: 20
         },
         collectionInfo: {

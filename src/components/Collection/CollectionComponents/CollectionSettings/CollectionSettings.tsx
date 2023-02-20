@@ -17,6 +17,7 @@ import collectionStyles from "../../collectionStyles";
 import {useNavigate} from "react-router-dom";
 import useShortTranslation from "../../../../hooks/useShortTranslation";
 import extendedCollectionsApi from "../../../../redux/api/extendedCollectionsApi";
+import RequestsInfo from "./CollectionSettingsComponents/RequestsInfo/RequestsInfo";
 
 const CollectionInfo = React.lazy(() => import( "./CollectionSettingsComponents/CollectionInfo"));
 const AddUserToCollection = React.lazy(() => import( "./CollectionSettingsComponents/AddUserToCollection"));
@@ -69,7 +70,7 @@ const changeBorderRadiusOnResize = (node: HTMLElement) => {
 export default function CollectionSettings({data, closeSettingsModal, isSettingsOpen}: ICollectionSettingsProps) {
 
     const {collection, currentUserStatus} = data
-    const {_id: collectionId, title, tags, authors, isPrivate, viewers} = collection
+    const {_id: collectionId, title, tags, authors, isPrivate, viewers, requests} = collection
     const styles = useSx(collectionStyles)
 
     const [modalRef] = useHookWithRefCallback({ifNodeFunction: changeBorderRadiusOnResize})
@@ -88,7 +89,7 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
         };
     const openAddUserAccordion = () => setExpanded('panel1')
 
-    const {isAuthor, isAdmin} = currentUserStatus
+    const {isAuthor, isAdmin, isViewer, isInQueue} = currentUserStatus
 
     const formattedTags = tags.join(' ')
 
@@ -201,6 +202,26 @@ export default function CollectionSettings({data, closeSettingsModal, isSettings
                             />
                         </AccordionDetails>
                     </Accordion>
+                    {isAdmin && (
+                        <Accordion
+                            sx={styles.accordionWrapper}
+                            expanded={expanded === 'panel4'}
+                            onChange={handleChange('panel4')}
+                        >
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon color='primary'/>}
+                                aria-controls="panel4bh-content"
+                                id="panel4bh-header"
+                            >
+                                <Typography sx={styles.accordionTitle}>
+                                    {t('requestsToJoinTitle')}
+                                </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <RequestsInfo collectionId={collectionId} users={requests} />
+                            </AccordionDetails>
+                        </Accordion>
+                    )}
                     {isAdmin && (
                         <Box sx={styles.togglePrivateContainer}>
                             <Box>
