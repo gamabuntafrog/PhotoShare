@@ -10,6 +10,12 @@ const extendedNotificationsApi = rootApi.injectEndpoints({
             }),
             transformResponse: (res: IResponse<{ notifications: INotification[] }>) => res.data.notifications,
         }),
+        checkNotifications: build.mutation<void, void>({
+            query: () => ({
+                url: '/notifications',
+                method: 'PATCH'
+            })
+        })
     })
 })
 

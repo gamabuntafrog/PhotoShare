@@ -21,6 +21,7 @@ export default function Notifications() {
         isLoading,
         isError
     } = extendedNotificationsApi.useGetNotificationsQuery(undefined, {pollingInterval: 5000})
+    const [checkNotifications] = extendedNotificationsApi.useCheckNotificationsMutation()
 
     const isThereNonChecked = notifications.some(({checked}) => checked === false)
 
@@ -30,7 +31,7 @@ export default function Notifications() {
         if (!isAnchorEl) return
         if (!isThereNonChecked) return
 
-        // makeAllChecked
+        checkNotifications()
     }, [isAnchorEl]);
 
 
@@ -102,7 +103,7 @@ export default function Notifications() {
                         const userId = user._id
                         const username = user?.username || userId
                         const avatarURL = user?.avatarURL || ''
-                        const textColor = checked ? 'inherit' : 'theme.palette.primary.main'
+                        const textColor = checked ? 'inherit' : theme.palette.primary.main
 
                         if (type === 'subscribe') {
                             return (
