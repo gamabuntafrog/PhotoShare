@@ -37,7 +37,7 @@ const extendedPostsApi = rootApi.injectEndpoints({
         }),
         getPostsByUserId: build.query<IPost[], { id: string, arrayOfId: string[] }>({
             query: ({id, arrayOfId}) => ({
-                url: `/users/${id}/posts`,
+                url: `/posts/users/${id}`,
                 params: {
                     arrayOfId: JSON.stringify(arrayOfId)
                 }

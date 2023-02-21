@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import {useInView} from "react-intersection-observer";
 
 export interface IUseInfiniteScrollForQueryHookProps {
@@ -25,7 +25,7 @@ export default function useInfiniteScrollForQueryHook({
         rootMargin: page > 1 ? '500px' : '100px'
     });
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         console.log('refetch')
         setPage(1)
         setCombinedValue([])
@@ -33,7 +33,7 @@ export default function useInfiniteScrollForQueryHook({
         triggerCallback({page: 1})
     }, [...refetchDependencies]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (isError) return;
         if (data.length < 1 || isLoading) return
         if (data.length < 1 && combinedValue.length > 0) {
@@ -57,7 +57,7 @@ export default function useInfiniteScrollForQueryHook({
         })
     }, [data, isLoading, inView]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (isError) return;
         if (!inView || isLoading) return;
         if (isEnd) return;
@@ -65,7 +65,7 @@ export default function useInfiniteScrollForQueryHook({
         setPage(prev => prev + 1)
     }, [inView]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         triggerCallback({page})
     }, [page]);
 

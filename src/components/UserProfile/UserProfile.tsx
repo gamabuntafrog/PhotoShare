@@ -2,7 +2,6 @@ import {
     Avatar,
     Box,
     Button,
-
     Typography, useTheme
 } from "@mui/material";
 import {NavLink, Outlet, useParams} from "react-router-dom";
@@ -30,7 +29,6 @@ export default function UserProfile() {
     const [isUserUpdating, setIsUserUpdating] = useState(false);
     const [avatarFile, setAvatarFile] = useState<null | string>(null);
     const [isChangingMode, setIsChangingMode] = useState(false);
-    const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
     const {isSubscribed, toggleSubscribe, subscribersCount} = useToggleSubscribe(id, user?.subscribersCount || 0)
 
@@ -79,17 +77,10 @@ export default function UserProfile() {
         setIsChangingMode(false)
     }
 
-    const closeAddAuthorModal = () => setIsAddUserModalOpen(false)
-    const openAddAuthorModal = () => setIsAddUserModalOpen(true)
 
     return (
         <Box>
             <StandardHelmet keyOfTitle='userProfile' options={{username}}/>
-            {/*<AddAuthorModal*/}
-            {/*    isAddUserModalOpen={isAddUserModalOpen}*/}
-            {/*    closeAddAuthorModal={closeAddAuthorModal}*/}
-            {/*    authorId={id}*/}
-            {/*/>*/}
             <Box
                 sx={styles.wrapper}
             >

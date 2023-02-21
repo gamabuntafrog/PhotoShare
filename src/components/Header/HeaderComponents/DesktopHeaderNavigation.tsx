@@ -12,12 +12,13 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import React from "react";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import SearchBar from "./SearchBar";
+import Notifications from "./Notifications";
 
 
 interface IDesktopHeaderNavigationProps {
     user: ICurrentUser | null,
     isLoggedIn: boolean,
-    exitFromAccount: () => Promise<void>
+    exitFromAccount: () => Promise<void>,
 }
 
 
@@ -44,36 +45,8 @@ export default function DesktopHeaderNavigation({user, isLoggedIn, exitFromAccou
                                 <AddBoxIcon/>
                             </IconButton>
                         </StyledHeaderNavLink>
-                        <Box
-                            sx={{ml: 1, position: 'relative'}}
-                        >
 
-                            <IconButton
-                                onClick={(e) => {
-                                    // setIsNotificationsOpen(isOpen => !isOpen)
-                                }}
-                                className={'tabindex="0"'}
-                                onBlur={(e) => {
-                                    // console.log(e)
-                                    // setIsNotificationsOpen(!isNotificationsOpen)
-                                }}
-                                disabled={true}
-                                sx={{color: 'text.primary'}}
-                            >
-                                <NotificationsIcon/>
-                                {/*{unCheckedNotificationsLength > 0 &&*/}
-                                {/*    <Typography sx={{color: 'error.main'}}>*/}
-                                {/*        {unCheckedNotificationsLength}*/}
-                                {/*    </Typography>*/}
-                                {/*}*/}
-                            </IconButton>
-                            {/*{isNotificationsOpen &&*/}
-                            {/*    <Notifications*/}
-                            {/*        notifications={notifications}*/}
-                            {/*        setIsNotificationsOpen={setIsNotificationsOpen}*/}
-                            {/*    />*/}
-                            {/*}*/}
-                        </Box>
+                        <Notifications/>
                         <StyledHeaderNavLink to={`/users/${currentUserId}`}>
                             {username}
                         </StyledHeaderNavLink>

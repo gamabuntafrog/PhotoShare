@@ -123,3 +123,19 @@ export interface IUserForUsers {
     subscribesCount: number,
     subscribersCount: number
 }
+
+export type notificationActions = 'subscribe' | 'unsubscribe' | 'likePost' | 'unlikePost'
+
+export interface INotification {
+    user: {
+        _id: string,
+        username?: string,
+        avatarURL?: string | null
+    },
+    type: notificationActions,
+    post: {
+        _id: string,
+        image?: string
+    },
+    checked: boolean
+}

@@ -8,7 +8,6 @@ import postsStyles from "../../Posts/postsStyles";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import MasonryPostsDrawer from "../../MasonryPostsDrawer";
 import useGetPostsByUserIdWithInfiniteScroll from "../../../redux/api/hooks/useGetPostsByUserIdWithInfiniteScroll";
-import extendedPostsApi from "../../../redux/api/extendedPostsApi";
 
 
 export default function UsersPosts() {
@@ -16,7 +15,7 @@ export default function UsersPosts() {
     const {id = ''} = useParams<{ id: string }>()!
 
     const {data, isLoading, isEnd, isError, ref} = useGetPostsByUserIdWithInfiniteScroll({id})
-    // const {data = [], isLoading, isError} = extendedPostsApi.useGetPostsByUserIdQuery({id, page: 1, arrayOfId: []})
+
     const [posts, postsActions] = usePostsActions({initPosts: data})
     const styles = useSx(postsStyles)
 
@@ -27,11 +26,11 @@ export default function UsersPosts() {
     }
 
     if (isError) {
-        return <Typography variant='h1'>{t('error')}</Typography>
+        return <Typography textAlign='center' variant='h1'>{t('error')}</Typography>
     }
 
     if (!posts) {
-        return <Typography variant='h1'>{t('noPostsMessage')}</Typography>
+        return <Typography textAlign='center' variant='h1'>{t('noPostsMessage')}</Typography>
     }
 
     return (
@@ -44,5 +43,4 @@ export default function UsersPosts() {
             <div ref={ref} />
         </>
     )
-    // return <div/>
 }

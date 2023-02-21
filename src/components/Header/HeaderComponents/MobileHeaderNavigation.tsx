@@ -8,6 +8,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import SearchBar from "./SearchBar";
+import Notifications from "./Notifications";
 
 interface IMobileHeaderNavigationProps {
     openModal: () => void,
@@ -37,25 +38,7 @@ export default function MobileHeaderNavigation(
                             <AddBoxIcon/>
                         </IconButton>
                     </StyledHeaderNavLink>
-                    <IconButton
-                        onClick={(e) => {
-                            // setIsNotificationsOpen(isOpen => !isOpen)
-                        }}
-                        className={'tabindex="0"'}
-                        onBlur={(e) => {
-                            // console.log(e)
-                            // setIsNotificationsOpen(!isNotificationsOpen)
-                        }}
-                        sx={{color: 'text.primary'}}
-                        disabled={true}
-                    >
-                        <NotificationsIcon/>
-                        {/*{unCheckedNotificationsLength > 0 &&*/}
-                        {/*    <Typography sx={{color: 'error.main'}}>*/}
-                        {/*        {unCheckedNotificationsLength}*/}
-                        {/*    </Typography>*/}
-                        {/*}*/}
-                    </IconButton>
+                    <Notifications/>
                     <StyledHeaderNavLink to={`/users/${user._id}`}>
                         <Avatar src={user.avatar.url || ''}/>
                     </StyledHeaderNavLink>

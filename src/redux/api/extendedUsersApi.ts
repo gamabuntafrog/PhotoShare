@@ -1,6 +1,14 @@
-import {IUser, IUserForAddInCollection, IUserForSearchBar, IUserForUsers, IUserWithCollections} from "../../types/user";
+import {
+    INotification,
+    IUser,
+    IUserForAddInCollection,
+    IUserForSearchBar,
+    IUserForUsers,
+    IUserWithCollections
+} from "../../types/user";
 import {IResponse} from "../slices/userSlice";
 import {idType, rootApi} from "./rootApi";
+
 
 
 const extendedUsersApi = rootApi.injectEndpoints({

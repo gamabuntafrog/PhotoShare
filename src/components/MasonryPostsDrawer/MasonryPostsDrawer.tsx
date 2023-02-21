@@ -56,3 +56,4 @@ export default function MasonryPostsDrawer({posts, postsActions}: {posts: IPost[
 //             image         image        image
 //             image         image        image
 //etc...
+// ЦЕ ПРИДУМАВ Я А НЕ CHATGPT!!!!!!!! (я серйозно)

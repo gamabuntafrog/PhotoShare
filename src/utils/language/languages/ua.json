@@ -115,15 +115,15 @@
       },
 
       "UserAllowedToViewCollections": {
-        "Error": "Помилка",
+        "error": "Помилка",
         "noCollectionsMessage": "Колекцій ще немає"
       },
       "UserCollections": {
-        "Error": "Помилка",
+        "error": "Помилка",
         "noCollectionsMessage": "Колекцій ще немає"
       },
       "UserPosts": {
-        "Error": "Помилка",
+        "error": "Помилка",
         "noPostsMessage": "Постів ще немає"
       }
     },

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useLayoutEffect, useState} from "react";
 import {useInView} from "react-intersection-observer";
 
 interface IUseInfiniteScrollForSearchBuIdQueryProps {
@@ -25,12 +25,12 @@ export default function useInfiniteScrollForSearchBuIdQuery({
         rootMargin: '500px'
     });
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setCombinedValue([])
         setIsEnd(false)
     }, [id]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (isError) return;
         if (data.length < 1 || isLoading) return
         if (data.length < 1 && combinedValue.length > 0) {
@@ -53,7 +53,7 @@ export default function useInfiniteScrollForSearchBuIdQuery({
         })
     }, [data]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (isError) return;
         if (!inView || isLoading) return;
         if (isEnd) return;
@@ -61,6 +61,10 @@ export default function useInfiniteScrollForSearchBuIdQuery({
         const arrayOfId = combinedValue.map((el) => el._id)
         trigger({arrayOfId, id})
     }, [inView, id]);
+
+    useLayoutEffect(() => {
+        trigger({arrayOfId: [], id})
+    }, [])
 
     return {paginatedData: combinedValue, ref, isEnd}
 }

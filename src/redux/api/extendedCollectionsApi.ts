@@ -15,7 +15,7 @@ const extendedCollectionsApi = rootApi.injectEndpoints({
         }),
         getCollectionsByUserId: build.query<ICollectionForIUser[], idType>({
             query: ({id}) => ({
-                url: `/users/${id}/collections`
+                url: `/collections/users/${id}`
             }),
             transformResponse: (response: IResponse<{ collections: ICollectionForIUser[] }>) => response.data.collections,
         }),

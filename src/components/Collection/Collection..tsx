@@ -1,13 +1,9 @@
 import {
     Box, Button,
     Container,
-    ImageList,
     Typography
 } from "@mui/material";
 import {useParams} from "react-router-dom";
-import {useTheme} from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import PostItem from "../PostItem";
 import React, {useEffect, useState} from "react";
 import usePostsActions from "../../hooks/usePostsActions";
 import FullScreenLoader from "../Loaders/FullScreenLoader";
@@ -16,7 +12,6 @@ import collectionStyles from "./collectionStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
 import extendedCollectionsApi from "../../redux/api/extendedCollectionsApi";
-import extendedPostsApi from "../../redux/api/extendedPostsApi";
 import useGetPostsByCollectionIdWithInfiniteScroll
     from "../../redux/api/hooks/useGetPostsByCollectionIdWithInfiniteScroll";
 import MasonryPostsDrawer from "../MasonryPostsDrawer";
@@ -107,13 +102,15 @@ export default function Collection() {
                             </Button>
                         }
                     </Box>
-                    <CollectionInfo
-                        title={title}
-                        formattedTags={formattedTags}
-                        authors={authors}
-                        isCurrentUserAuthorOfCollection={isAuthor}
-                        collectionId={collectionId}
-                    />
+                    <React.Suspense fallback={<FullScreenLoader fixed withMeta/>}>
+                        <CollectionInfo
+                            title={title}
+                            formattedTags={formattedTags}
+                            authors={authors}
+                            isCurrentUserAuthorOfCollection={isAuthor}
+                            collectionId={collectionId}
+                        />
+                    </React.Suspense>
                 </Box>
                 <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
                 <div ref={ref}/>

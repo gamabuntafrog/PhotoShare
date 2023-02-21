@@ -24,6 +24,7 @@ import postStyles, {StyledPostImage} from "./postStyles";
 import DeleteIcon from '@mui/icons-material/Delete';
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
+import extendedUsersApi from "../../redux/api/extendedUsersApi";
 
 
 interface IAuthorOfPostInfoProps {
@@ -51,6 +52,9 @@ function AuthorOfPostInfo(
     const userActionsButton = isSubscribed ? t('unsubscribeButton') : t('subscribeButton')
 
     const {authorInfo: styles} = useSx(postStyles)
+
+
+
 
     return (
         <Box
