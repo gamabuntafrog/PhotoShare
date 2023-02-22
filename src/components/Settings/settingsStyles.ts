@@ -13,8 +13,14 @@ const settingsStyles = (theme: Theme) => {
         },
         title: {
             fontWeight: '600', textAlign: 'center',
+            [theme.breakpoints.down('laptop')]: {
+                fontSize: 55
+            },
             [theme.breakpoints.down('tablet')]: {
-                fontSize: 70
+                fontSize: 40
+            },
+            [theme.breakpoints.down('mobile')]: {
+                fontSize: 30
             }
         },
         wrapper: {display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 2},

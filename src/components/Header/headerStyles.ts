@@ -138,6 +138,65 @@ const headerStyles = (theme: Theme) => {
                 display: 'flex',
                 alignItems: 'center',
             }
+        },
+        notifications: {
+            openMenuButton: {
+                '&:hover': {
+                    color: theme.palette.primary.main
+                },
+                '&.active': {
+                    color: theme.palette.primary.main
+                },
+            },
+            menu: {
+                '& .MuiPaper-root': {
+                    maxWidth: '400px'
+                },
+                [theme.breakpoints.down('tablet')]: {
+                    '& .MuiPaper-root': {
+                        maxHeight: '500px',
+                        maxWidth: '90%',
+                        width: '90%',
+                        left: '50% !important',
+                        transform: 'translateX(-50%) !important'
+                    },
+                    '& .MuiList-root': {
+                        top: '0px !important',
+                        left: '0px !important',
+                        width: '100%',
+                        maxWidth: '100%',
+                        height: '100%',
+                        maxHeight: 'none',
+                        py: 1
+                    }
+                }
+            },
+            loaderWrapper: {
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                overflow: 'hidden',
+                padding: 2
+            },
+            menuItem: {
+                whiteSpace: 'normal',
+                color: 'inherit',
+
+            },
+            menuItemActive: {
+                whiteSpace: 'normal',
+                color: theme.palette.primary.main
+            },
+            avatar: {
+                position: 'absolute',
+                top: '40%',
+                left: '40%',
+                zIndex: 100,
+                width: '30px',
+                height: '30px'
+            },
+            image: {borderRadius: 1},
+            imageWrapper: {position: 'relative', mr: 1}
         }
     }
 }

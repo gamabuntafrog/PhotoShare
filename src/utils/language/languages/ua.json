@@ -53,6 +53,18 @@
         "posts": "Пости",
         "collections": "Колекції",
         "inputPlaceholder": "Пошук"
+      },
+      "Notifications": {
+        "subscribed": "{{username}} підписався на вас",
+        "unsubscribed": "{{username}} відписався від вас",
+        "likedPost": "{{username}} лайкнув ваш пост",
+        "unlikedPost": "{{username}} видалив лайк з вашого поста",
+        "savedPost": "{{username}} зберіг ваш пост",
+        "addedUserToCollection": "{{username}} додав вас в колекцію {{collectionTitle}}",
+        "deleteUserFromCollection": "{{username}} видалив вас з колекції {{collectionTitle}}",
+        "changedUserRoleInCollection": "{{username}} змінив вашу роль в колекції {{collectionTitle}}",
+        "acceptedJoinToCollectionRequest": "{{username}} відклонив ваш запит на приєднання до колекції {{collectionTitle}}",
+        "declinedJoinToCollectionRequest": "{{username}} прийняв ваш запит на приєднання до колекції {{collectionTitle}}"
       }
     },
     "Login": {

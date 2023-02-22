@@ -151,5 +151,6 @@ export interface INotification {
         _id: string,
         title?: string
     } | null,
-    checked: boolean
+    checked: boolean,
+    _id: string
 }

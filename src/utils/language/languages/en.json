@@ -53,6 +53,18 @@
         "posts": "Posts",
         "collections": "Collections",
         "inputPlaceholder": "Search"
+      },
+      "Notifications": {
+        "subscribed": "{{username}} subscribed on you",
+        "unsubscribed": "{{username}} unsubscribed from you",
+        "likedPost": "{{username}} liked your post",
+        "unlikedPost": "{{username}} remove like from your post",
+        "savedPost": "{{username}} saved your post",
+        "addedUserToCollection": "{{username}} added you to collection {{collectionTitle}}",
+        "deleteUserFromCollection": "{{username}} deleted you from collection {{collectionTitle}}",
+        "changedUserRoleInCollection": "{{username}} changed your role in collection {{collectionTitle}}",
+        "acceptedJoinToCollectionRequest": "{{username}} declined your request to join to collection {{collectionTitle}}",
+        "declinedJoinToCollectionRequest": "{{username}} accepted your request to join to collection {{collectionTitle}}"
       }
     },
     "Login": {
