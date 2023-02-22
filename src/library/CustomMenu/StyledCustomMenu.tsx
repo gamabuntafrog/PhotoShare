@@ -6,7 +6,6 @@ const StyledCustomMenu = styled(Menu)(({theme}) => ({
     '& .MuiPaper-root': {
         backgroundColor: theme.palette.background.paper,
         maxHeight: '300px',
-        minHeight: '300px'
     },
     '& .MuiMenu-list': {
         backgroundColor: theme.palette.background.paper,

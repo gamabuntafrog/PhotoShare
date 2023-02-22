@@ -124,7 +124,17 @@ export interface IUserForUsers {
     subscribersCount: number
 }
 
-export type notificationActions = 'subscribe' | 'unsubscribe' | 'likePost' | 'unlikePost'
+export type notificationActions =
+    'subscribe'
+    | 'unsubscribe'
+    | 'likePost'
+    | 'unlikePost'
+    | 'addUserToCollection'
+    | 'deleteUserFromCollection'
+    | 'changeUserRoleInCollection'
+    | 'acceptJoinToCollectionRequest'
+    | 'declineJoinToCollectionRequest'
+    | 'savePost'
 
 export interface INotification {
     user: {
@@ -136,6 +146,10 @@ export interface INotification {
     post: {
         _id: string,
         image?: string
-    },
+    } | null,
+    collection: {
+        _id: string,
+        title?: string
+    } | null,
     checked: boolean
 }
