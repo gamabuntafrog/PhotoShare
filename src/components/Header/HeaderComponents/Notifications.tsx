@@ -12,6 +12,7 @@ import {INotification} from "../../../types/user";
 import headerStyles from "../headerStyles";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 
+const longPollingInterval = process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? 60 : 15
 
 export interface INotificationProps {
     notification: INotification,
@@ -208,7 +209,7 @@ export default function Notifications() {
         data: notifications = [],
         isLoading,
         isError
-    } = extendedNotificationsApi.useGetNotificationsQuery(undefined) // , {pollingInterval: 5000}
+    } = extendedNotificationsApi.useGetNotificationsQuery(undefined, {pollingInterval: longPollingInterval})
     const [checkNotifications] = extendedNotificationsApi.useCheckNotificationsMutation()
 
     const isThereNonChecked = notifications.some(({checked}) => checked === false)
