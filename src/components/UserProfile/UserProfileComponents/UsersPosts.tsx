@@ -8,6 +8,7 @@ import postsStyles from "../../Posts/postsStyles";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import MasonryPostsDrawer from "../../MasonryPostsDrawer";
 import useGetPostsByUserIdWithInfiniteScroll from "../../../redux/api/hooks/useGetPostsByUserIdWithInfiniteScroll";
+import FullScreenLoader from "../../Loaders/FullScreenLoader";
 
 
 export default function UsersPosts() {
@@ -20,9 +21,8 @@ export default function UsersPosts() {
     const styles = useSx(postsStyles)
 
     const t = useShortTranslation({componentNameKey: 'UserProfile.UserPosts'})
-
     if (isLoading) {
-        return <MiniLoader/>
+        return <FullScreenLoader smaller/>
     }
 
     if (isError) {

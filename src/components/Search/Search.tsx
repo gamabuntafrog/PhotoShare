@@ -6,6 +6,7 @@ import useSx from "../../hooks/useSx";
 import searchStyles from "./searchStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
+import FullScreenLoader from "../Loaders/FullScreenLoader";
 
 export default function Search() {
 
@@ -40,14 +41,17 @@ export default function Search() {
                 <Box
                     sx={styles.linksWrapper}
                 >
-                    <StyledHeaderNavLink className='first' to={`users?query=${query}`} end>{t('usersLink')}</StyledHeaderNavLink>
+                    <StyledHeaderNavLink className='first' to={`users?query=${query}`}
+                                         end>{t('usersLink')}</StyledHeaderNavLink>
                     <StyledHeaderNavLink to={`posts?query=${query}`}>{t('postsLink')}</StyledHeaderNavLink>
                     <StyledHeaderNavLink to={`collections?query=${query}`}>{t('collectionsLink')}</StyledHeaderNavLink>
                 </Box>
                 <Box
                     sx={styles.outletWrapper}
                 >
-                    <Outlet/>
+                    <React.Suspense fallback={<FullScreenLoader smaller/>}>
+                        <Outlet/>
+                    </React.Suspense>
                 </Box>
             </Container>
         </>

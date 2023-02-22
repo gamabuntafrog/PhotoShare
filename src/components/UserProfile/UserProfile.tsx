@@ -101,7 +101,8 @@ export default function UserProfile() {
                             <Box sx={styles.userInfoSecondWrapper}>
                                 <Typography sx={styles.infoItem}>{t('postsCount', {postsCount})}</Typography>
                                 <Typography sx={styles.infoItem}> {t('subscribesCount', {subscribesCount})}</Typography>
-                                <Typography sx={styles.infoItem}>{t('subscribersCount', {subscribersCount})}</Typography>
+                                <Typography
+                                    sx={styles.infoItem}>{t('subscribersCount', {subscribersCount})}</Typography>
                             </Box>
                             <Typography>{t('userCreatedAt', {date: formattedCreatedAt})}</Typography>
                         </>
@@ -138,7 +139,9 @@ export default function UserProfile() {
                 )}
             </Box>
             <Box sx={{minHeight: '100vh'}}>
-                <Outlet/>
+                <React.Suspense fallback={<FullScreenLoader smaller/>}>
+                    <Outlet/>
+                </React.Suspense>
             </Box>
         </Box>
     )

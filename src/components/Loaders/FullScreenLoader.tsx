@@ -4,10 +4,11 @@ import StandardHelmet from "../StandardHelmet";
 
 interface IFullScreenLoaderProps {
     withMeta?: boolean,
-    fixed?: boolean
+    fixed?: boolean,
+    smaller?: boolean
 }
 
-export default function FullScreenLoader({withMeta, fixed}: IFullScreenLoaderProps) {
+export default function FullScreenLoader({withMeta, fixed, smaller = false}: IFullScreenLoaderProps) {
 
     return (
         <>
@@ -17,7 +18,7 @@ export default function FullScreenLoader({withMeta, fixed}: IFullScreenLoaderPro
             <Box sx={{
                 bgcolor: 'background.default',
                 color: 'var(--text-primary)',
-                minHeight: '100vh',
+                minHeight: smaller ? '40vh' : '100vh',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

@@ -51,7 +51,11 @@ const searchStyles = (theme: Theme) => {
             mt: 2,
             padding: 1,
             width: '100%',
-            minHeight: '60vh'
+            minHeight: '60vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'start',
+            flexDirection: 'column',
         },
         users: {
             usersList: {

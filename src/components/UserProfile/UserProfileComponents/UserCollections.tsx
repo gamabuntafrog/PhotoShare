@@ -5,6 +5,7 @@ import React from "react";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 import Collections from "../../Collections/Collections";
 import extendedCollectionsApi from "../../../redux/api/extendedCollectionsApi";
+import FullScreenLoader from "../../Loaders/FullScreenLoader";
 
 
 export default function UserCollections() {
@@ -16,7 +17,7 @@ export default function UserCollections() {
     const t = useShortTranslation({componentNameKey: 'UserProfile.AllowedToViewCollections'})
 
     if (isLoading) {
-        return <MiniLoader/>
+        return <FullScreenLoader smaller/>
     }
 
     if (isError) {
