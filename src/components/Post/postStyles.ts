@@ -95,5 +95,6 @@ export const StyledPostImage = styled("img")(({theme}) => ({
     backgroundColor: theme.palette.primary.main,
     [theme.breakpoints.down('laptop')]: {
         width: '100%'
-    }
+    },
+    height: 'fit-content'
 }))

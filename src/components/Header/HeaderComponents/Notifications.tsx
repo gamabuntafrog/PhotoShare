@@ -127,7 +127,10 @@ function Notification({notification, handleClose}: INotificationProps) {
         const collectionId = collection._id
         const collectionTitle = collection?.title || collection._id
 
-        const message = type === 'addUserToCollection' ? t('addedUserToCollection', {username, collectionTitle}) :  t('deleteUserFromCollection', {username, collectionTitle})
+        const message = type === 'addUserToCollection' ? t('addedUserToCollection', {
+            username,
+            collectionTitle
+        }) : t('deleteUserFromCollection', {username, collectionTitle})
 
         return (
             <StyledCustomMenuItem
@@ -179,7 +182,10 @@ function Notification({notification, handleClose}: INotificationProps) {
         const collectionId = collection._id
         const collectionTitle = collection?.title || collection._id
 
-        const message = type === 'acceptJoinToCollectionRequest' ? t('acceptedJoinToCollectionRequest', {username, collectionTitle}) : t('declinedJoinToCollectionRequest', {username, collectionTitle})
+        const message = type === 'acceptJoinToCollectionRequest' ? t('acceptedJoinToCollectionRequest', {
+            username,
+            collectionTitle
+        }) : t('declinedJoinToCollectionRequest', {username, collectionTitle})
 
         return (
             <StyledCustomMenuItem
@@ -264,13 +270,16 @@ export default function Notifications() {
                         </Box>
                     )
                     :
-                    notifications.map((notification, index) =>
-                        <Notification
-                            key={index}
-                            notification={notification}
-                            handleClose={handleClose}
-                        />
-                    )
+                    isError ?
+                        null
+                        :
+                        notifications.map((notification, index) =>
+                            <Notification
+                                key={index}
+                                notification={notification}
+                                handleClose={handleClose}
+                            />
+                        )
                 }
             </StyledCustomMenu>
 

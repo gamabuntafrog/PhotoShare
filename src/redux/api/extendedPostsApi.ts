@@ -90,6 +90,26 @@ const extendedPostsApi = rootApi.injectEndpoints({
             }),
             transformErrorResponse: returnTransformedError,
         }),
+        createComment: build.mutation<unknown, { postId: string, text: string }>({
+            query: ({postId, text}) => ({
+                url: `/posts/${postId}/comments`,
+                method: 'POST',
+                body: {
+                    text
+                }
+            }),
+            transformErrorResponse: returnTransformedError,
+        }),
+        createReply: build.mutation<unknown, { postId: string, commentId: string, text: string  }>({
+            query: ({postId, commentId, text}) => ({
+                url: `/posts/${postId}/comments/${commentId}`,
+                method: 'POST',
+                body: {
+                    text
+                }
+            }),
+            transformErrorResponse: returnTransformedError,
+        }),
     }),
     overrideExisting: false
 })

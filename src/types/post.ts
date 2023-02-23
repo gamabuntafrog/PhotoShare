@@ -1,10 +1,17 @@
 import {IUser, IUserInOnePost, IUserInPost} from "./user";
 
-export interface IComment {
-    author: IUser,
+export interface IReplyComment {
+    _id: string,
+    author: { _id: string, username: string, avatar: string },
+    receiver: { _id: string, username: string},
     text: string,
-    createdAt: string,
-    updatedAt: string
+}
+
+export interface IComment {
+    _id: string,
+    author: { _id: string, username: string, avatar: string },
+    text: string,
+    replies: IReplyComment[]
 }
 
 export interface ISavesInfo {
