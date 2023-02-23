@@ -1,21 +1,21 @@
-import {useEffect, useLayoutEffect, useState} from "react";
+import {useLayoutEffect, useState} from "react";
 import {useInView} from "react-intersection-observer";
 
-interface IUseInfiniteScrollForSearchBuIdQueryProps {
+interface IUseInfiniteScrollForSearchByTagsQueryProps {
     trigger: any,
     isLoading: boolean,
     isError: boolean,
-    id: string,
+    tags: string[],
     data: any[]
 }
 
-export default function useInfiniteScrollForSearchBuIdQuery({
-                                                                trigger,
-                                                                isLoading,
-                                                                isError,
-                                                                id,
-                                                                data
-                                                            }: IUseInfiniteScrollForSearchBuIdQueryProps) {
+export default function useInfiniteScrollForSearchByTagsQuery({
+                                                                    trigger,
+                                                                    isLoading,
+                                                                    isError,
+                                                                    tags,
+                                                                    data
+                                                                }: IUseInfiniteScrollForSearchByTagsQueryProps) {
 
     const [isEnd, setIsEnd] = useState(false);
     const [combinedValue, setCombinedValue] = useState(data);
@@ -28,7 +28,7 @@ export default function useInfiniteScrollForSearchBuIdQuery({
     useLayoutEffect(() => {
         setCombinedValue([])
         setIsEnd(false)
-    }, [id]);
+    }, [tags]);
 
     useLayoutEffect(() => {
         if (isError) return;
@@ -59,11 +59,11 @@ export default function useInfiniteScrollForSearchBuIdQuery({
         if (isEnd) return;
 
         const arrayOfId = combinedValue.map((el) => el._id)
-        trigger({arrayOfId, id})
-    }, [inView, id]);
+        trigger({arrayOfId, tags})
+    }, [inView, tags]);
 
     useLayoutEffect(() => {
-        trigger({arrayOfId: [], id})
+        trigger({arrayOfId: [], tags})
     }, [])
 
     return {paginatedData: combinedValue, ref, isEnd}

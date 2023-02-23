@@ -38,7 +38,7 @@ const postStyles = (theme: Theme) => {
         postInfo: {
             px: 3,
             mt: 1,
-            width:'50%',
+            width: '50%',
             [down('laptop')]: {
                 px: 0,
                 width: '100%'
@@ -73,6 +73,15 @@ const postStyles = (theme: Theme) => {
             userInfoWrapper: {
                 ml: 1,
                 lineHeight: '0px'
+            }
+        },
+        similarPosts: {
+            loaderContainer: {
+                height: '40vh',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                overflow: 'hidden'
             }
         }
     }
