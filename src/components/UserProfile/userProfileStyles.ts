@@ -76,8 +76,11 @@ export const StyledCollectionItem = styled(NavLink)(({theme}) => ({
     borderRadius: '8px',
     overflow: 'hidden',
     minHeight: '150px',
-    maxHeight: '300px',
+    maxHeight: '250px',
     [theme.breakpoints.down('tablet')]: {
         height: '150px',
+    },
+    '& img': {
+
     }
 }))

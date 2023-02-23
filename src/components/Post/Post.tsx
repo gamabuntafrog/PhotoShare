@@ -24,8 +24,6 @@ import postStyles, {StyledPostImage} from "./postStyles";
 import DeleteIcon from '@mui/icons-material/Delete';
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
-import extendedUsersApi from "../../redux/api/extendedUsersApi";
-import useGetManyPostsByTagsWithInfiniteScroll from "../../redux/api/hooks/useGetManyPostsByTagsWithInfiniteScroll";
 import MiniLoader from "../Loaders/MiniLoader";
 import MasonryPostsDrawer from "../MasonryPostsDrawer";
 import usePostsActions from "../../hooks/usePostsActions";

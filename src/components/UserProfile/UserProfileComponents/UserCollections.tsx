@@ -14,7 +14,7 @@ export default function UserCollections() {
 
     const {data: collections, isLoading, isError} = extendedCollectionsApi.useGetCollectionsByUserIdQuery({id})
 
-    const t = useShortTranslation({componentNameKey: 'UserProfile.AllowedToViewCollections'})
+    const t = useShortTranslation({componentNameKey: 'UserProfile.UserAllowedToViewCollections'})
 
     if (isLoading) {
         return <FullScreenLoader smaller/>

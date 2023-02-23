@@ -44,11 +44,12 @@ const collectionsStyles = (theme: Theme) => {
             overflow: 'hidden',
             margin: 0,
             background: 'rgba(0, 0, 0, 1)',
+            height: '100%',
         },
         postItem: {
             bgcolor: 'primary.main',
             overflow: 'hidden',
-            height: 'auto'
+            height: 'auto',
         },
     }
 }

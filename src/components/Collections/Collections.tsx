@@ -50,7 +50,7 @@ export default function Collections({collections}: ICollectionItemProps) {
                                 cols={2}
                                 sx={styles.postsList}
                             >
-                                {posts.map((post, i) => {
+                                {posts.slice(0,3).map((post, i) => {
                                     const isPostsAmountSmall = posts.length < 2
                                     const rows = i === 0 ? isPostsAmountSmall ? 2 : 2 : 1
                                     const cols = i === 0 ? isPostsAmountSmall ? 2 : 1 : 1
