@@ -319,103 +319,105 @@ function Comments({postId, comments}: ICommentsProps) {
 
     return (
         <Box sx={styles.container}>
-            <List sx={{px: 0}}>
-                {comments.map((comment) => {
-                    const {_id: commentId, author: {username, _id: authorId, avatar}, text, replies} = comment
+            {comments.length > 0 && (
+                <List sx={{px: 0}}>
+                    {comments.map((comment) => {
+                        const {_id: commentId, author: {username, _id: authorId, avatar}, text, replies} = comment
 
-                    return (
-                        <ListItem key={commentId} sx={styles.commentItem}>
-                            <Box sx={styles.commentContainer}>
-                                <ListItemAvatar
-                                    onClick={() => navigate(`/users/${authorId}`)}
-                                    sx={styles.avatarWrapper}
-                                >
-                                    <Avatar src={avatar}/>
-                                </ListItemAvatar>
-                                <Box sx={styles.commentWrapper}>
-                                    <ListItemText
+                        return (
+                            <ListItem key={commentId} sx={styles.commentItem}>
+                                <Box sx={styles.commentContainer}>
+                                    <ListItemAvatar
                                         onClick={() => navigate(`/users/${authorId}`)}
-                                        sx={styles.username}
+                                        sx={styles.avatarWrapper}
                                     >
-                                        {username}
-                                    </ListItemText>
-                                    <Box sx={styles.commentSecondWrapper}>
-                                        <Typography
-                                            sx={styles.replyButton}
-                                            variant='caption'
-                                            onClick={() => chooseReply({receiverId: authorId, commentId})}
+                                        <Avatar src={avatar}/>
+                                    </ListItemAvatar>
+                                    <Box sx={styles.commentWrapper}>
+                                        <ListItemText
+                                            onClick={() => navigate(`/users/${authorId}`)}
+                                            sx={styles.username}
                                         >
-                                            Reply
-                                        </Typography>
-                                        <ListItemText sx={styles.avoid}>|</ListItemText>
-                                        <ListItemText>{text}</ListItemText>
+                                            {username}
+                                        </ListItemText>
+                                        <Box sx={styles.commentSecondWrapper}>
+                                            <Typography
+                                                sx={styles.replyButton}
+                                                variant='caption'
+                                                onClick={() => chooseReply({receiverId: authorId, commentId})}
+                                            >
+                                                Reply
+                                            </Typography>
+                                            <ListItemText sx={styles.avoid}>|</ListItemText>
+                                            <ListItemText>{text}</ListItemText>
+                                        </Box>
                                     </Box>
                                 </Box>
-                            </Box>
 
-                            <List sx={{alignSelf: 'start', pl: 2, pt: 0}}>
-                                {replies.map((reply) => {
-                                    const {
-                                        _id,
-                                        author: {username, _id: authorId, avatar},
-                                        text,
-                                        receiver: {_id: receiverId, username: receiverUsername}
-                                    } = reply
+                                <List sx={{alignSelf: 'start', pl: 2, pt: 0}}>
+                                    {replies.map((reply) => {
+                                        const {
+                                            _id,
+                                            author: {username, _id: authorId, avatar},
+                                            text,
+                                            receiver: {_id: receiverId, username: receiverUsername}
+                                        } = reply
 
-                                    return (
-                                        <ListItem key={commentId} sx={styles.commentItem}>
-                                            <Box sx={styles.commentContainer}>
-                                                <ListItemAvatar
-                                                    onClick={() => navigate(`/users/${authorId}`)}
-                                                    sx={styles.avatarWrapper}
-                                                >
-                                                    <Avatar src={avatar}/>
-                                                </ListItemAvatar>
-                                                <Box sx={styles.commentWrapper}>
-                                                    <ListItemText
-                                                        sx={{cursor: 'pointer'}}
+                                        return (
+                                            <ListItem key={commentId} sx={styles.commentItem}>
+                                                <Box sx={styles.commentContainer}>
+                                                    <ListItemAvatar
+                                                        onClick={() => navigate(`/users/${authorId}`)}
+                                                        sx={styles.avatarWrapper}
                                                     >
-                                                        <Typography
-                                                            onClick={() => navigate(`/users/${authorId}`)}
-                                                            component='span'
-                                                            sx={styles.username}
+                                                        <Avatar src={avatar}/>
+                                                    </ListItemAvatar>
+                                                    <Box sx={styles.commentWrapper}>
+                                                        <ListItemText
+                                                            sx={{cursor: 'pointer'}}
                                                         >
-                                                            {username}
-                                                        </Typography>
-                                                        <Typography
-                                                            component='span'
-                                                            variant='caption'
-                                                            onClick={() => navigate(`/users/${receiverId}`)}
-                                                            sx={{color: 'text.secondary', ml: 0.5}}
-                                                        >
-                                                            to {receiverUsername}
-                                                        </Typography>
-                                                    </ListItemText>
-                                                    <Box sx={styles.commentSecondWrapper}>
-                                                        <Typography
-                                                            sx={styles.replyButton}
-                                                            variant='caption'
-                                                            component='p'
-                                                            onClick={() => chooseReply({
-                                                                receiverId: authorId,
-                                                                commentId
-                                                            })}
-                                                        >
-                                                            Reply
-                                                        </Typography>
-                                                        <ListItemText sx={styles.avoid}>|</ListItemText>
-                                                        <ListItemText>{text}</ListItemText>
+                                                            <Typography
+                                                                onClick={() => navigate(`/users/${authorId}`)}
+                                                                component='span'
+                                                                sx={styles.username}
+                                                            >
+                                                                {username}
+                                                            </Typography>
+                                                            <Typography
+                                                                component='span'
+                                                                variant='caption'
+                                                                onClick={() => navigate(`/users/${receiverId}`)}
+                                                                sx={{color: 'text.secondary', ml: 0.5}}
+                                                            >
+                                                                to {receiverUsername}
+                                                            </Typography>
+                                                        </ListItemText>
+                                                        <Box sx={styles.commentSecondWrapper}>
+                                                            <Typography
+                                                                sx={styles.replyButton}
+                                                                variant='caption'
+                                                                component='p'
+                                                                onClick={() => chooseReply({
+                                                                    receiverId: authorId,
+                                                                    commentId
+                                                                })}
+                                                            >
+                                                                Reply
+                                                            </Typography>
+                                                            <ListItemText sx={styles.avoid}>|</ListItemText>
+                                                            <ListItemText>{text}</ListItemText>
+                                                        </Box>
                                                     </Box>
                                                 </Box>
-                                            </Box>
-                                        </ListItem>
-                                    )
-                                })}
-                            </List>
-                        </ListItem>
-                    )
-                })}
-            </List>
+                                            </ListItem>
+                                        )
+                                    })}
+                                </List>
+                            </ListItem>
+                        )
+                    })}
+                </List>
+            )}
 
             <Box sx={{
                 pt: commentType === commentsType.reply ? 3.5 : 1,

@@ -15,7 +15,8 @@ const postStyles = (theme: Theme) => {
             maxWidth: values.laptop,
             [down('laptop')]: {
                 pt: 2,
-            }
+            },
+            minHeight: '92vh'
         },
         postWrapper: {
             display: 'flex',
@@ -87,10 +88,13 @@ const postStyles = (theme: Theme) => {
             container: {
                 minHeight: '20vh',
                 maxHeight: '50vh',
+                height: '100%',
                 overflow: 'auto',
                 [down('tablet')]: {
                     maxHeight: '70vh'
-                }
+                },
+                display: 'flex',
+                flexDirection: 'column'
             },
             commentItem: {flexDirection: 'column', py: 0, px: 0.5},
             commentContainer: {display: 'flex', alignSelf: 'start', width: '100%'},
@@ -118,7 +122,8 @@ const postStyles = (theme: Theme) => {
                 px: 1,
                 [down('tablet')]: {
                     px: 0
-                }
+                },
+                mt: 'auto'
             }
         }
     }
