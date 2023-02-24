@@ -29,11 +29,17 @@ import MasonryPostsDrawer from "../MasonryPostsDrawer";
 import usePostsActions from "../../hooks/usePostsActions";
 import {IUserSliceAuthorized} from "../../types/userSlice";
 import SendIcon from '@mui/icons-material/Send';
-import {useForm} from "react-hook-form";
+import {SubmitHandler, useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
-import {commentValidationSchema, createPostValidationSchema} from "../../utils/validationSchemas";
+import {
+    commentValidationSchema,
+    createPostValidationSchema,
+    replyValidationSchema
+} from "../../utils/validationSchemas";
 import convertImageToString from "../../utils/convertImageToString";
 import {IComment} from "../../types/post";
+import CloseIcon from '@mui/icons-material/Close';
+
 
 interface IAuthorOfPostInfoProps {
     authorId: string,
@@ -166,7 +172,7 @@ export default function Post() {
         <>
             <StandardHelmet keyOfTitle='post' options={{username}}/>
             <Container
-                sx={styles.postContainer}
+                sx={{...styles.postContainer}}
             >
                 <CreateCollectionModal
                     postId={postId}
@@ -225,14 +231,26 @@ export default function Post() {
     )
 }
 
-interface IFormData {
+enum commentsType {
+    comment = 'comment',
+    reply = 'reply'
+}
+
+interface ICommentFormData {
     text: string
+}
+
+interface IReplyFormData {
+    text: string,
+    commentId: string,
+    receiverId: string
 }
 
 interface ICommentsProps {
     postId: string,
     comments: IComment[]
 }
+
 
 function Comments({postId, comments}: ICommentsProps) {
     console.log(comments)
@@ -241,73 +259,95 @@ function Comments({postId, comments}: ICommentsProps) {
     const [createComment] = extendedPostsApi.useCreateCommentMutation()
     const [createReply] = extendedPostsApi.useCreateReplyMutation()
 
+    const [commentType, setCommentType] = useState<commentsType>(commentsType.comment);
+
     const {
         register,
         watch,
         handleSubmit,
         setValue,
         reset,
-        formState: {
-            errors: {
-                text: textError,
-            }
-        },
-    } = useForm<IFormData>({
-        resolver: yupResolver(commentValidationSchema),
+        formState: {},
+    } = useForm<ICommentFormData | IReplyFormData>({
+        resolver: commentType === commentsType.comment ? yupResolver(commentValidationSchema) : yupResolver(replyValidationSchema),
         mode: 'all',
-        defaultValues: {
-            text: ''
+        defaultValues: commentType === commentsType.comment ? {text: ''} : {
+            text: '',
+            commentId: '',
+            receiverId: ''
         }
     });
 
-    const onSubmit = handleSubmit(async ({text}) => {
+    const chooseComment = () => {
+        setCommentType(commentsType.comment)
+        setValue('receiverId', '')
+        setValue('commentId', '')
+    }
+    const chooseReply = ({receiverId, commentId}: { receiverId: string, commentId: string }) => {
+        setCommentType(commentsType.reply)
+        setValue('receiverId', receiverId)
+        setValue('commentId', commentId)
+    }
+
+    const onSubmit = handleSubmit(async (props) => {
+        const {text} = props
         // author 63b55b1ea5e2554ebb11c625
         // text test nested comment
         // postRef 63e6a891c6027f5f3a6de635
         // commentRef 63f7a20bd2c7f5b96af5de14
-        await createComment({text, postId})
+        if (commentType === commentsType.reply) {
+            const {commentId, receiverId} = props as IReplyFormData
+            console.log('reply', text, commentId, receiverId)
+
+            await createReply({text, postId, commentId, receiverId})
+        } else {
+            console.log('comment', text)
+            await createComment({text, postId})
+        }
+
         reset()
-        // await createReply({text, postId: '63e6a891c6027f5f3a6de635', commentId: '63f7a20bd2c7f5b96af5de14'})
+        setCommentType(commentsType.comment)
     });
 
     const navigate = useNavigate()
 
+    const receiver = comments.find((comment) => {
+        return comment.author._id === watch('receiverId')
+    }) || comments.find((comment) => comment.replies.find((reply) => reply.author._id === watch('receiverId')))
+
+    const {comments: styles} = useSx(postStyles)
+
     return (
-        <Box sx={{height: '60vh'}}>
-            <Typography>Comments</Typography>
-            <List>
+        <Box sx={styles.container}>
+            <List sx={{px: 0}}>
                 {comments.map((comment) => {
-                    const {_id, author: {username, _id: authorId, avatar}, text, replies} = comment
+                    const {_id: commentId, author: {username, _id: authorId, avatar}, text, replies} = comment
 
                     return (
-                        <ListItem key={_id} sx={{flexDirection: 'column', py: 0}}>
-                            <Box sx={{display: 'flex', alignSelf: 'start', width: '100%'}}>
+                        <ListItem key={commentId} sx={styles.commentItem}>
+                            <Box sx={styles.commentContainer}>
                                 <ListItemAvatar
                                     onClick={() => navigate(`/users/${authorId}`)}
-                                    sx={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}
+                                    sx={styles.avatarWrapper}
                                 >
                                     <Avatar src={avatar}/>
                                 </ListItemAvatar>
-                                <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                <Box sx={styles.commentWrapper}>
                                     <ListItemText
                                         onClick={() => navigate(`/users/${authorId}`)}
-                                        sx={{cursor: 'pointer'}}
+                                        sx={styles.username}
                                     >
                                         {username}
                                     </ListItemText>
-                                    <Box sx={{display: 'flex', alignItems: 'baseline'}}>
+                                    <Box sx={styles.commentSecondWrapper}>
                                         <Typography
-                                            sx={{
-                                                cursor: 'pointer',
-                                                '&:hover': {
-                                                    textDecoration: 'underline'
-                                                }
-                                            }}
+                                            sx={styles.replyButton}
                                             variant='caption'
+                                            onClick={() => chooseReply({receiverId: authorId, commentId})}
                                         >
                                             Reply
                                         </Typography>
-                                        <ListItemText sx={{ml: 0.5, mr: 1, flex: 0}}>|</ListItemText>
+                                        <ListItemText sx={styles.avoid}>|</ListItemText>
                                         <ListItemText>{text}</ListItemText>
                                     </Box>
                                 </Box>
@@ -323,25 +363,22 @@ function Comments({postId, comments}: ICommentsProps) {
                                     } = reply
 
                                     return (
-                                        <ListItem key={_id} sx={{flexDirection: 'column', px: 0, py: 0}}>
-                                            <Box sx={{display: 'flex', alignSelf: 'start'}}>
+                                        <ListItem key={commentId} sx={styles.commentItem}>
+                                            <Box sx={styles.commentContainer}>
                                                 <ListItemAvatar
                                                     onClick={() => navigate(`/users/${authorId}`)}
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        cursor: 'pointer'
-                                                    }}>
+                                                    sx={styles.avatarWrapper}
+                                                >
                                                     <Avatar src={avatar}/>
                                                 </ListItemAvatar>
-                                                <Box sx={{display: 'flex', flexDirection: 'column'}}>
+                                                <Box sx={styles.commentWrapper}>
                                                     <ListItemText
                                                         sx={{cursor: 'pointer'}}
                                                     >
                                                         <Typography
                                                             onClick={() => navigate(`/users/${authorId}`)}
                                                             component='span'
-                                                            sx={{mr: 0.5}}
+                                                            sx={styles.username}
                                                         >
                                                             {username}
                                                         </Typography>
@@ -349,25 +386,24 @@ function Comments({postId, comments}: ICommentsProps) {
                                                             component='span'
                                                             variant='caption'
                                                             onClick={() => navigate(`/users/${receiverId}`)}
-                                                            sx={{color: 'text.secondary'}}
+                                                            sx={{color: 'text.secondary', ml: 0.5}}
                                                         >
                                                             to {receiverUsername}
                                                         </Typography>
                                                     </ListItemText>
-                                                    <Box sx={{display: 'flex', alignItems: 'baseline'}}>
+                                                    <Box sx={styles.commentSecondWrapper}>
                                                         <Typography
-                                                            sx={{
-                                                                cursor: 'pointer',
-                                                                '&:hover': {
-                                                                    textDecoration: 'underline'
-                                                                }
-                                                            }}
+                                                            sx={styles.replyButton}
                                                             variant='caption'
                                                             component='p'
+                                                            onClick={() => chooseReply({
+                                                                receiverId: authorId,
+                                                                commentId
+                                                            })}
                                                         >
                                                             Reply
                                                         </Typography>
-                                                        <ListItemText sx={{ml: 0.5, mr: 1, flex: 0}}>|</ListItemText>
+                                                        <ListItemText sx={styles.avoid}>|</ListItemText>
                                                         <ListItemText>{text}</ListItemText>
                                                     </Box>
                                                 </Box>
@@ -380,12 +416,37 @@ function Comments({postId, comments}: ICommentsProps) {
                     )
                 })}
             </List>
-            <Box sx={{display: 'flex', alignItems: 'center'}}>
+
+            <Box sx={{
+                pt: commentType === commentsType.reply ? 3.5 : 1,
+                ...styles.writeCommentContainer
+            }}>
                 <Avatar src={currentUserAvatarURL} sx={{mr: 1}}/>
-                <TextField {...register('text')} fullWidth placeholder='write comment'/>
-                <Button sx={{ml: 1}} onClick={onSubmit}>
+                <Box sx={{position: 'relative', width: '100%'}}>
+                    {commentType === commentsType.reply && (
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                bottom: '105%',
+                                left: '6px',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                            onClick={chooseComment}
+                        >
+                            <Typography component='p' variant='caption'>
+                                Reply to {receiver?.author.username || 'unknown'}
+                            </Typography>
+                            <IconButton sx={{ml: 0.5}} color='error' size='small'>
+                                <CloseIcon sx={{fontSize: 'small'}}/>
+                            </IconButton>
+                        </Box>
+                    )}
+                    <TextField {...register('text')} fullWidth placeholder='Write comment'/>
+                </Box>
+                <IconButton sx={{ml: 1}} onClick={onSubmit}>
                     <SendIcon/>
-                </Button>
+                </IconButton>
             </Box>
         </Box>
     )

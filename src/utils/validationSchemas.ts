@@ -60,6 +60,12 @@ export const commentValidationSchema = Yup.object({
     text: Yup.string().min(3).max(200)
 })
 
+export const replyValidationSchema = Yup.object({
+    text: Yup.string().min(3).max(200),
+    commentId: Yup.string().min(24).max(24),
+    receiverId: Yup.string().min(24).max(24),
+})
+
 export const MIN_USERNAME_LENGTH = 4
 export const MAX_USERNAME_LENGTH = 20
 export const MIN_PASSWORD_LENGTH = 6

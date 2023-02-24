@@ -21,7 +21,6 @@ const postStyles = (theme: Theme) => {
             display: 'flex',
             flexDirection: 'row',
             mx: 'auto',
-            mb: 2,
             borderRadius: '8px',
             [down('laptop')]: {
                 flexDirection: 'column',
@@ -82,6 +81,44 @@ const postStyles = (theme: Theme) => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 overflow: 'hidden'
+            }
+        },
+        comments: {
+            container: {
+                minHeight: '20vh',
+                maxHeight: '50vh',
+                overflow: 'auto',
+                [down('tablet')]: {
+                    maxHeight: '70vh'
+                }
+            },
+            commentItem: {flexDirection: 'column', py: 0, px: 0.5},
+            commentContainer: {display: 'flex', alignSelf: 'start', width: '100%'},
+            avatarWrapper: {display: 'flex', alignItems: 'center', cursor: 'pointer'},
+            commentWrapper: {display: 'flex', flexDirection: 'column'},
+            commentSecondWrapper: {display: 'flex', alignItems: 'baseline'},
+            username: {
+                cursor: 'pointer',
+                color: theme.palette.primary.main
+            },
+            replyButton: {
+                cursor: 'pointer',
+                '&:hover': {
+                    textDecoration: 'underline'
+                },
+                color: theme.palette.text.secondary
+            },
+            avoid: {ml: 0.5, mr: 1, flex: 0},
+            writeCommentContainer: {
+                display: 'flex',
+                alignItems: 'center',
+                position: 'sticky',
+                bottom: 0,
+                bgcolor: 'background.default',
+                px: 1,
+                [down('tablet')]: {
+                    px: 0
+                }
             }
         }
     }

@@ -100,12 +100,13 @@ const extendedPostsApi = rootApi.injectEndpoints({
             }),
             transformErrorResponse: returnTransformedError,
         }),
-        createReply: build.mutation<unknown, { postId: string, commentId: string, text: string  }>({
-            query: ({postId, commentId, text}) => ({
+        createReply: build.mutation<unknown, { postId: string, commentId: string, text: string, receiverId: string  }>({
+            query: ({postId, commentId, receiverId, text}) => ({
                 url: `/posts/${postId}/comments/${commentId}`,
                 method: 'POST',
                 body: {
-                    text
+                    text,
+                    receiverId
                 }
             }),
             transformErrorResponse: returnTransformedError,
