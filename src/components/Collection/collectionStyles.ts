@@ -14,7 +14,7 @@ const collectionStyles = (theme: Theme) => {
             bgcolor: 'background.paper',
             flexShrink: 0,
             width: '50vw',
-            height: '100svh',
+            maxHeight: '100svh',
             overflow: 'auto',
             px: 0,
             // pt: 1,
@@ -31,7 +31,7 @@ const collectionStyles = (theme: Theme) => {
             [theme.breakpoints.down('tablet')]: {
                 width: '100vw',
                 borderRadius: 0,
-                minHeight: '100svh',
+                height: '100svh',
             }
         },
         modalContainer: {
