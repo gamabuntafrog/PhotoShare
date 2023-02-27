@@ -22,7 +22,7 @@ export default function useInfiniteScrollForSearchByTagsQuery({
 
     const {ref, inView} = useInView({
         threshold: 0,
-        rootMargin: '500px'
+        rootMargin: '1000px',
     });
 
     useLayoutEffect(() => {

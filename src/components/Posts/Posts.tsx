@@ -44,7 +44,7 @@ export default function Posts() {
                 <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
             </Box>
             <div ref={ref}/>
-            {isEnd && <Typography variant='h4' textAlign='center' sx={{my: 2}}>This is the end</Typography>}
+            {isEnd && <Typography variant='h4' textAlign='center' sx={{my: 2}}>{t('end')}</Typography>}
         </>
     )
 }

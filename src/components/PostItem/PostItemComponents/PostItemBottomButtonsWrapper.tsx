@@ -20,7 +20,7 @@ export default function PostItemBottomButtonsWrapper({onToggleLike, isLiked, lik
             sx={styles.postBottomButtonsWrapper}
             className='buttonsBar'
         >
-            <IconButton sx={{color: 'currentColor'}} onClick={onToggleLike}>
+            <IconButton sx={styles.likeButton} onClick={onToggleLike}>
                 {isLiked ? <FavoriteIcon color='secondary'/> : <FavoriteBorderIcon/>}
             </IconButton>
             <Typography sx={{ml: 0.5, color: 'currentColor'}}>

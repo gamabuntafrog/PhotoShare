@@ -9,9 +9,9 @@ export default function useGetManyPostsWithInfiniteScroll() {
         isLoading,
         data,
         isError,
-        triggerCallback: ({page}) => {
+        triggerCallback: () => {
             const arrayOfId = paginatedData.map((el) => el._id)
-            trigger({page, arrayOfId})
+            trigger({arrayOfId})
         }
     })
 

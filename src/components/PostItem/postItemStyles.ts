@@ -51,6 +51,15 @@ const postItemStyles = (theme: Theme) => {
             color: theme.palette.text.light,
             [theme.breakpoints.down('laptop')]: {
                 opacity: 100,
+            },
+            [theme.breakpoints.down('tablet')]: {
+                padding: 0.2,
+            }
+        },
+        likeButton: {
+            color: 'currentColor',
+            [theme.breakpoints.down('tablet')]: {
+                padding: '3px'
             }
         },
         postItemTitleWrapper: {

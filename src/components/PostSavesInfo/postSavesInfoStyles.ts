@@ -8,7 +8,13 @@ const postSavesInfoStyles = (theme: Theme) => {
         wrapper: {
             ml: 'auto'
         },
-        openMenuButton: {ml: 'auto', color: theme.palette.text.light},
+        openMenuButton: {
+            ml: 'auto',
+            color: theme.palette.text.light,
+            [theme.breakpoints.down('tablet')]: {
+                padding: '2px'
+            }
+        },
         menuList: {
             backgroundColor: 'rgba(0, 0, 0, 0.2)',
             '& .MuiPaper-root': {

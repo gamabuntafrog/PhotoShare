@@ -140,7 +140,8 @@
     },
     "Posts": {
       "error": "Error",
-      "noPostsMessage": "There already no posts yet"
+      "noPostsMessage": "There already no posts yet",
+      "end": "This is the end"
     },
     "PostSavesInfo": {
       "savePostButton": "Save",

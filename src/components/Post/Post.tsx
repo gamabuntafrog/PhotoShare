@@ -11,7 +11,7 @@ import {NavLink, useNavigate, useParams} from "react-router-dom";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useLayoutEffect, useState} from "react";
 import extendedPostsApi from "../../redux/api/extendedPostsApi";
 import PostSavesInfo from "../PostSavesInfo";
 import CreateCollectionModal from "../CreateCollectionModal";
@@ -97,21 +97,16 @@ function AuthorOfPostInfo(
 function SimilarPostsByTags({tags, postId}: { tags: string[], postId: string }) {
 
     const {data = [], isLoading, isError} = extendedPostsApi.useGetByTagsQuery({tags, arrayOfId: [], id: postId})
-    const [pots, postActions] = usePostsActions({initPosts: data})
+
+    const [posts, postActions] = usePostsActions({initPosts: data})
     const {similarPosts: styles} = useSx(postStyles)
 
 
-    if (isLoading) return (
-        <Box sx={styles.loaderContainer}>
-            <MiniLoader/>
-        </Box>
-    )
-
-    if (data.length === 0 || isError) return null
+    if (isLoading || data.length === 0 || isError) return null
 
     return (
         <Box sx={{px: 1}}>
-            <MasonryPostsDrawer posts={pots} postsActions={postActions}/>
+            <MasonryPostsDrawer posts={posts} postsActions={postActions}/>
         </Box>
     )
 }
@@ -251,15 +246,16 @@ interface ICommentsProps {
     comments: IComment[]
 }
 
-
-function Comments({postId, comments}: ICommentsProps) {
-    console.log(comments)
-    const currentUserAvatarURL = useAppSelector(state => (state.userReducer as IUserSliceAuthorized).user.avatar.url) as string
-
+function useCommentsActions({initComments, postId}: { initComments: IComment[], postId: string }) {
     const [createComment] = extendedPostsApi.useCreateCommentMutation()
     const [createReply] = extendedPostsApi.useCreateReplyMutation()
 
     const [commentType, setCommentType] = useState<commentsType>(commentsType.comment);
+    const [comments, setComments] = useState(initComments);
+
+    useEffect(() => {
+        setComments(initComments)
+    }, [JSON.stringify(initComments)])
 
     const {
         register,
@@ -291,31 +287,58 @@ function Comments({postId, comments}: ICommentsProps) {
 
     const onSubmit = handleSubmit(async (props) => {
         const {text} = props
-        // author 63b55b1ea5e2554ebb11c625
-        // text test nested comment
-        // postRef 63e6a891c6027f5f3a6de635
-        // commentRef 63f7a20bd2c7f5b96af5de14
+
         if (commentType === commentsType.reply) {
             const {commentId, receiverId} = props as IReplyFormData
-            console.log('reply', text, commentId, receiverId)
+            const res = await createReply({text, postId, commentId, receiverId})
 
-            await createReply({text, postId, commentId, receiverId})
+            if (res && 'data' in res) {
+                setComments(prev => {
+                    return prev.map((comment) => {
+                        if (comment._id !== commentId) return comment
+                        return {...comment, replies: [...comment.replies, res.data]}
+                    })
+                })
+            }
         } else {
-            console.log('comment', text)
-            await createComment({text, postId})
+            const res = await createComment({text, postId})
+            if (res && 'data' in res) {
+                setComments(prev => [...prev, res.data])
+            }
         }
 
         reset()
         setCommentType(commentsType.comment)
     });
 
-    const navigate = useNavigate()
-
     const receiver = comments.find((comment) => {
         return comment.author._id === watch('receiverId')
     }) || comments.find((comment) => comment.replies.find((reply) => reply.author._id === watch('receiverId')))
 
+    return {receiver, onSubmit, chooseComment, chooseReply, register, commentType, comments}
+}
+
+
+function Comments({postId, comments: initComments}: ICommentsProps) {
+    const currentUserAvatarURL = useAppSelector(state => (state.userReducer as IUserSliceAuthorized).user.avatar.url) as string
+
+    const {
+        receiver,
+        onSubmit,
+        chooseComment,
+        chooseReply,
+        register,
+        commentType,
+        comments
+    } = useCommentsActions({initComments, postId})
+
+    useEffect(() => {
+        console.log(comments)
+    }, [comments])
+
     const {comments: styles} = useSx(postStyles)
+
+    const navigate = useNavigate()
 
     return (
         <Box sx={styles.container}>
@@ -357,14 +380,14 @@ function Comments({postId, comments}: ICommentsProps) {
                                 <List sx={{alignSelf: 'start', pl: 2, pt: 0}}>
                                     {replies.map((reply) => {
                                         const {
-                                            _id,
+                                            _id: replyId,
                                             author: {username, _id: authorId, avatar},
                                             text,
                                             receiver: {_id: receiverId, username: receiverUsername}
                                         } = reply
 
                                         return (
-                                            <ListItem key={commentId} sx={styles.commentItem}>
+                                            <ListItem key={replyId} sx={styles.commentItem}>
                                                 <Box sx={styles.commentContainer}>
                                                     <ListItemAvatar
                                                         onClick={() => navigate(`/users/${authorId}`)}

@@ -1,15 +1,14 @@
-import {IOnePost, IPost} from "../../types/post";
+import {IComment, IOnePost, IPost, IReplyComment} from "../../types/post";
 import {IResponse, IResponseWithMessage} from "../slices/userSlice";
 import {returnTransformedError} from "../utils";
 import {ICreatePostBody, ICRUDOperationWithoutId, idType, rootApi} from "./rootApi";
 
 const extendedPostsApi = rootApi.injectEndpoints({
     endpoints: (build) => ({
-        getMany: build.query<IPost[], {page: number, arrayOfId: string[]}>({
-            query: ({page, arrayOfId}) => ({
+        getMany: build.query<IPost[], {arrayOfId: string[]}>({
+            query: ({arrayOfId}) => ({
                 url: '/posts',
                 params: {
-                    page,
                     arrayOfId: JSON.stringify(arrayOfId)
                 }
             }),
@@ -34,12 +33,11 @@ const extendedPostsApi = rootApi.injectEndpoints({
             }),
             transformResponse: (response: IResponse<{ posts: IPost[] }>) => response.data.posts,
         }),
-        searchPosts: build.query<IPost[], { title: string, page: number, arrayOfId: string[] }>({
-            query: ({title, page, arrayOfId}) => ({
+        searchPosts: build.query<IPost[], { title: string, arrayOfId: string[] }>({
+            query: ({title, arrayOfId}) => ({
                 url: `/posts/search`,
                 params: {
                     title,
-                    page,
                     arrayOfId: JSON.stringify(arrayOfId)
                 }
             }),
@@ -90,7 +88,7 @@ const extendedPostsApi = rootApi.injectEndpoints({
             }),
             transformErrorResponse: returnTransformedError,
         }),
-        createComment: build.mutation<unknown, { postId: string, text: string }>({
+        createComment: build.mutation<IComment, { postId: string, text: string }>({
             query: ({postId, text}) => ({
                 url: `/posts/${postId}/comments`,
                 method: 'POST',
@@ -99,8 +97,9 @@ const extendedPostsApi = rootApi.injectEndpoints({
                 }
             }),
             transformErrorResponse: returnTransformedError,
+            transformResponse: (response: IResponse<{ comment: IComment }>) => response.data.comment
         }),
-        createReply: build.mutation<unknown, { postId: string, commentId: string, text: string, receiverId: string  }>({
+        createReply: build.mutation<IReplyComment, { postId: string, commentId: string, text: string, receiverId: string  }>({
             query: ({postId, commentId, receiverId, text}) => ({
                 url: `/posts/${postId}/comments/${commentId}`,
                 method: 'POST',
@@ -110,6 +109,7 @@ const extendedPostsApi = rootApi.injectEndpoints({
                 }
             }),
             transformErrorResponse: returnTransformedError,
+            transformResponse: (response: IResponse<{ reply: IReplyComment }>) => response.data.reply
         }),
     }),
     overrideExisting: false

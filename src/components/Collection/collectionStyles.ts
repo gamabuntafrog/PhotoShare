@@ -14,11 +14,9 @@ const collectionStyles = (theme: Theme) => {
             bgcolor: 'background.paper',
             flexShrink: 0,
             width: '50vw',
-            maxHeight: '100svh',
+            maxHeight: '100dvh',
             overflow: 'auto',
             px: 0,
-            // pt: 1,
-            // pb: 3,
             color: 'text.primary',
             borderRadius: 2,
             position: 'relative',
@@ -31,7 +29,6 @@ const collectionStyles = (theme: Theme) => {
             [theme.breakpoints.down('tablet')]: {
                 width: '100vw',
                 borderRadius: 0,
-
                 height: '100dvh',
             }
         },

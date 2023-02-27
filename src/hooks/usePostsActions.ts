@@ -31,7 +31,7 @@ const usePostsActions = ({initPosts}: IUsePostsProps): usePostsActionsReturnValu
         if (initPosts) {
             setPosts(initPosts)
         }
-    }, [initPosts?.length]);
+    }, [JSON.stringify(initPosts)]);
 
     const toggleLike = async (id: string, isLiked: boolean) => {
         try {

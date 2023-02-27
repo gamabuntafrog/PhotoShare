@@ -141,7 +141,8 @@
     },
     "Posts": {
       "error": "Помилка",
-      "noPostsMessage": "Постів ще немає"
+      "noPostsMessage": "Постів ще немає",
+      "end": "Кінець"
     },
     "PostSavesInfo": {
       "savePostButton": "Зберегти",
