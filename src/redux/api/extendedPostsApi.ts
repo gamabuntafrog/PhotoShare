@@ -111,6 +111,18 @@ const extendedPostsApi = rootApi.injectEndpoints({
             transformErrorResponse: returnTransformedError,
             transformResponse: (response: IResponse<{ reply: IReplyComment }>) => response.data.reply
         }),
+        deleteComment: build.mutation<unknown, {commentId: string}>({
+            query: ({commentId}) => ({
+                url: `/posts/comments/${commentId}`,
+                method: 'DELETE',
+            })
+        }),
+        deleteReply: build.mutation<unknown, {replyId: string}>({
+            query: ({replyId}) => ({
+                url: `/posts/replies/${replyId}`,
+                method: 'DELETE',
+            })
+        })
     }),
     overrideExisting: false
 })

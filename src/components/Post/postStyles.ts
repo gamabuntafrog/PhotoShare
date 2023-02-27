@@ -69,7 +69,10 @@ const postStyles = (theme: Theme) => {
                     borderRadius: 2,
                 }
             },
-            avatar: {width: '40px', height: '40px'},
+            avatar: {
+                width: '40px',
+                height: '40px'
+            },
             userInfoWrapper: {
                 ml: 1,
                 lineHeight: '0px'
@@ -85,6 +88,7 @@ const postStyles = (theme: Theme) => {
             }
         },
         comments: {
+            repliesList: {alignSelf: 'start', pl: 2, pt: 0, width: '-webkit-fill-available'},
             container: {
                 minHeight: '20vh',
                 maxHeight: '50vh',
@@ -94,13 +98,17 @@ const postStyles = (theme: Theme) => {
                     maxHeight: '70vh'
                 },
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
             },
-            commentItem: {flexDirection: 'column', py: 0, px: 0.5},
+            commentItem: {
+                flexDirection: 'column',
+                py: 0,
+                px: 0.5,
+            },
             commentContainer: {display: 'flex', alignSelf: 'start', width: '100%'},
             avatarWrapper: {display: 'flex', alignItems: 'center', cursor: 'pointer'},
-            commentWrapper: {display: 'flex', flexDirection: 'column'},
-            commentSecondWrapper: {display: 'flex', alignItems: 'baseline'},
+            commentWrapper: {display: 'flex', flexDirection: 'column', width: '100%'},
+            commentSecondWrapper: {display: 'flex', alignItems: 'baseline', width: '100%'},
             username: {
                 cursor: 'pointer',
                 color: theme.palette.primary.main
@@ -124,6 +132,11 @@ const postStyles = (theme: Theme) => {
                     px: 0
                 },
                 mt: 'auto'
+            },
+            deleteButton: {
+                ml: 'auto',
+                mr: 1,
+                alignSelf: 'center'
             }
         }
     }

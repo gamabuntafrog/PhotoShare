@@ -23,6 +23,8 @@ interface IReplyFormData {
 export default function useCommentsActions({initComments, postId}: { initComments: IComment[], postId: string }) {
     const [createComment] = extendedPostsApi.useCreateCommentMutation()
     const [createReply] = extendedPostsApi.useCreateReplyMutation()
+    const [tryDeleteComment] = extendedPostsApi.useDeleteCommentMutation()
+    const [tryDeleteReply] = extendedPostsApi.useDeleteReplyMutation()
 
     const [commentType, setCommentType] = useState<commentsType>(commentsType.comment);
     const [comments, setComments] = useState(initComments);
@@ -53,10 +55,29 @@ export default function useCommentsActions({initComments, postId}: { initComment
         setValue('receiverId', '')
         setValue('commentId', '')
     }
+
     const chooseReply = ({receiverId, commentId}: { receiverId: string, commentId: string }) => {
         setCommentType(commentsType.reply)
         setValue('receiverId', receiverId)
         setValue('commentId', commentId)
+    }
+
+    const deleteComment = async (commentId: string) => {
+        try {
+            await tryDeleteComment({commentId}).unwrap()
+            setComments(prev => prev.filter((comment) => comment._id !== commentId))
+        } catch (e) {
+
+        }
+    }
+
+    const deleteReply = async (replyId: string) => {
+        try {
+            await tryDeleteReply({replyId}).unwrap()
+            setComments(prev => prev.map((comment) => ({...comment, replies: comment.replies.filter((reply) => reply._id !== replyId)})))
+        } catch (e) {
+
+        }
     }
 
     const onSubmit = handleSubmit(async (props) => {
@@ -89,5 +110,5 @@ export default function useCommentsActions({initComments, postId}: { initComment
         return comment.author._id === watch('receiverId')
     }) || comments.find((comment) => comment.replies.find((reply) => reply.author._id === watch('receiverId')))
 
-    return {receiver, onSubmit, chooseComment, chooseReply, register, commentType, comments}
+    return {receiver, onSubmit, chooseComment, chooseReply, register, commentType, comments, deleteComment, deleteReply}
 }

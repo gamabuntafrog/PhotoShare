@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 import {
     Avatar,
     Box,
+    Button,
     IconButton,
     List,
     ListItem,
@@ -27,12 +28,15 @@ interface ICommentsProps {
 
 export default function Comments({postId, comments: initComments}: ICommentsProps) {
     const currentUserAvatarURL = useAppSelector(state => (state.userReducer as IUserSliceAuthorized).user.avatar.url) as string
+    const currentUserId = useAppSelector(state => (state.userReducer as IUserSliceAuthorized).user._id) as string
 
     const {
         receiver,
         onSubmit,
         chooseComment,
         chooseReply,
+        deleteComment,
+        deleteReply,
         register,
         commentType,
         comments
@@ -77,9 +81,14 @@ export default function Comments({postId, comments: initComments}: ICommentsProp
                                             <ListItemText>{text}</ListItemText>
                                         </Box>
                                     </Box>
+                                    {(authorId === currentUserId) && (
+                                        <IconButton onClick={() => deleteComment(commentId)} sx={styles.deleteButton} color='error'>
+                                            <CloseIcon />
+                                        </IconButton>
+                                    )}
                                 </Box>
 
-                                <List sx={{alignSelf: 'start', pl: 2, pt: 0}}>
+                                <List sx={styles.repliesList}>
                                     {replies.map((reply) => {
                                         const {
                                             _id: replyId,
@@ -131,6 +140,11 @@ export default function Comments({postId, comments: initComments}: ICommentsProp
                                                             </Typography>
                                                             <ListItemText sx={styles.avoid}>|</ListItemText>
                                                             <ListItemText>{text}</ListItemText>
+                                                            {authorId === currentUserId && (
+                                                                <IconButton onClick={() => deleteReply(replyId)} sx={styles.deleteButton} color='error'>
+                                                                    <CloseIcon />
+                                                                </IconButton>
+                                                            )}
                                                         </Box>
                                                     </Box>
                                                 </Box>
