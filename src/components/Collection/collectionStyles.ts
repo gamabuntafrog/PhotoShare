@@ -14,7 +14,6 @@ const collectionStyles = (theme: Theme) => {
             bgcolor: 'background.paper',
             flexShrink: 0,
             width: '50vw',
-            maxHeight: '90vh',
             height: '100svh',
             overflow: 'auto',
             px: 0,
