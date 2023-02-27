@@ -31,7 +31,8 @@ const collectionStyles = (theme: Theme) => {
             [theme.breakpoints.down('tablet')]: {
                 width: '100vw',
                 borderRadius: 0,
-                height: '100svh',
+
+                height: '100dvh',
             }
         },
         modalContainer: {
