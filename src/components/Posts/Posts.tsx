@@ -12,7 +12,7 @@ const MasonryPostsDrawer = React.lazy(() => import( "../MasonryPostsDrawer"));
 
 export default function Posts() {
 
-    const {data, isLoading: isPostsLoading, error: postsError, ref, isEnd} = useGetManyPostsWithInfiniteScroll()
+    const {data, isLoading: isPostsLoading, error: postsError, ref, isEnd, isNextPostsLoading} = useGetManyPostsWithInfiniteScroll()
 
     const [posts, postsActions] = usePostsActions({initPosts: data})
 
@@ -41,7 +41,7 @@ export default function Posts() {
             <Box
                 sx={styles.container}
             >
-                <MasonryPostsDrawer posts={posts} postsActions={postsActions}/>
+                <MasonryPostsDrawer posts={posts} postsActions={postsActions} isNextPostsLoading={isNextPostsLoading} />
             </Box>
             <div ref={ref}/>
             {isEnd && <Typography variant='h4' textAlign='center' sx={{my: 2}}>{t('end')}</Typography>}

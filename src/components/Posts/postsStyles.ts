@@ -33,7 +33,13 @@ const postsStyles = (theme: Theme) => {
             // my: 0,
             margin: 1
             // minHeight: '110vh'
-        }
+        },
+        miniLoader: {
+            height: '20vh',
+            mx: 'auto',
+            mt: 1
+        },
+        masonryContainer: {padding: 0, display: 'flex', flexDirection: 'column'}
     }
 
 }

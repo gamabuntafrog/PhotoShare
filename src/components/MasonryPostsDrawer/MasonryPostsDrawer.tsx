@@ -7,9 +7,10 @@ import sortItemsForMasonryList from "../../utils/sortItemsForMasonryList";
 import {Box, ImageList} from "@mui/material";
 import PostItem from "../PostItem";
 import React from "react";
+import MiniLoader from "../Loaders/MiniLoader";
 
 
-export default function MasonryPostsDrawer({posts, postsActions}: {posts: IPost[], postsActions: IPostsActions}) {
+export default function MasonryPostsDrawer({posts, postsActions, isNextPostsLoading = false}: {posts: IPost[], postsActions: IPostsActions, isNextPostsLoading?: boolean}) {
     const {isSmallerThanLaptop, isSmallerThanTablet} = useMediaQueries()
     const postsListCols = isSmallerThanLaptop ? isSmallerThanTablet ? 2 : 3 : 5
 
@@ -20,28 +21,35 @@ export default function MasonryPostsDrawer({posts, postsActions}: {posts: IPost[
     const sortedPostsForMasonryList = sortItemsForMasonryList(postsListCols, posts)
 
     return (
-        <Box sx={{display: 'flex'}}>
-            {columns.map((_, index) => {
-                const postsLengthInOneColumn = Math.round(sortedPostsForMasonryList.length / postsListCols) || 1
-
-                const slicedPosts = sortedPostsForMasonryList.slice(index * postsLengthInOneColumn, index * postsLengthInOneColumn + postsLengthInOneColumn)
-
-                return (
-                    <ImageList
-                        variant="masonry"
-                        sx={styles.postsList}
-                        gap={12}
-                        key={index}
-                        cols={1}
-                    >
-                        {slicedPosts.map((post) => <PostItem
-                            postsActions={postsActions}
-                            post={post}
-                            key={post._id}
-                        />)}
-                    </ImageList>
-                )
-            })}
+        <Box sx={styles.masonryContainer}>
+            <Box sx={{display: 'flex'}}>
+                {columns.map((_, index) => {
+                    const postsLengthInOneColumn = Math.round(sortedPostsForMasonryList.length / postsListCols) || 1
+            
+                    const slicedPosts = sortedPostsForMasonryList.slice(index * postsLengthInOneColumn, index * postsLengthInOneColumn + postsLengthInOneColumn)
+            
+                    return (
+                        <ImageList
+                            variant="masonry"
+                            sx={styles.postsList}
+                            gap={12}
+                            key={index}
+                            cols={1}
+                        >
+                            {slicedPosts.map((post) => <PostItem
+                                postsActions={postsActions}
+                                post={post}
+                                key={post._id}
+                            />)}
+                        </ImageList>
+                    )
+                })}
+            </Box>
+            {isNextPostsLoading && (
+                <Box sx={styles.miniLoader}>
+                    <MiniLoader size='15vh'/>
+                </Box>
+            )}
         </Box>
     )
 }
