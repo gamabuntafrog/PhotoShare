@@ -17,7 +17,7 @@ export default function SimilarPostsByTags({tags, postId}: { tags: string[], pos
 
     return (
         <Box sx={{px: 1}}>
-            <MasonryPostsDrawer posts={posts} postsActions={postActions}/>
+            <MasonryPostsDrawer isNextPostsLoading={false} posts={posts} postsActions={postActions}/>
         </Box>
     )
 }

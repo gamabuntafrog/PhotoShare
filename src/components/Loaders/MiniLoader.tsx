@@ -8,7 +8,7 @@ interface IMiniLoaderProps {
     withMeta?: boolean
 }
 
-export default function MiniLoader({size, withMeta}: IMiniLoaderProps) {
+export default function MiniLoader({size, withMeta = false}: IMiniLoaderProps) {
 
     return (
         <>

@@ -79,10 +79,10 @@ export default function Post() {
 
     return (
         <>
-            <StandardHelmet keyOfTitle='post' options={{username}}/>
             <Container
-                sx={{...styles.postContainer}}
+                sx={styles.postContainer}
             >
+                <StandardHelmet keyOfTitle='post' options={{username}}/>
                 <CreateCollectionModal
                     postId={postId}
                     onCreate={updateSavesInfo}

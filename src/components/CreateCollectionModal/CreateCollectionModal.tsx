@@ -88,9 +88,9 @@ export default function CreateCollectionModal(
 
     return (
         <>
-            {isModalOpen && (
-                <StandardHelmet keyOfTitle='createCollectionModal'/>
-            )}
+            {/*{isModalOpen && (*/}
+            {/*    <StandardHelmet keyOfTitle='createCollectionModal'/>*/}
+            {/*)}*/}
             <Modal
                 open={isModalOpen}
                 onClose={closeModal}
@@ -103,7 +103,8 @@ export default function CreateCollectionModal(
                     maxWidth='tablet'
                 >
                     {isCollectionCreatingLoading ?
-                        <MiniLoader withMeta/>
+                        // <MiniLoader withMeta/>
+                        null
                         :
                         <>
                             <IconButton color='error' sx={{alignSelf: 'end'}} onClick={closeModal}>
@@ -124,8 +125,13 @@ export default function CreateCollectionModal(
                                     {tagsLabel}
                                 </InputLabel>
                                 <OutlinedInput fullWidth id='tags' {...register('tags')}/>
-                                <Button type='submit' variant='outlined'
-                                        sx={styles.submitButton}>{t('submitButton')}</Button>
+                                <Button
+                                    type='submit'
+                                    variant='outlined'
+                                        sx={styles.submitButton}
+                                >
+                                    {t('submitButton')}
+                                </Button>
                             </form>
                         </>
                     }
