@@ -64,7 +64,9 @@
         "deleteUserFromCollection": "{{username}} deleted you from collection {{collectionTitle}}",
         "changedUserRoleInCollection": "{{username}} changed your role in collection {{collectionTitle}}",
         "acceptedJoinToCollectionRequest": "{{username}} declined your request to join to collection {{collectionTitle}}",
-        "declinedJoinToCollectionRequest": "{{username}} accepted your request to join to collection {{collectionTitle}}"
+        "declinedJoinToCollectionRequest": "{{username}} accepted your request to join to collection {{collectionTitle}}",
+        "addCommentToPost": "{{username}} added comment to your post: {{text}}",
+        "addReplyToComment": "{{username}} replied on your comment: {{text}}"
       }
     },
     "Login": {
@@ -152,7 +154,12 @@
       "doesNotExists": "Post does not exist",
       "subscribeButton": "Subscribe",
       "unsubscribeButton": "Unsubscribe",
-      "subscribersCount": "{{subscribersCount}} subscribers"
+      "subscribersCount": "{{subscribersCount}} subscribers",
+      "Comments": {
+        "reply": "Reply",
+        "replyTo": "Reply to {{username}}",
+        "writeComment": "Write comment"
+      }
     },
     "CreateCollectionModal": {
       "loading": "Loading...",

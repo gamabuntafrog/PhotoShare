@@ -22,7 +22,7 @@ export interface INotificationProps {
 function Notification({notification, handleClose}: INotificationProps) {
     const {notifications: styles} = useSx(headerStyles)
 
-    const {user, type, post, collection, checked} = notification
+    const {user, type, post, collection, checked, comment} = notification
 
     const userId = user._id
     const username = user?.username || userId
@@ -200,6 +200,58 @@ function Notification({notification, handleClose}: INotificationProps) {
                 </ListItemAvatar>
                 <ListItemText>
                     {message}
+                </ListItemText>
+            </StyledCustomMenuItem>
+        )
+    }
+
+    if (type === 'addCommentToPost') {
+        if (!post) return null
+        if (!comment) return null
+
+        const postId = post._id
+        const imageURL = post?.image || ''
+
+        return (
+            <StyledCustomMenuItem
+                onClick={() => {
+                    navigate(`/posts/${postId}`)
+                    handleClose()
+                }}
+                sx={menuItemStyle}
+            >
+                <ListItemAvatar sx={styles.imageWrapper}>
+                    <Avatar sx={styles.image} src={imageURL}/>
+                    <Avatar sx={styles.avatar} src={avatarURL}/>
+                </ListItemAvatar>
+                <ListItemText>
+                    {t('addCommentToPost', {username, text: comment.text})}
+                </ListItemText>
+            </StyledCustomMenuItem>
+        )
+    }
+
+    if (type === 'addReplyToComment') {
+        if (!post) return null
+        if (!comment) return null
+
+        const postId = post._id
+        const imageURL = post?.image || ''
+
+        return (
+            <StyledCustomMenuItem
+                onClick={() => {
+                    navigate(`/posts/${postId}`)
+                    handleClose()
+                }}
+                sx={menuItemStyle}
+            >
+                <ListItemAvatar sx={styles.imageWrapper}>
+                    <Avatar sx={styles.image} src={imageURL}/>
+                    <Avatar sx={styles.avatar} src={avatarURL}/>
+                </ListItemAvatar>
+                <ListItemText>
+                    {t('addReplyToComment', {username, text: comment.text})}
                 </ListItemText>
             </StyledCustomMenuItem>
         )

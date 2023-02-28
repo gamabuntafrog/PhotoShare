@@ -7,7 +7,6 @@ import {useNavigate} from "react-router-dom";
 import {
     Avatar,
     Box,
-    Button,
     IconButton,
     List,
     ListItem,
@@ -20,6 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import React from "react";
 import {IComment} from "../../../types/post";
+import useShortTranslation from "../../../hooks/useShortTranslation";
 
 interface ICommentsProps {
     postId: string,
@@ -45,6 +45,8 @@ export default function Comments({postId, comments: initComments}: ICommentsProp
     const {comments: styles} = useSx(postStyles)
 
     const navigate = useNavigate()
+
+    const t = useShortTranslation({componentNameKey: 'Post.Comments'})
 
     return (
         <Box sx={styles.container}>
@@ -75,7 +77,7 @@ export default function Comments({postId, comments: initComments}: ICommentsProp
                                                 variant='caption'
                                                 onClick={() => chooseReply({receiverId: authorId, commentId})}
                                             >
-                                                Reply
+                                                {t('reply')}
                                             </Typography>
                                             <ListItemText sx={styles.avoid}>|</ListItemText>
                                             <ListItemText>{text}</ListItemText>
@@ -136,11 +138,11 @@ export default function Comments({postId, comments: initComments}: ICommentsProp
                                                                     commentId
                                                                 })}
                                                             >
-                                                                Reply
+                                                                {t('reply')}
                                                             </Typography>
                                                             <ListItemText sx={styles.avoid}>|</ListItemText>
                                                             <ListItemText>{text}</ListItemText>
-                                                            {authorId === currentUserId && (
+                                                            {(authorId === currentUserId) && (
                                                                 <IconButton onClick={() => deleteReply(replyId)} sx={styles.deleteButton} color='error'>
                                                                     <CloseIcon />
                                                                 </IconButton>
@@ -157,32 +159,25 @@ export default function Comments({postId, comments: initComments}: ICommentsProp
                     })}
                 </List>
             )}
-            <Box sx={{
-                pt: commentType === commentsType.reply ? 3.5 : 1,
-                ...styles.writeCommentContainer
-            }}>
+            <Box sx={
+                styles.writeCommentContainer(commentType === commentsType.reply)
+            }>
                 <Avatar src={currentUserAvatarURL} sx={{mr: 1}}/>
-                <Box sx={{position: 'relative', width: '100%'}}>
+                <Box sx={styles.inputWrapper}>
                     {commentType === commentsType.reply && (
                         <Box
-                            sx={{
-                                position: 'absolute',
-                                bottom: '105%',
-                                left: '6px',
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
+                            sx={styles.replyContainer}
                             onClick={chooseComment}
                         >
                             <Typography component='p' variant='caption'>
-                                Reply to {receiver?.author.username || 'unknown'}
+                                {t('replyTo', {username: receiver?.author.username || 'unknown'})}
                             </Typography>
                             <IconButton sx={{ml: 0.5}} color='error' size='small'>
                                 <CloseIcon sx={{fontSize: 'small'}}/>
                             </IconButton>
                         </Box>
                     )}
-                    <TextField {...register('text')} fullWidth placeholder='Write comment'/>
+                    <TextField {...register('text')} fullWidth placeholder={t('writeComment')}/>
                 </Box>
                 <IconButton sx={{ml: 1}} onClick={onSubmit}>
                     <SendIcon/>

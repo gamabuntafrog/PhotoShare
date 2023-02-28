@@ -135,6 +135,8 @@ export type notificationActions =
     | 'acceptJoinToCollectionRequest'
     | 'declineJoinToCollectionRequest'
     | 'savePost'
+    | 'addCommentToPost'
+    | 'addReplyToComment'
 
 export interface INotification {
     user: {
@@ -152,5 +154,11 @@ export interface INotification {
         title?: string
     } | null,
     checked: boolean,
-    _id: string
+    _id: string,
+    comment?: {
+        _id: string,
+        text: string
+    }
 }
+
+// {checked, type, user, _id, text, post: {id: postId, image: url}}

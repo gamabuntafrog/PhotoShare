@@ -1,4 +1,5 @@
 import {styled, Theme} from "@mui/material";
+import {commentsType} from "../../hooks/useCommentsActions";
 
 
 const postStyles = (theme: Theme) => {
@@ -121,7 +122,7 @@ const postStyles = (theme: Theme) => {
                 color: theme.palette.text.secondary
             },
             avoid: {ml: 0.5, mr: 1, flex: 0},
-            writeCommentContainer: {
+            writeCommentContainer: (isReply: boolean) => ({
                 display: 'flex',
                 alignItems: 'center',
                 position: 'sticky',
@@ -131,7 +132,16 @@ const postStyles = (theme: Theme) => {
                 [down('tablet')]: {
                     px: 0
                 },
-                mt: 'auto'
+                mt: 'auto',
+                pt: isReply ? 3.5 : 1,
+            }),
+            inputWrapper: {position: 'relative', width: '100%'},
+            replyContainer: {
+                position: 'absolute',
+                bottom: '105%',
+                left: '6px',
+                display: 'flex',
+                alignItems: 'center',
             },
             deleteButton: {
                 ml: 'auto',

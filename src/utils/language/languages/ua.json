@@ -64,7 +64,9 @@
         "deleteUserFromCollection": "{{username}} видалив вас з колекції {{collectionTitle}}",
         "changedUserRoleInCollection": "{{username}} змінив вашу роль в колекції {{collectionTitle}}",
         "acceptedJoinToCollectionRequest": "{{username}} відклонив ваш запит на приєднання до колекції {{collectionTitle}}",
-        "declinedJoinToCollectionRequest": "{{username}} прийняв ваш запит на приєднання до колекції {{collectionTitle}}"
+        "declinedJoinToCollectionRequest": "{{username}} прийняв ваш запит на приєднання до колекції {{collectionTitle}}",
+        "addCommentToPost": "{{username}} додав коментар до вашого посту: {{text}}",
+        "addReplyToComment": "{{username}} відповів на ваш комент: {{text}}"
       }
     },
     "Login": {
@@ -153,7 +155,12 @@
       "doesNotExists": "Такого поста не існує",
       "subscribeButton": "Підписатися",
       "unsubscribeButton": "Відписатися",
-      "subscribersCount": "{{subscribersCount}} підписників"
+      "subscribersCount": "{{subscribersCount}} підписників",
+      "Comments": {
+        "reply": "Відповісти",
+        "replyTo": "Відповідь {{username}}",
+        "writeComment": "Написати коментар"
+      }
     },
     "CreateCollectionModal": {
       "loading": "Завантаження...",
