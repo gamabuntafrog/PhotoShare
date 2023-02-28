@@ -1,10 +1,8 @@
-import {ICurrentUser} from "../../../types/user";
+import {ICurrentUser} from "../../../types/types";
 import useSx from "../../../hooks/useSx";
 import headerStyles, {StyledHeaderNavLink} from "../headerStyles";
 import {Avatar, Box, IconButton} from "@mui/material";
-import {NavLink} from "react-router-dom";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import SearchBar from "./SearchBar";

@@ -4,7 +4,7 @@ import convertImageToString from "../../../utils/convertImageToString";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup/dist/yup";
 import {changeProfileValidationSchema} from "../../../utils/validationSchemas";
-import {ICurrentUser} from "../../../types/user";
+import {ICurrentUser} from "../../../types/types";
 import {Dispatch, SetStateAction, useEffect} from "react";
 import setPreviewImage from "../../../utils/setPreviewImage";
 import useShortTranslation from "../../../hooks/useShortTranslation";

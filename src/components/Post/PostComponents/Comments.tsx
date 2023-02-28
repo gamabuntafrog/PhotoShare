@@ -1,5 +1,5 @@
 import {useAppSelector} from "../../../redux/hooks";
-import {IUserSliceAuthorized} from "../../../types/userSlice";
+import {IUserSliceAuthorized} from "../../../types/types";
 import useCommentsActions, {commentsType} from "../../../hooks/useCommentsActions";
 import useSx from "../../../hooks/useSx";
 import postStyles from "../postStyles";
@@ -18,7 +18,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import SendIcon from "@mui/icons-material/Send";
 import React from "react";
-import {IComment} from "../../../types/post";
+import {IComment} from "../../../types/types";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 
 interface ICommentsProps {

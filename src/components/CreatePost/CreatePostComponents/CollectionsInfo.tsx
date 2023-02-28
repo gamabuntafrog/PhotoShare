@@ -1,5 +1,5 @@
 import React from "react";
-import {ICollection} from "../../../types/collection";
+import {ICollection} from "../../../types/types";
 import useAnchorEl from "../../../hooks/useAnchorEl";
 import {Box, Button, IconButton, ListItemText, Menu, MenuItem, Typography} from "@mui/material";
 import useShortTranslation from "../../../hooks/useShortTranslation";

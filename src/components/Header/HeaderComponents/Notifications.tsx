@@ -8,7 +8,7 @@ import StyledCustomMenuItem from "../../../library/CustomMenu/StyledCustomMenuIt
 import React, {useEffect} from "react";
 import extendedNotificationsApi from "../../../redux/api/extendedNotificationsApi";
 import useSx from "../../../hooks/useSx";
-import {INotification} from "../../../types/user";
+import {INotification} from "../../../types/types";
 import headerStyles from "../headerStyles";
 import useShortTranslation from "../../../hooks/useShortTranslation";
 

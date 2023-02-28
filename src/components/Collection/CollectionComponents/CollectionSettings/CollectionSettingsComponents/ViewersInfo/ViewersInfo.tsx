@@ -1,4 +1,4 @@
-import {IViewerOfCollection} from "../../../../../../types/collection";
+import {IViewerOfCollection} from "../../../../../../types/types";
 import {Avatar, Button, ListItem, ListItemAvatar, ListItemText, TextField, Typography} from "@mui/material";
 import {NavLink} from "react-router-dom";
 import CustomOpenMenuButton from "../../../../../../library/CustomMenu/CustomOpenMenuButton";

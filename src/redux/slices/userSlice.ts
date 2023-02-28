@@ -1,8 +1,7 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../store";
-import {ICurrentUser, IUser} from "../../types/user";
-import {IUserSlice} from "../../types/userSlice";
-import {INotificationWithUser} from "../../types/notification";
+import {ICurrentUser, IUser} from "../../types/types";
+import {IUserSlice} from "../../types/types";
 import {IResponseNotification, pushResponse} from "./responseNotificationsSlice";
 import baseUrl from "../../utils/baseUrl";
 

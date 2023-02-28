@@ -1,5 +1,5 @@
 import {rootApi} from "./rootApi";
-import {INotification} from "../../types/user";
+import {INotification} from "../../types/types";
 import {IResponse} from "../slices/userSlice";
 
 const extendedNotificationsApi = rootApi.injectEndpoints({

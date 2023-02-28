@@ -1,4 +1,4 @@
-import {IOnePost, IPost} from "../types/post";
+import {IOnePost} from "../types/types";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import extendedPostsApi from "../redux/api/extendedPostsApi";

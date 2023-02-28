@@ -1,4 +1,4 @@
-import {ICurrentUser, IUserForSearchBar} from "../../../types/user";
+import {ICurrentUser, IUserForSearchBar} from "../../../types/types";
 import useSx from "../../../hooks/useSx";
 import headerStyles, {StyledHeaderNavLink} from "../headerStyles";
 import {

@@ -1,4 +1,4 @@
-import {IAuthorOfCollection} from "../../../types/collection";
+import {IAuthorOfCollection} from "../../../types/types";
 import {Avatar, Box, Button, Typography} from "@mui/material";
 import {NavLink, useNavigate} from "react-router-dom";
 import React from "react";

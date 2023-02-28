@@ -5,7 +5,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import StyledCustomMenu from "../../../../../../library/CustomMenu/StyledCustomMenu";
 import StyledCustomMenuItem from "../../../../../../library/CustomMenu/StyledCustomMenuItem";
 import React, {ChangeEvent, ChangeEventHandler, useState} from "react";
-import {IAuthorOfCollection} from "../../../../../../types/collection";
+import {IAuthorOfCollection} from "../../../../../../types/types";
 import useAnchorEl from "../../../../../../hooks/useAnchorEl";
 import useSx from "../../../../../../hooks/useSx";
 import collectionStyles from "../../../../collectionStyles";

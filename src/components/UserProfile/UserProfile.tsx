@@ -8,7 +8,7 @@ import {NavLink, Outlet, useParams} from "react-router-dom";
 import {useAppSelector} from "../../redux/hooks";
 import React, {useEffect, useState} from "react";
 import useToggleSubscribe from "../../hooks/useToggleSubscribe";
-import {ICurrentUser} from "../../types/user";
+import {ICurrentUser} from "../../types/types";
 import useSx from "../../hooks/useSx";
 import userProfileStyles from "./userProfileStyles";
 import ChangeUserProfile from "./UserProfileComponents/ChangeUserProfile";

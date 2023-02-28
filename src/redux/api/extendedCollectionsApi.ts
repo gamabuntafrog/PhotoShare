@@ -1,6 +1,6 @@
-import {ICollection, IFullCollection} from "../../types/collection";
+import {ICollection, IFullCollection} from "../../types/types";
 import {IResponse, IResponseWithMessage} from "../slices/userSlice";
-import {ICollectionForIUser} from "../../types/user";
+import {ICollectionForIUser} from "../../types/types";
 import {returnTransformedError} from "../utils";
 import {idType, rootApi} from "./rootApi";
 

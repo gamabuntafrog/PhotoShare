@@ -19,7 +19,7 @@ import postStyles, {StyledPostImage} from "./postStyles";
 import DeleteIcon from '@mui/icons-material/Delete';
 import useShortTranslation from "../../hooks/useShortTranslation";
 import StandardHelmet from "../StandardHelmet";
-import {IUserSliceAuthorized} from "../../types/userSlice";
+import {IUserSliceAuthorized} from "../../types/types";
 
 const AuthorOfPostInfo = React.lazy(() => import( "./PostComponents/AuthorOfPostInfo"));
 const SimilarPostsByTags = React.lazy(() => import( "./PostComponents/SimilarPostsByTags"));

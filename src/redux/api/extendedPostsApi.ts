@@ -1,4 +1,4 @@
-import {IComment, IOnePost, IPost, IReplyComment} from "../../types/post";
+import {IComment, IOnePost, IPost, IReplyComment} from "../../types/types";
 import {IResponse, IResponseWithMessage} from "../slices/userSlice";
 import {returnTransformedError} from "../utils";
 import {ICreatePostBody, ICRUDOperationWithoutId, idType, rootApi} from "./rootApi";

@@ -4,7 +4,7 @@ import {
     ImageListItemBar,
 } from "@mui/material";
 import {NavLink} from "react-router-dom";
-import {IPost, ISavesInfo} from "../../types/post";
+import {IPost} from "../../types/types";
 import React, {Dispatch, useState} from "react";
 import {IPostsActions} from "../../hooks/usePostsActions";
 import PostSavesInfo from "../PostSavesInfo";

@@ -1,4 +1,4 @@
-import {ICurrentUser} from "../../../types/user";
+import {ICurrentUser} from "../../../types/types";
 import {
     Avatar,
     Box,

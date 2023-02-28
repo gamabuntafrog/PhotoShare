@@ -11,7 +11,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import React, {useCallback, useRef} from "react";
-import {IFullCollection} from "../../../../types/collection";
+import {IFullCollection} from "../../../../types/types";
 import useSx from "../../../../hooks/useSx";
 import collectionStyles from "../../collectionStyles";
 import {useNavigate} from "react-router-dom";

@@ -1,4 +1,4 @@
-import {ICollectionForIUser} from "../../types/user";
+import {ICollectionForIUser} from "../../types/types";
 import useSx from "../../hooks/useSx";
 import userProfileStyles, {StyledCollectionItem} from "../UserProfile/userProfileStyles";
 import useShortTranslation from "../../hooks/useShortTranslation";

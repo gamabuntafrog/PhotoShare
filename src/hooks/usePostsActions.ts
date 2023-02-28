@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import extendedCollectionsApi from "../redux/api/extendedCollectionsApi";
 import extendedPostsApi from "../redux/api/extendedPostsApi";
-import {IPost, ISavesInfo} from "../types/post";
+import {IPost} from "../types/types";
 
 export interface IUsePostsProps {
     initPosts: IPost[] | undefined,

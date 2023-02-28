@@ -9,7 +9,7 @@ import {
     TextField, useTheme
 } from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {IUserForSearchBar} from "../../../types/user";
+import {IUserForSearchBar} from "../../../types/types";
 import TuneIcon from "@mui/icons-material/Tune";
 import {CustomIconButton} from "../../../library/CustomIconButton";
 import SearchOffIcon from "@mui/icons-material/SearchOff";

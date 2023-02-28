@@ -5,7 +5,7 @@ import {
     IUserForSearchBar,
     IUserForUsers,
     IUserWithCollections
-} from "../../types/user";
+} from "../../types/types";
 import {IResponse} from "../slices/userSlice";
 import {idType, rootApi} from "./rootApi";
 

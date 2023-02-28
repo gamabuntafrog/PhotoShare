@@ -1,4 +1,4 @@
-import {ISavesInfo} from "../../types/post";
+import {ISavesInfo} from "../../types/types";
 import {toggleSaveType} from "../../hooks/usePostsActions";
 import useAnchorEl from "../../hooks/useAnchorEl";
 import {Box, Button, IconButton, ListItemText, Menu, MenuItem, useTheme} from "@mui/material";

@@ -6,7 +6,7 @@ import collectionStyles from "../../../../../collectionStyles";
 import useAnchorEl from "../../../../../../../hooks/useAnchorEl";
 import StyledCustomMenuItem from "../../../../../../../library/CustomMenu/StyledCustomMenuItem";
 import StyledCustomMenu from "../../../../../../../library/CustomMenu/StyledCustomMenu";
-import {IUserForAddInCollection} from "../../../../../../../types/user";
+import {IUserForAddInCollection} from "../../../../../../../types/types";
 import useShortTranslation from "../../../../../../../hooks/useShortTranslation";
 import extendedCollectionsApi from "../../../../../../../redux/api/extendedCollectionsApi";
 

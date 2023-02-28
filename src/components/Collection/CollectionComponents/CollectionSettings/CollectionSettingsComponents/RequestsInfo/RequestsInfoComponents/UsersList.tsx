@@ -1,4 +1,3 @@
-import {IUserForAddInCollection} from "../../../../../../../types/user";
 import extendedCollectionsApi from "../../../../../../../redux/api/extendedCollectionsApi";
 import useSx from "../../../../../../../hooks/useSx";
 import collectionStyles from "../../../../../collectionStyles";
@@ -9,7 +8,7 @@ import {NavLink} from "react-router-dom";
 import StyledCustomMenu from "../../../../../../../library/CustomMenu/StyledCustomMenu";
 import StyledCustomMenuItem from "../../../../../../../library/CustomMenu/StyledCustomMenuItem";
 import React from "react";
-import {IUserFromRequestsOfCollection} from "../../../../../../../types/collection";
+import {IUserFromRequestsOfCollection} from "../../../../../../../types/types";
 
 interface IUsersListProps {
     users: IUserFromRequestsOfCollection[],

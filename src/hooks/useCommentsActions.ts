@@ -1,4 +1,4 @@
-import {IComment} from "../types/post";
+import {IComment} from "../types/types";
 import extendedPostsApi from "../redux/api/extendedPostsApi";
 import {useEffect, useState} from "react";
 import {useForm} from "react-hook-form";

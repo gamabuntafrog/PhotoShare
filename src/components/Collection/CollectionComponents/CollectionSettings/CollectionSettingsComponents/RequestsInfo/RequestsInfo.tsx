@@ -1,7 +1,7 @@
 import React, {ChangeEvent, useState} from "react";
 import useShortTranslation from "../../../../../../hooks/useShortTranslation";
 import FullScreenLoader from "../../../../../Loaders/FullScreenLoader";
-import {IUserFromRequestsOfCollection} from "../../../../../../types/collection";
+import {IUserFromRequestsOfCollection} from "../../../../../../types/types";
 import {Button, ListItem, TextField, Typography} from "@mui/material";
 const UsersList = React.lazy(() => import("./RequestsInfoComponents/UsersList"));
 
