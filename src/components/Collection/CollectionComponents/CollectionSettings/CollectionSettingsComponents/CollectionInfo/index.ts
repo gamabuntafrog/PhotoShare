@@ -1,3 +1,3 @@
-import CollectionInfo from './CollectionInfo';
+import CollectionInfo from './CollectionInfo'
 
 export default CollectionInfo

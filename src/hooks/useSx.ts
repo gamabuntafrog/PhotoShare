@@ -1,10 +1,9 @@
-import {Theme, useTheme} from "@mui/material";
+import { Theme, useTheme } from '@mui/material'
 
 const useSx = <T>(getStyles: (theme: Theme) => T) => {
+  const theme = useTheme()
 
-    const theme = useTheme()
-
-    return getStyles(theme)
+  return getStyles(theme)
 }
 
 export default useSx

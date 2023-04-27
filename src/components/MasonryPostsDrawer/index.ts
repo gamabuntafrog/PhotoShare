@@ -1,4 +1,3 @@
-
-import MasonryPostsDrawer from "./MasonryPostsDrawer";
+import MasonryPostsDrawer from './MasonryPostsDrawer'
 
 export default MasonryPostsDrawer

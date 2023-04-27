@@ -1,2 +1,2 @@
-import PostSavesInfo from './PostSavesInfo';
+import PostSavesInfo from './PostSavesInfo'
 export default PostSavesInfo

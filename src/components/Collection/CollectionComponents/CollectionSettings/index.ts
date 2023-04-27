@@ -1,3 +1,3 @@
-import CollectionSettings from "./CollectionSettings";
+import CollectionSettings from './CollectionSettings'
 
 export default CollectionSettings
