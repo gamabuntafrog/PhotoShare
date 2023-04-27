@@ -2,7 +2,7 @@
 
 ## Опис
 
-Застосунок з авторизацією, можливістю підписуватися на користувачів, викладати картинки в мережу та коментувати публікації
+Застосунок з авторизацією, сповіщеннями,пошуком, можливістю підписуватися на користувачів, викладати картинки в мережу коментувати їх та додавати в свої колекції. Колекції мають налаштування.
 
 ## Технології:
 
@@ -17,7 +17,7 @@ Redux Toolkit
 
 ## Description
 
-An application with authorization, the ability to subscribe to users, upload pictures to the network and comment on publications
+An application with authorization, notifications, search, the ability to subscribe to users, upload pictures to the network, comment on them and add to your collections. Collections have settings.
 
 ## Technologies:
 
