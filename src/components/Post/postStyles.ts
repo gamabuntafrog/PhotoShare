@@ -14,8 +14,7 @@ const postStyles = (theme: Theme) => {
       maxWidth: values.laptop,
       [down('laptop')]: {
         pt: 2
-      },
-      minHeight: '92vh'
+      }
     },
     postWrapper: {
       display: 'flex',
@@ -36,11 +35,11 @@ const postStyles = (theme: Theme) => {
     },
     postInfo: {
       px: 3,
-      mt: 1,
       width: '50%',
       [down('laptop')]: {
         px: 0,
-        width: '100%'
+        width: '100%',
+        mt: 1
       }
     },
     postButtons: {
@@ -92,9 +91,9 @@ const postStyles = (theme: Theme) => {
     comments: {
       repliesList: { alignSelf: 'start', pl: 2, pt: 0, width: '-webkit-fill-available' },
       container: {
-        minHeight: '20vh',
-        maxHeight: '50vh',
-        height: '100%',
+        // minHeight: '20vh',
+        maxHeight: '350px',
+        // height: '100%',
         overflow: 'auto',
         [down('tablet')]: {
           maxHeight: '70vh'
