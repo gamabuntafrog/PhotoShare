@@ -12,6 +12,7 @@ import { StyledHeaderNavLink } from '../Header/headerStyles'
 import useShortTranslation from '../../hooks/useShortTranslation'
 import StandardHelmet from '../StandardHelmet'
 import extendedUsersApi from '../../redux/api/extendedUsersApi'
+import MiniLoader from '../Loaders/MiniLoader'
 
 export default function UserProfile() {
   const { id = '' } = useParams<{ id: string }>()!
@@ -128,8 +129,8 @@ export default function UserProfile() {
           <StyledHeaderNavLink to={`allowedToView`}>{t('linkToAllowedToView')}</StyledHeaderNavLink>
         )}
       </Box>
-      <Box sx={{ minHeight: '100vh' }}>
-        <React.Suspense fallback={<FullScreenLoader smaller />}>
+      <Box>
+        <React.Suspense fallback={<MiniLoader />}>
           <Outlet />
         </React.Suspense>
       </Box>
