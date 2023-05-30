@@ -47,7 +47,7 @@ export default function Post() {
     return (
       <>
         <StandardHelmet keyOfOther="error" />
-        <Container sx={{ ...styles.postContainer, height: '92vh' }}>
+        <Container sx={{ ...styles.postContainer, height: '90vh', display: 'flex', alignItems: 'center' }}>
           <Typography variant="h1" textAlign="center">
             {t('doesNotExists')}
           </Typography>

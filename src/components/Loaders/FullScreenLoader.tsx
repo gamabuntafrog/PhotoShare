@@ -5,13 +5,15 @@ import StandardHelmet from '../StandardHelmet'
 interface IFullScreenLoaderProps {
   withMeta?: boolean
   fixed?: boolean
-  smaller?: boolean
+  smaller?: boolean,
+  isInitial?: boolean
 }
 
 export default function FullScreenLoader({
   withMeta,
   fixed,
-  smaller = false
+  smaller = false,
+  isInitial = false,
 }: IFullScreenLoaderProps) {
   return (
     <>
@@ -20,7 +22,7 @@ export default function FullScreenLoader({
         sx={{
           bgcolor: 'background.default',
           color: 'var(--text-primary)',
-          minHeight: smaller ? '40vh' : '100vh',
+          minHeight: smaller ? '40vh' : isInitial ? '100vh' : '90vh',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

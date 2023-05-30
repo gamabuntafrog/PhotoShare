@@ -42,7 +42,7 @@ export default function App() {
 
   const styles = useSx(appStyles)
 
-  if (isLoading) return <FullScreenLoader withMeta />
+  if (isLoading) return <FullScreenLoader withMeta isInitial />
 
   const router = chooseRouter(isLoggedIn)
 

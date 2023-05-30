@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 const userProfileStyles = (theme: Theme) => {
   return {
     loaderOrErrorWrapper: {
-      minHeight: '100vh',
+      minHeight: '90vh',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center'
