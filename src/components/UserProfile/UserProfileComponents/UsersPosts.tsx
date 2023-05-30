@@ -13,7 +13,7 @@ import FullScreenLoader from '../../Loaders/FullScreenLoader'
 export default function UsersPosts() {
   const { id = '' } = useParams<{ id: string }>()!
 
-  const { data, isLoading, isEnd, isError, ref } = useGetPostsByUserIdWithInfiniteScroll({ id })
+  const { data, isLoading, isEnd, isError, ref, isNextPostsLoading} = useGetPostsByUserIdWithInfiniteScroll({ id })
 
   const [posts, postsActions] = usePostsActions({ initPosts: data })
   const styles = useSx(postsStyles)
@@ -42,7 +42,7 @@ export default function UsersPosts() {
   return (
     <>
       <Box sx={styles.container}>
-        <MasonryPostsDrawer posts={posts} postsActions={postsActions} />
+        <MasonryPostsDrawer isNextPostsLoading={isNextPostsLoading} posts={posts} postsActions={postsActions} />
       </Box>
       <div ref={ref} />
     </>
