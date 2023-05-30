@@ -20,7 +20,11 @@ const postSavesInfoStyles = (theme: Theme) => {
       },
       '& .MuiMenu-list': {
         bgcolor: 'background.paper',
-        py: 0
+        pt: 1,
+        pb: 0,
+        [theme.breakpoints.up('laptop')]: {
+          py: 0
+        }
       }
     },
     menuItem: {
@@ -30,7 +34,12 @@ const postSavesInfoStyles = (theme: Theme) => {
       bgcolor: 'background.paper',
       position: 'relative'
     },
-    menuItemButton: { position: 'absolute', right: 8, display: 'none' },
+    menuItemButton: {
+      position: 'absolute',
+      display: 'flex',
+      right: 12,
+      [theme.breakpoints.up('laptop')]: { display: 'none', right: 8 }
+    },
     staticButtonsWrapper: {
       bgcolor: 'background.paper',
       px: 1,
@@ -39,7 +48,7 @@ const postSavesInfoStyles = (theme: Theme) => {
       bottom: '-1px',
       '&:hover': {
         bgcolor: 'background.paper'
-      }
+      },
     }
   }
 }
