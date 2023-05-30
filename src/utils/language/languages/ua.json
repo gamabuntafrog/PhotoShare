@@ -160,6 +160,9 @@
         "reply": "Відповісти",
         "replyTo": "Відповідь {{username}}",
         "writeComment": "Написати коментар"
+      },
+      "Similar": {
+        "title": "Схоже"
       }
     },
     "CreateCollectionModal": {

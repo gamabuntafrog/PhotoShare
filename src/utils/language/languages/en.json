@@ -159,6 +159,9 @@
         "reply": "Reply",
         "replyTo": "Reply to {{username}}",
         "writeComment": "Write comment"
+      },
+      "Similar": {
+        "title": "Similar"
       }
     },
     "CreateCollectionModal": {
