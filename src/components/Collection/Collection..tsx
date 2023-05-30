@@ -84,11 +84,7 @@ export default function Collection() {
         )}
         <Box sx={styles.collectionWrapper}>
           <Box sx={styles.buttonsWrapper}>
-            {(isAuthor || isAdmin) && (
-              <Button sx={{ mx: 1 }} variant="contained" onClick={openSettingsModal}>
-                {t('openSettingsButton')}
-              </Button>
-            )}
+            
             {!isAuthor && !isAdmin && !isViewer && !isInQueue && (
               <Button
                 sx={{ mx: 1 }}
@@ -115,6 +111,8 @@ export default function Collection() {
               authors={authors}
               isCurrentUserAuthorOfCollection={isAuthor}
               collectionId={collectionId}
+              isCurrentUserAdminOfCollection={isAdmin}
+              openSettingsModal={openSettingsModal}
             />
           </React.Suspense>
         </Box>

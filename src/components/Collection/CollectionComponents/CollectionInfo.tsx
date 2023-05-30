@@ -1,17 +1,19 @@
 import { IAuthorOfCollection } from '../../../types/types'
-import { Avatar, Box, Button, Typography } from '@mui/material'
+import { Avatar, Box, Button, IconButton, Typography } from '@mui/material'
 import { NavLink, useNavigate } from 'react-router-dom'
 import React from 'react'
 import useSx from '../../../hooks/useSx'
 import collectionStyles from '../collectionStyles'
 import useShortTranslation from '../../../hooks/useShortTranslation'
-
+import SettingsIcon from '@mui/icons-material/Settings'
 interface ICollectionInfoProps {
   title: string
   formattedTags: string
   authors: IAuthorOfCollection[]
   isCurrentUserAuthorOfCollection: boolean
+  isCurrentUserAdminOfCollection: boolean
   collectionId: string
+  openSettingsModal: () => void
 }
 
 export default function CollectionInfo({
@@ -19,7 +21,9 @@ export default function CollectionInfo({
   formattedTags,
   authors,
   isCurrentUserAuthorOfCollection,
-  collectionId
+  collectionId,
+  isCurrentUserAdminOfCollection,
+  openSettingsModal
 }: ICollectionInfoProps) {
   const { collectionInfo: styles } = useSx(collectionStyles)
 
@@ -64,11 +68,21 @@ export default function CollectionInfo({
             </Box>
           )
         })}
-        {isCurrentUserAuthorOfCollection && (
-          <Button variant="contained" sx={styles.addNewPostButton}>
-            <NavLink to={`/post/create/${collectionId}`}>{t('addNewPostButton')}</NavLink>
-          </Button>
-        )}
+        <Box sx={{ display: 'flex' }}>
+          {isCurrentUserAuthorOfCollection && (
+            <Button variant="contained" sx={styles.addNewPostButton}>
+              <NavLink to={`/post/create/${collectionId}`}>{t('addNewPostButton')}</NavLink>
+            </Button>
+          )}
+          {(isCurrentUserAuthorOfCollection || isCurrentUserAdminOfCollection) && (
+            <IconButton
+              sx={{ mx: 1, ...styles.addNewPostButton, '&:hover': { color: 'primary.main' } }}
+              onClick={openSettingsModal}
+            >
+              <SettingsIcon color='inherit'/>
+            </IconButton>
+          )}
+        </Box>
       </Box>
     </>
   )
