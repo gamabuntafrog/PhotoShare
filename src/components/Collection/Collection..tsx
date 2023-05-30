@@ -27,7 +27,8 @@ export default function Collection() {
     data: postsData,
     isLoading: isPostsLoading,
     isError: postsError,
-    ref
+    ref,
+    isNextPostsLoading
   } = useGetPostsByCollectionIdWithInfiniteScroll({ id })
 
   const [posts, postsActions] = usePostsActions({ initPosts: postsData })
@@ -117,7 +118,11 @@ export default function Collection() {
             />
           </React.Suspense>
         </Box>
-        <MasonryPostsDrawer posts={posts} postsActions={postsActions} />
+        <MasonryPostsDrawer
+          isNextPostsLoading={isNextPostsLoading}
+          posts={posts}
+          postsActions={postsActions}
+        />
         <div ref={ref} />
       </Box>
     </>
