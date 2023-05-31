@@ -38,7 +38,7 @@ const postsStyles = (theme: Theme) => {
       mx: 'auto',
       mt: 1
     },
-    masonryContainer: { padding: 0, display: 'flex', flexDirection: 'column' }
+    masonryContainer: { padding: 0, display: 'flex', flexDirection: 'column', width: '100%' }
   }
 }
 
