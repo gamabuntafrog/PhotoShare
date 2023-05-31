@@ -61,12 +61,15 @@ export default function Login() {
 
   const styles = useSx(loginStyles)
 
-  // const {t} = useTranslation()
   const t = useShortTranslation({ componentNameKey: 'Login' })
 
   const emailLabel = emailError?.message ? t(emailError.message) : t('emailLabel')
   const passwordLabel = passwordError?.message ? t(passwordError.message) : t('passwordLabel')
   const submitButtonText = isNotValidated ? t('loginButtonDisabled') : t('loginButton')
+
+  const loginInDemoAccount = () => {
+    dispatch(login({ email: 'demo123@demo.com', password: 'demo123' }))
+  }
 
   return (
     <>
@@ -132,6 +135,16 @@ export default function Login() {
             </StyledHeaderNavLink>
           </FormGroup>
         </Box>
+        <Button
+          type="submit"
+          variant="contained"
+          color="secondary"
+          onClick={loginInDemoAccount}
+          disabled={isNotValidated}
+          sx={{ mt: 2, width: '50%', maxWidth: '300px', mx: 'auto' }}
+        >
+          {t('loginDemoButton')}
+        </Button>
       </Box>
     </>
   )

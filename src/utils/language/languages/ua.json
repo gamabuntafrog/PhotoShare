@@ -80,7 +80,8 @@
       "wrongEmail": "Невірна електронна пошта",
       "passwordIsRequired": "Пароль обов'язковий",
       "passwordMinLengthError": "Мінімальна довжина паролю {{MIN_PASSWORD_LENGTH}} символа",
-      "passwordMaxLengthError": "Максимальна довжина паролю {{MAX_PASSWORD_LENGTH}} символа"
+      "passwordMaxLengthError": "Максимальна довжина паролю {{MAX_PASSWORD_LENGTH}} символа",
+      "loginDemoButton": "Увійти через демо акаунт"
     },
     "Register": {
       "title": "Реєстрація",
