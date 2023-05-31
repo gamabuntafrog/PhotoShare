@@ -140,7 +140,6 @@ export default function Login() {
           variant="contained"
           color="secondary"
           onClick={loginInDemoAccount}
-          disabled={isNotValidated}
           sx={{ mt: 2, width: '50%', maxWidth: '300px', mx: 'auto' }}
         >
           {t('loginDemoButton')}
