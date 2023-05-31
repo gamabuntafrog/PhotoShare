@@ -17,6 +17,6 @@ export default function useGetPostsByUserIdWithInfiniteScroll({ id }: { id: stri
     id,
     data,
   })
-  console.log(isLoading)
+
   return { data: paginatedData, isLoading, isError, ref, isEnd, isNextPostsLoading}
 }
