@@ -6,14 +6,14 @@ interface IMiniLoaderProps {
   size?: string
   bgOff?: boolean
   withMeta?: boolean
+  center?: boolean
 }
 
-
-export default function MiniLoader({ size, withMeta = false }: IMiniLoaderProps) {
+export default function MiniLoader({ size, withMeta = false, center = false }: IMiniLoaderProps) {
   return (
     <>
       {withMeta && <StandardHelmet keyOfOther="loading" />}
-      <CircularProgress size={size || '20vw'} />
+      <CircularProgress sx={center ? { mx: 'auto', display: 'block' } : {}} size={size || '20vw'} />
     </>
   )
 }

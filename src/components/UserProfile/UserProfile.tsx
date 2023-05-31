@@ -129,8 +129,8 @@ export default function UserProfile() {
           <StyledHeaderNavLink to={`allowedToView`}>{t('linkToAllowedToView')}</StyledHeaderNavLink>
         )}
       </Box>
-      <Box sx={{minHeight: '100vh'}}>
-        <React.Suspense fallback={<MiniLoader />}>
+      <Box sx={{minHeight: '50vh'}}>
+        <React.Suspense fallback={<MiniLoader center />}>
           <Outlet />
         </React.Suspense>
       </Box>

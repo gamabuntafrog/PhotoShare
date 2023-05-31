@@ -6,7 +6,8 @@ interface IFullScreenLoaderProps {
   withMeta?: boolean
   fixed?: boolean
   smaller?: boolean,
-  isInitial?: boolean
+  isInitial?: boolean,
+  center?: boolean
 }
 
 export default function FullScreenLoader({
@@ -14,6 +15,7 @@ export default function FullScreenLoader({
   fixed,
   smaller = false,
   isInitial = false,
+  center = false,
 }: IFullScreenLoaderProps) {
   return (
     <>
@@ -35,6 +37,9 @@ export default function FullScreenLoader({
             zIndex: 100,
             width: '100%',
             height: '100%'
+          }),
+          ...(center && {
+            mx: 'auto'
           })
         }}
       >

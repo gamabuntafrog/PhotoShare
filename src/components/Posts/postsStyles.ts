@@ -33,6 +33,8 @@ const postsStyles = (theme: Theme) => {
     },
     miniLoader: {
       height: '20vh',
+      width: '20vh',
+      display: 'block',
       mx: 'auto',
       mt: 1
     },
