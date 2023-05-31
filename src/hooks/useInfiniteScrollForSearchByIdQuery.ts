@@ -27,6 +27,7 @@ export default function useInfiniteScrollForSearchByIdQuery({
   useLayoutEffect(() => {
     setCombinedValue([])
     setIsEnd(false)
+    trigger({ arrayOfId: [], id })
   }, [id])
 
   useLayoutEffect(() => {
