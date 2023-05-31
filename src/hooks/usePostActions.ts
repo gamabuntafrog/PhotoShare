@@ -47,34 +47,30 @@ const usePostActions = ({ initPost }: IUsePostProps): usePostActionsReturnValue 
   }, [initPost])
 
   const toggleLike = async (id: string, isLiked: boolean) => {
+    if (!post) return
+
+    let likesCount = post.likesCount
+    likesCount = isLiked ? --likesCount : ++likesCount
+
     try {
-      if (!post) return
+      setPost({ ...post, isLiked: !post.isLiked, likesCount })
 
       if (isLiked) {
         await unlikePost({ id }).unwrap()
       } else {
         await likePost({ id }).unwrap()
       }
-
-      let likesCount = post.likesCount
-      likesCount = isLiked ? --likesCount : ++likesCount
-
-      setPost({ ...post, isLiked: !post.isLiked, likesCount })
     } catch (e) {
       console.log(e)
+
+      setPost({ ...post, isLiked: post.isLiked, likesCount: post.likesCount })
     }
   }
 
   const toggleSave = async (postId: string, collectionId: string, isSaved: boolean) => {
+    if (!post) return
+
     try {
-      if (!post) return
-
-      if (isSaved) {
-        await unsavePost({ postId, collectionId }).unwrap()
-      } else {
-        await savePost({ postId, collectionId }).unwrap()
-      }
-
       setPost((prev) => {
         if (!prev) return prev
 
@@ -89,8 +85,29 @@ const usePostActions = ({ initPost }: IUsePostProps): usePostActionsReturnValue 
 
         return { ...post, savesInfo: changedSavesInfo, isSomewhereSaved }
       })
+
+      if (isSaved) {
+        await unsavePost({ postId, collectionId }).unwrap()
+      } else {
+        await savePost({ postId, collectionId }).unwrap()
+      }
     } catch (e) {
       console.log(e)
+
+      setPost((prev) => {
+        if (!prev) return prev
+
+        const changedSavesInfo = post.savesInfo.map((info) => {
+          if (info.collectionId === collectionId) {
+            return { isSaved: isSaved, collectionId: info.collectionId, title: info.title }
+          }
+          return info
+        })
+
+        const isSomewhereSaved = changedSavesInfo.some(({ isSaved }) => !!isSaved)
+
+        return { ...post, savesInfo: changedSavesInfo, isSomewhereSaved }
+      })
     }
   }
 
@@ -98,8 +115,6 @@ const usePostActions = ({ initPost }: IUsePostProps): usePostActionsReturnValue 
     if (!post) return
 
     try {
-      await savePost({ postId, collectionId }).unwrap()
-
       setPost((prev) => {
         if (!prev) return prev
 
@@ -116,8 +131,27 @@ const usePostActions = ({ initPost }: IUsePostProps): usePostActionsReturnValue 
 
         return { ...post, savesInfo: changedSavesInfo, isSomewhereSaved }
       })
+      
+      await savePost({ postId, collectionId }).unwrap()
     } catch (e) {
       console.log(e)
+
+      setPost((prev) => {
+        if (!prev) return prev
+
+        const changedSavesInfo = [...post.savesInfo, { title, collectionId, isSaved: false }].map(
+          (info) => {
+            if (info.collectionId === collectionId) {
+              return { isSaved: info.isSaved, collectionId: info.collectionId, title: info.title }
+            }
+            return info
+          }
+        )
+
+        const isSomewhereSaved = changedSavesInfo.some(({ isSaved }) => !!isSaved)
+
+        return { ...post, savesInfo: changedSavesInfo, isSomewhereSaved }
+      })
     }
   }
 

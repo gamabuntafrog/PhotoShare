@@ -39,11 +39,27 @@ const usePostsActions = ({ initPosts }: IUsePostsProps): usePostsActionsReturnVa
 
   const toggleLike = async (id: string, isLiked: boolean) => {
     try {
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post._id === id) {
+            let { likesCount: initLikesCount, isLiked } = post
+
+            const likesCount = isLiked ? --initLikesCount : ++initLikesCount
+
+            return { ...post, isLiked: !isLiked, likesCount }
+          } else {
+            return post
+          }
+        })
+      )
+
       if (isLiked) {
         await unlikePost({ id }).unwrap()
       } else {
         await likePost({ id }).unwrap()
       }
+    } catch (e) {
+      console.log(e)
 
       setPosts((prev) =>
         prev.map((post) => {
@@ -58,18 +74,39 @@ const usePostsActions = ({ initPosts }: IUsePostsProps): usePostsActionsReturnVa
           }
         })
       )
-    } catch (e) {
-      console.log(e)
     }
   }
 
   const toggleSave = async (postId: string, collectionId: string, isSaved: boolean) => {
     try {
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post._id === postId) {
+            let { savesCount, savesInfo } = post
+
+            const changedSavesInfo = savesInfo.map((info) => {
+              if (info.collectionId === collectionId) {
+                return { isSaved: !isSaved, collectionId: info.collectionId, title: info.title }
+              }
+              return info
+            })
+
+            const isSomewhereSaved = changedSavesInfo.some(({ isSaved }) => !!isSaved)
+
+            return { ...post, isSomewhereSaved, savesCount, savesInfo: changedSavesInfo }
+          } else {
+            return post
+          }
+        })
+      )
+
       if (isSaved) {
         await unsavePost({ postId, collectionId }).unwrap()
       } else {
         await savePost({ postId, collectionId }).unwrap()
       }
+    } catch (e) {
+      console.log(e)
 
       setPosts((prev) =>
         prev.map((post) => {
@@ -91,15 +128,11 @@ const usePostsActions = ({ initPosts }: IUsePostsProps): usePostsActionsReturnVa
           }
         })
       )
-    } catch (e) {
-      console.log(e)
     }
   }
 
   const updateSavesInfo = async (title: string, collectionId: string, postId: string) => {
     try {
-      await savePost({ postId, collectionId }).unwrap()
-
       setPosts((prev) =>
         prev.map((post) => {
           if (post._id === postId) {
@@ -116,8 +149,27 @@ const usePostsActions = ({ initPosts }: IUsePostsProps): usePostsActionsReturnVa
           }
         })
       )
+
+      await savePost({ postId, collectionId }).unwrap()
     } catch (e) {
       console.log(e)
+
+      setPosts((prev) =>
+        prev.map((post) => {
+          if (post._id === postId) {
+            return {
+              ...post,
+              isSomewhereSaved: true,
+              savesInfo: [...post.savesInfo, { title, collectionId, isSaved: false }]
+            }
+          }
+
+          return {
+            ...post,
+            savesInfo: [...post.savesInfo, { title, collectionId, isSaved: true }]
+          }
+        })
+      )
     }
   }
 
