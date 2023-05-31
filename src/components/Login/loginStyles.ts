@@ -2,11 +2,15 @@ import { Theme } from '@mui/material'
 
 const background =
   'https://images.unsplash.com/photo-1534484374439-6b8cd79be97c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1887&q=80'
+const lightBackground =
+  'https://images.unsplash.com/photo-1510353157186-4e5fec7beb6d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHx8fA%3D%3D&w=1000&q=80'
 
 const loginStyles = (theme: Theme) => {
   return {
     backdrop: {
-      background: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${background})`,
+      background: `linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url(${
+        theme.palette.mode === 'light' ? lightBackground : background
+      })`,
       backgroundPositionY: 'center',
       backgroundSize: 'cover',
       minHeight: 'calc(100vh - 80px)',
@@ -19,7 +23,7 @@ const loginStyles = (theme: Theme) => {
       py: 2,
       width: '90%',
       mx: 'auto',
-      bgcolor: 'background.default',
+      bgcolor: theme.palette.mode === 'light' ? 'rgba(255,255,255, 0.6)' : 'background.default',
       [theme.breakpoints.down('tablet')]: {
         width: '100%'
       }

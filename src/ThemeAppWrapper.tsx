@@ -85,12 +85,12 @@ export default function ThemeAppWrapper() {
               mode === 'dark'
                 ? getPrimaryTheme(primaryColor)[500]
                 : getPrimaryTheme(primaryColor)[700],
-            standard: mode === 'dark' ? 'white' : 'black',
-            standardReversed: mode === 'dark' ? 'black' : 'white'
+            standard: mode === 'dark' ? 'whitesmoke' : 'black',
+            standardReversed: mode === 'dark' ? 'black' : 'whitesmoke'
           },
           background: {
-            default: mode === 'dark' ? '#161616' : '#ffffff',
-            paper: mode === 'dark' ? '#242424' : '#ffffff'
+            default: mode === 'dark' ? '#161616' : 'rgb(235 235 235)',
+            paper: mode === 'dark' ? '#242424' : 'rgb(245 246 245)'
           },
           text: {
             standard: mode === 'dark' ? 'white' : 'black',
