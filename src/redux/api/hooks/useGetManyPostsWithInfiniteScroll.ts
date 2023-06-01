@@ -2,7 +2,7 @@ import useInfiniteScrollForQueryHook from '../../../hooks/useInfiniteScrollForQu
 import extendedPostsApi from '../extendedPostsApi'
 import { useState } from 'react'
 
-export default function useGetManyPostsWithInfiniteScroll() {
+export default function useGetManyPostsWithInfiniteScroll({ type }: { type: 'subscribes' | 'all' }) {
   const [trigger, { data = [], isLoading, isError }] = extendedPostsApi.useLazyGetManyQuery()
   const [isNextPostsLoading, setIsNextPostsLoading] = useState(false)
 
@@ -10,10 +10,11 @@ export default function useGetManyPostsWithInfiniteScroll() {
     isLoading,
     data,
     isError,
+    refetchDependencies: [type],
     triggerCallback: () => {
       setIsNextPostsLoading(true)
       const arrayOfId = paginatedData.map((el) => el._id)
-      trigger({ arrayOfId }).then(() => setIsNextPostsLoading(false))
+      trigger({ arrayOfId, type }).then(() => setIsNextPostsLoading(false))
     }
   })
 

@@ -1,5 +1,5 @@
-import { Box, Container, Typography } from '@mui/material'
-import React from 'react'
+import { Box, Button, Container, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import usePostsActions from '../../hooks/usePostsActions'
 import FullScreenLoader from '../Loaders/FullScreenLoader'
 import useSx from '../../hooks/useSx'
@@ -11,6 +11,8 @@ import useGetManyPostsWithInfiniteScroll from '../../redux/api/hooks/useGetManyP
 const MasonryPostsDrawer = React.lazy(() => import('../MasonryPostsDrawer'))
 
 export default function Posts() {
+  const [type, setType] = useState<'all' | 'subscribes'>('all')
+
   const {
     data,
     isLoading: isPostsLoading,
@@ -18,7 +20,7 @@ export default function Posts() {
     ref,
     isEnd,
     isNextPostsLoading
-  } = useGetManyPostsWithInfiniteScroll()
+  } = useGetManyPostsWithInfiniteScroll({ type: type })
 
   const [posts, postsActions] = usePostsActions({ initPosts: data })
 
@@ -44,6 +46,14 @@ export default function Posts() {
   return (
     <>
       <StandardHelmet keyOfTitle="posts" />
+      <Box sx={{ display: 'flex', mt: 4, ml: 2 }}>
+        <Button variant="contained" onClick={() => setType('all')}>
+          Всі
+        </Button>
+        <Button variant="contained" onClick={() => setType('subscribes')} sx={{ ml: 2 }}>
+          Підписки
+        </Button>
+      </Box>
       <Box sx={styles.container}>
         <MasonryPostsDrawer
           posts={posts}

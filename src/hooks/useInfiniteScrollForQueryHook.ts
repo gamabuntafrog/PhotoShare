@@ -14,11 +14,10 @@ export default function useInfiniteScrollForQueryHook({
   data,
   isError,
   triggerCallback,
-  refetchDependencies = []
+  refetchDependencies = [],
 }: IUseInfiniteScrollForQueryHookProps) {
   const [isEnd, setIsEnd] = useState(false)
   const [combinedValue, setCombinedValue] = useState(data)
-  const [page, setPage] = useState(1)
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -26,8 +25,8 @@ export default function useInfiniteScrollForQueryHook({
   })
 
   useLayoutEffect(() => {
-    setPage(1)
     setCombinedValue([])
+    triggerCallback()
     setIsEnd(false)
   }, [...refetchDependencies])
 
@@ -61,12 +60,9 @@ export default function useInfiniteScrollForQueryHook({
     if (!inView || isLoading) return
     if (isEnd) return
 
-    setPage((prev) => prev + 1)
+    triggerCallback()
   }, [inView])
 
-  useLayoutEffect(() => {
-    triggerCallback()
-  }, [page])
 
-  return { paginatedData: combinedValue, isEnd, ref, inView, page }
+  return { paginatedData: combinedValue, isEnd, ref, inView }
 }

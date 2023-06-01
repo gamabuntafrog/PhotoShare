@@ -5,11 +5,12 @@ import { ICreatePostBody, ICRUDOperationWithoutId, idType, rootApi } from './roo
 
 const extendedPostsApi = rootApi.injectEndpoints({
   endpoints: (build) => ({
-    getMany: build.query<IPost[], { arrayOfId: string[] }>({
-      query: ({ arrayOfId }) => ({
+    getMany: build.query<IPost[], { arrayOfId: string[], type: 'subscribes' | 'all' }>({
+      query: ({ arrayOfId, type }) => ({
         url: '/posts',
         params: {
-          arrayOfId: JSON.stringify(arrayOfId)
+          arrayOfId: JSON.stringify(arrayOfId),
+          type
         }
       }),
       transformResponse: (response: IResponse<{ posts: IPost[] }>) => response.data.posts
