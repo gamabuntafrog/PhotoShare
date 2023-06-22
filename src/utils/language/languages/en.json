@@ -144,7 +144,9 @@
     "Posts": {
       "error": "Error",
       "noPostsMessage": "There already no posts yet",
-      "end": "This is the end"
+      "end": "This is the end",
+      "allPosts": "All",
+      "subscribesPosts": "Subscribes"
     },
     "PostSavesInfo": {
       "savePostButton": "Save",

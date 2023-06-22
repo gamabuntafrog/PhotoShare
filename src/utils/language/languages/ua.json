@@ -145,7 +145,9 @@
     "Posts": {
       "error": "Помилка",
       "noPostsMessage": "Постів ще немає",
-      "end": "Кінець"
+      "end": "Кінець",
+      "allPosts": "Всі",
+      "subscribesPosts": "Підписки"
     },
     "PostSavesInfo": {
       "savePostButton": "Зберегти",

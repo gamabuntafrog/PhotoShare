@@ -1,18 +1,19 @@
 import { Box, Button, Container, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import usePostsActions from '../../hooks/usePostsActions'
 import FullScreenLoader from '../Loaders/FullScreenLoader'
 import useSx from '../../hooks/useSx'
 import postsStyles from './postsStyles'
 import useShortTranslation from '../../hooks/useShortTranslation'
 import StandardHelmet from '../StandardHelmet'
-import useGetManyPostsWithInfiniteScroll from '../../redux/api/hooks/useGetManyPostsWithInfiniteScroll'
+import extendedPostsApi from '../../redux/api/extendedPostsApi'
+import { useDataWithInfiniteScroll, lazyQueryType } from '../../hooks/useDataWithInfiniteScroll'
 
 const MasonryPostsDrawer = React.lazy(() => import('../MasonryPostsDrawer'))
 
 export default function Posts() {
   const [type, setType] = useState<'all' | 'subscribes'>('all')
-
+  
   const {
     data,
     isLoading: isPostsLoading,
@@ -20,13 +21,19 @@ export default function Posts() {
     ref,
     isEnd,
     isNextPostsLoading
-  } = useGetManyPostsWithInfiniteScroll({ type: type })
+  } = useDataWithInfiniteScroll({
+    lazyQuery: extendedPostsApi.useLazyGetManyQuery as unknown as lazyQueryType,
+    refetchDependencies: [type],
+    queryData: { type }
+  })
 
   const [posts, postsActions] = usePostsActions({ initPosts: data })
 
   const styles = useSx(postsStyles)
 
   const t = useShortTranslation({ componentNameKey: 'Posts' })
+
+  console.log(postsError)
 
   if (isPostsLoading) return <FullScreenLoader withMeta />
 
@@ -48,10 +55,10 @@ export default function Posts() {
       <StandardHelmet keyOfTitle="posts" />
       <Box sx={{ display: 'flex', mt: 4, ml: 2 }}>
         <Button variant="contained" onClick={() => setType('all')}>
-          Всі
+          {t('allPosts')}
         </Button>
         <Button variant="contained" onClick={() => setType('subscribes')} sx={{ ml: 2 }}>
-          Підписки
+          {t('subscribesPosts')}
         </Button>
       </Box>
       <Box sx={styles.container}>
