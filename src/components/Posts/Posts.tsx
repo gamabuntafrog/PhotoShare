@@ -13,7 +13,7 @@ const MasonryPostsDrawer = React.lazy(() => import('../MasonryPostsDrawer'))
 
 export default function Posts() {
   const [type, setType] = useState<'all' | 'subscribes'>('all')
-  
+
   const {
     data,
     isLoading: isPostsLoading,
@@ -32,8 +32,6 @@ export default function Posts() {
   const styles = useSx(postsStyles)
 
   const t = useShortTranslation({ componentNameKey: 'Posts' })
-
-  console.log(postsError)
 
   if (isPostsLoading) return <FullScreenLoader withMeta />
 
@@ -54,10 +52,17 @@ export default function Posts() {
     <>
       <StandardHelmet keyOfTitle="posts" />
       <Box sx={{ display: 'flex', mt: 4, ml: 2 }}>
-        <Button variant="contained" onClick={() => setType('all')}>
+        <Button
+          variant={type === 'all' ? 'contained' : 'text'}
+          onClick={() => setType('all')}
+        >
           {t('allPosts')}
         </Button>
-        <Button variant="contained" onClick={() => setType('subscribes')} sx={{ ml: 2 }}>
+        <Button
+          variant={type === 'subscribes' ? 'contained' : 'text'}
+          onClick={() => setType('subscribes')}
+          sx={{ ml: 2 }}
+        >
           {t('subscribesPosts')}
         </Button>
       </Box>
